@@ -11,6 +11,7 @@
 
     <style>
         :root {
+            --bg-dark: #121212;
             --bg-purple: #4a148c; 
             --primary: #ffeb3b; 
             --secondary: #00e676; 
@@ -21,106 +22,140 @@
         body {
             margin: 0; padding: 0;
             font-family: 'Tajawal', sans-serif;
-            background-color: #121212;
+            background-color: var(--bg-dark);
             color: var(--text);
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; }
         .active { display: flex; }
 
-        /* --- 1. شاشة الهبوط --- */
+        /* --- 1. شاشة الهبوط (الخلفية PNG) --- */
         #scr-landing {
-            background: radial-gradient(circle, #4a148c 0%, #000 100%);
+            background-image: url('insan_bg.png'); /* اسم الخلفية الجديد */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            justify-content: flex-end;
+            padding-bottom: 50px;
         }
-        .title-huge { font-size: 4rem; margin-bottom: 20px; color: var(--primary); text-shadow: 0 0 20px var(--primary); }
+        
         .btn-main {
-            background: white; color: var(--bg-purple); border: none;
-            padding: 15px 50px; font-size: 1.5rem; font-weight: 900;
+            background: var(--primary); color: #000; border: none;
+            padding: 15px 60px; font-size: 1.8rem; font-weight: 900;
             border-radius: 50px; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.4);
+            font-family: 'Tajawal';
         }
-        .btn-main:hover { transform: scale(1.1); }
+        .btn-main:hover { transform: scale(1.05); }
 
         /* --- 2. شاشة الباركود --- */
         #scr-connect { background: #222; }
-        .qr-box { background: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
+        .qr-box { background: white; padding: 20px; border-radius: 20px; text-align: center; }
         .qr-img { width: 300px; height: 300px; }
         .qr-tiny { width: 80px; height: 80px; }
 
         /* --- 3. شاشة التلفزيون --- */
         #scr-tv {
             background: linear-gradient(135deg, #1a237e 0%, #000 100%);
-            justify-content: flex-start; padding-top: 40px;
+            justify-content: flex-start; padding-top: 20px; overflow-y: auto;
         }
         
+        .tv-header { width: 95%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .letter-display {
-            font-size: 8rem; font-weight: 900; color: var(--primary);
-            border: 5px solid white; border-radius: 50%; width: 200px; height: 200px;
+            font-size: 4rem; font-weight: 900; color: var(--primary);
+            border: 4px solid white; border-radius: 50%; width: 100px; height: 100px;
             display: flex; justify-content: center; align-items: center;
-            background: rgba(255,255,255,0.1); margin-bottom: 20px;
-            box-shadow: 0 0 30px var(--primary);
+            background: rgba(255,255,255,0.1);
         }
-
-        .status-bar {
-            font-size: 2rem; color: white; margin-bottom: 30px; font-weight: bold;
-        }
+        .status-bar { font-size: 1.5rem; color: white; font-weight: bold; }
 
         .results-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px; width: 95%; overflow-y: auto; padding: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px; width: 98%; padding: 10px;
         }
 
         .result-card {
-            background: white; color: black; border-radius: 15px; padding: 15px;
+            background: white; color: black; border-radius: 10px; padding: 10px;
             text-align: right; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
-        .res-name { font-weight: 900; color: var(--bg-purple); font-size: 1.4rem; border-bottom: 2px solid #eee; margin-bottom: 10px; }
-        .res-item { display: flex; justify-content: space-between; font-size: 1.1rem; margin: 5px 0; }
-        .res-lbl { color: #666; font-size: 0.9rem; }
+        .res-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 5px;
+        }
+        .res-name { font-weight: 900; color: var(--bg-purple); font-size: 1.2rem; }
+        .res-total { background: var(--bg-purple); color: white; padding: 2px 8px; border-radius: 5px; font-weight: bold; }
+
+        .res-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .res-table td { padding: 4px; border-bottom: 1px solid #eee; }
+        .res-cat { font-weight: bold; color: #666; width: 60px; }
+        .res-val { font-weight: bold; }
+        .score-badge { float: left; font-size: 0.8rem; padding: 2px 5px; border-radius: 4px; color: white; font-weight: bold; }
+        .bg-10 { background: #00e676; }
+        .bg-5 { background: #ff9800; }
+        .bg-0 { background: #f44336; }
 
         /* --- 4. شاشة اللاعب --- */
         #scr-player { background: #f5f5f5; color: #333; justify-content: flex-start; overflow-y: auto; padding: 20px; }
         
-        .p-header { 
-            width: 100%; display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 20px; background: var(--bg-purple); padding: 15px; border-radius: 15px; color: white;
+        .p-dashboard-header {
+            display: flex; align-items: center; background: white; padding: 10px;
+            border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .current-letter { font-size: 2.5rem; font-weight: bold; color: var(--primary); }
+        .p-img-small { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--bg-purple); margin-left: 10px; }
+        
+        .char-strip {
+            background: var(--bg-purple); color: white; padding: 15px;
+            text-align: center; border-radius: 10px; margin-bottom: 15px;
+            font-size: 1.5rem; font-weight: bold;
+        }
 
         .game-input {
-            width: 100%; padding: 15px; margin: 8px 0; font-size: 1.1rem;
-            border: 2px solid #ddd; border-radius: 10px; font-family: 'Tajawal';
+            width: 100%; padding: 12px; margin: 5px 0; font-size: 1rem;
+            border: 2px solid #ddd; border-radius: 8px; text-align: right;
         }
-        .game-input:focus { border-color: var(--bg-purple); outline: none; }
-
         .btn-stop {
-            width: 100%; padding: 20px; background: var(--red); color: white;
-            font-size: 2rem; font-weight: 900; border: none; border-radius: 15px;
-            margin-top: 20px; cursor: pointer; box-shadow: 0 5px 0 #b71c1c;
+            width: 100%; padding: 15px; background: var(--red); color: white;
+            font-size: 1.5rem; font-weight: 900; border: none; border-radius: 10px;
+            margin-top: 15px; cursor: pointer;
         }
-        .btn-stop:active { transform: translateY(5px); box-shadow: none; }
-        .btn-stop:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+        .btn-stop:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* --- 5. شاشة المقدم --- */
-        #scr-admin { background: #eee; color: #333; justify-content: flex-start; padding: 20px; overflow-y: auto; }
-        .admin-panel { width: 100%; max-width: 500px; }
-        .admin-btn { width: 100%; padding: 15px; margin: 5px 0; border:none; border-radius: 10px; font-size: 1.2rem; font-weight:bold; cursor: pointer; color:white; }
+        /* Login Grid */
+        .name-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .name-btn { background: white; border: 2px solid var(--bg-purple); color: var(--bg-purple); padding: 10px; border-radius: 8px; font-weight: bold; font-size: 1rem; }
+
+        /* Custom Name Area */
+        #custom-name-area { display: none; width: 100%; text-align: center; margin-top: 20px; }
+
+        /* --- 5. شاشة المقدم (التحكم في النقاط) --- */
+        #scr-admin { background: #eee; color: #333; justify-content: flex-start; padding: 10px; overflow-y: auto; }
         
-        .char-select {
-            display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 15px 0;
-        }
-        .char-btn {
-            background: white; border: 1px solid #ccc; padding: 10px; font-size: 1.2rem; cursor: pointer; border-radius: 5px;
-        }
+        .admin-controls { background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .char-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 10px; }
+        .char-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 5px; text-align: center; cursor: pointer; border-radius: 5px; }
         .char-btn.selected { background: var(--bg-purple); color: white; }
 
-        /* Lock Overlay */
+        .scoring-card {
+            background: white; margin-bottom: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ddd;
+        }
+        .score-row {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #f0f0f0; padding: 5px 0;
+        }
+        .score-val { flex-grow: 1; margin: 0 10px; font-weight: bold; }
+        .score-btns { display: flex; gap: 5px; }
+        .s-btn { 
+            width: 35px; height: 35px; border: none; border-radius: 5px; 
+            font-weight: bold; color: white; cursor: pointer; opacity: 0.3;
+        }
+        .s-btn.active { opacity: 1; transform: scale(1.1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-10 { background: #00e676; }
+        .btn-5 { background: #ff9800; }
+        .btn-0 { background: #f44336; }
+
         #stop-overlay {
             display: none; position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(244, 67, 54, 0.95); z-index: 999;
@@ -131,77 +166,85 @@
 <body>
 
     <div id="stop-overlay">
-        <h1 style="font-size: 5rem;">✋ قف!</h1>
+        <h1>✋ قف!</h1>
         <h2 id="stopper-name">...</h2>
         <p>انتهت الجولة</p>
     </div>
 
     <div id="scr-landing" class="screen active">
-        <div class="title-huge">إنسان حيوان</div>
-        <button class="btn-main" onclick="createGame()">إنشاء غرفة 🎲</button>
+        <button class="btn-main" onclick="createGame()">ابدأ اللعبة 🎲</button>
     </div>
 
     <div id="scr-connect" class="screen">
-        <h2 style="color:white; margin-bottom:10px">امسح للدخول</h2>
         <div class="qr-box">
             <div id="qr-players"></div>
         </div>
-        <button class="btn-main" style="background:var(--secondary); color:black;" onclick="goTV()">بدء الشاشة 📺</button>
-        
-        <div style="position:absolute; bottom:20px; left:20px; background:white; padding:5px; border-radius:10px;">
+        <button class="btn-main" style="margin-top:20px; background:var(--secondary); color:black;" onclick="goTV()">الشاشة 📺</button>
+        <div style="position:absolute; bottom:10px; left:10px; background:white; padding:2px;">
             <div id="qr-admin" class="qr-tiny"></div>
-            <div style="color:black; font-size:0.7rem; font-weight:bold; text-align:center;">مقدم</div>
         </div>
     </div>
 
     <div id="scr-tv" class="screen">
-        <div class="letter-display" id="tv-char">?</div>
-        <div class="status-bar" id="tv-status">انتظار المقدم...</div>
+        <div class="tv-header">
+            <div class="status-bar" id="tv-status">...</div>
+            <div class="letter-display" id="tv-char">?</div>
+        </div>
         <div id="tv-results" class="results-grid"></div>
     </div>
 
     <div id="scr-player" class="screen">
-        <div id="p-login" style="width:100%; text-align:center; margin-top:50px;">
-            <h2>سجل اسمك</h2>
-            <input type="text" id="p-name-in" class="game-input" style="text-align:center;" placeholder="الاسم...">
-            <button class="btn-main" style="background:var(--bg-purple); color:white; width:100%;" onclick="pLogin()">دخول</button>
+        <div id="p-login" style="width:100%; text-align:center; margin-top:20px;">
+            <h3>من أنت؟ 👇</h3>
+            <div id="name-selection-area" class="name-grid"></div>
+            
+            <div id="custom-name-area">
+                <h3>اكتب اسمك:</h3>
+                <input type="text" id="custom-name-input" class="game-input" style="text-align:center;" placeholder="الاسم...">
+                <button class="btn-main" style="width:100%; font-size:1.2rem; background:var(--bg-purple); color:white; margin-top:10px;" onclick="submitCustomName()">دخول ✅</button>
+                <button onclick="cancelCustomName()" style="background:none; border:none; margin-top:10px; color:#666;">رجوع</button>
+            </div>
         </div>
 
-        <div id="p-game" style="display:none; width:100%;">
-            <div class="p-header">
-                <div>الحرف المطلوب:</div>
-                <div class="current-letter" id="p-char">?</div>
+        <div id="p-dashboard" style="display:none; width:100%;">
+            <div class="p-dashboard-header">
+                <img id="p-img" class="p-img-small" src="">
+                <div>
+                    <h3 style="margin:0; color:var(--bg-purple);" id="p-name-disp">...</h3>
+                </div>
             </div>
 
-            <input type="text" id="in-human" class="game-input" placeholder="إنسان (ولد/بنت)">
-            <input type="text" id="in-animal" class="game-input" placeholder="حيوان">
-            <input type="text" id="in-plant" class="game-input" placeholder="نبات">
-            <input type="text" id="in-object" class="game-input" placeholder="جماد">
-            <input type="text" id="in-country" class="game-input" placeholder="بلاد">
+            <div id="p-wait" style="text-align:center; margin-top:50px;">
+                <h3>انتظر البداية...</h3>
+                <div style="font-size:3rem;">⏳</div>
+            </div>
 
-            <button class="btn-stop" id="btn-stop-game" onclick="stopRoundByPlayer()">✋ قــــــف!</button>
-        </div>
-        
-        <div id="p-wait" style="display:none; text-align:center; margin-top:50px;">
-            <h2>انتظر بداية الجولة...</h2>
-            <div style="font-size:3rem;">⏳</div>
+            <div id="p-game" style="display:none;">
+                <div class="char-strip">الحرف: <span id="p-char">?</span></div>
+                
+                <input type="text" id="in-human" class="game-input" placeholder="إنسان">
+                <input type="text" id="in-animal" class="game-input" placeholder="حيوان">
+                <input type="text" id="in-plant" class="game-input" placeholder="نبات">
+                <input type="text" id="in-object" class="game-input" placeholder="جماد">
+                <input type="text" id="in-country" class="game-input" placeholder="بلاد">
+
+                <button class="btn-stop" onclick="stopRound()">✋ قف (خلصت!)</button>
+            </div>
         </div>
     </div>
 
     <div id="scr-admin" class="screen">
-        <div class="admin-panel">
-            <h2>لوحة التحكم</h2>
-            <div style="background:white; padding:10px; border-radius:10px; margin-bottom:20px;">
-                <h3>اختر الحرف:</h3>
-                <div id="chars-grid" class="char-select"></div>
-                <div style="text-align:center; font-size:2rem; font-weight:bold; color:var(--bg-purple);" id="adm-selected-char">?</div>
+        <div class="admin-controls">
+            <h3>التحكم بالجولة</h3>
+            <div id="chars-grid" class="char-grid"></div>
+            <div style="text-align:center; font-weight:bold; margin-bottom:10px;">
+                الحرف المختار: <span id="adm-char" style="color:var(--bg-purple); font-size:1.5rem;">-</span>
             </div>
-
-            <button class="admin-btn" style="background:var(--secondary); color:black;" onclick="startRound()">🚀 ابدأ الجولة</button>
-            <button class="admin-btn" style="background:var(--red);" onclick="forceStop()">🛑 إيقاف إجباري</button>
-            <button class="admin-btn" style="background:var(--primary); color:black;" onclick="showResults()">👀 إظهار النتائج</button>
-            <button class="admin-btn" style="background:#333;" onclick="resetRound()">🔄 تصفير الجولة</button>
+            <button class="btn-main" style="width:100%; font-size:1rem; padding:10px; background:var(--bg-purple); color:white;" onclick="startNewRound()">🚀 ابدأ الجولة</button>
+            <button class="btn-main" style="width:100%; font-size:1rem; padding:10px; background:#333; color:white; margin-top:5px;" onclick="resetRound()">🔄 تصفير</button>
         </div>
+
+        <div id="admin-scoring-area"></div>
     </div>
 
     <script>
@@ -217,23 +260,36 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
+        // قائمة المتسابقين بأسماء الصور الجديدة (JPG)
+        const playersList = [
+            {name: "هدى", img: "huda.jpg"}, 
+            {name: "نور", img: "noor.jpg"},
+            {name: "تهاني", img: "tahani.jpg"}, 
+            {name: "اماني", img: "amani.jpg"},
+            {name: "حنين", img: "haneen.jpg"}, 
+            {name: "صالح", img: "saleh.jpg"},
+            {name: "عبودي", img: "aboodi.jpg"}, 
+            {name: "مرام", img: "maram.jpg"},
+            {name: "آخر", img: "other.jpg"} // هذا الخيار يفتح خانة الكتابة
+        ];
+        
         const arabicChars = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split('');
+        const categories = {human:'إنسان', animal:'حيوان', plant:'نبات', object:'جماد', country:'بلاد'};
+
         const urlParams = new URLSearchParams(window.location.search);
         let roomId = urlParams.get('room');
         let role = urlParams.get('role');
-        let myId = localStorage.getItem('insan_myId') || Date.now().toString();
-        localStorage.setItem('insan_myId', myId);
-        let selectedChar = '';
+        let myId = localStorage.getItem('insan_uid') || Date.now().toString();
+        localStorage.setItem('insan_uid', myId);
+        let myName = '';
 
         window.onload = function() {
-            if(!roomId) {
-                // Landing
-            } else if(role === 'admin') {
-                initAdmin();
-            } else if(role === 'player') {
-                showScreen('scr-player');
-            } else {
-                showScreen('scr-connect');
+            if(!roomId && !role) { /* Landing */ }
+            else if(role === 'admin') initAdmin();
+            else if(role === 'player') initPlayer();
+            else { 
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById('scr-connect').classList.add('active');
                 generateQRs();
             }
         };
@@ -245,26 +301,16 @@
 
         function createGame() {
             roomId = Math.random().toString(36).substr(2, 6);
-            const newUrl = window.location.href.split('?')[0] + `?room=${roomId}`;
-            window.history.pushState({path:newUrl}, '', newUrl);
-            
-            db.ref(`insan/${roomId}`).set({
-                state: 'lobby',
-                char: '?',
-                stopper: null
-            });
-            
+            window.history.pushState({}, '', `?room=${roomId}`);
+            db.ref(`insan/${roomId}`).set({ state: 'lobby', char: '?' });
             showScreen('scr-connect');
             generateQRs();
         }
 
         function generateQRs() {
             const base = window.location.href.split('?')[0];
-            const pUrl = `${base}?room=${roomId}&role=player`;
-            const aUrl = `${base}?room=${roomId}&role=admin`;
-            
-            document.getElementById('qr-players').innerHTML = `<img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(pUrl)}" />`;
-            document.getElementById('qr-admin').innerHTML = `<img class="qr-tiny" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(aUrl)}" />`;
+            document.getElementById('qr-players').innerHTML = `<img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(base+`?room=${roomId}&role=player`)}" />`;
+            document.getElementById('qr-admin').innerHTML = `<img class="qr-tiny" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(base+`?room=${roomId}&role=admin`)}" />`;
         }
 
         function goTV() {
@@ -279,120 +325,139 @@
                 if(!data) return;
 
                 document.getElementById('tv-char').innerText = data.char;
-                
                 const status = document.getElementById('tv-status');
                 const overlay = document.getElementById('stop-overlay');
-                const resGrid = document.getElementById('tv-results');
-
+                
                 if(data.state === 'lobby') {
-                    status.innerText = "انتظار المتسابقين...";
+                    status.innerText = "انتظار اللاعبين...";
                     overlay.style.display = 'none';
-                    resGrid.innerHTML = '';
                 } else if(data.state === 'playing') {
-                    status.innerText = "انطلقوا! 🏁";
-                    status.style.color = "#00e676";
+                    status.innerText = "اللعب جارٍ... 🔥";
                     overlay.style.display = 'none';
-                    resGrid.innerHTML = '';
                 } else if(data.state === 'stopped') {
-                    // إظهار شاشة قف
-                    document.getElementById('stopper-name').innerText = data.stopper || "المقدم";
+                    document.getElementById('stopper-name').innerText = data.stopper;
                     overlay.style.display = 'flex';
                     status.innerText = "توقف اللعب!";
-                } else if(data.state === 'results') {
-                    overlay.style.display = 'none';
-                    status.innerText = "النتائج:";
-                    renderResults(data.players);
+                    setTimeout(() => { overlay.style.display = 'none'; }, 3000);
                 }
-            });
-        }
 
-        function renderResults(players) {
-            const grid = document.getElementById('tv-results');
-            grid.innerHTML = '';
-            if(!players) return;
+                const grid = document.getElementById('tv-results');
+                grid.innerHTML = '';
+                if(data.players) {
+                    Object.values(data.players).forEach(p => {
+                        let totalScore = 0;
+                        if(p.scores) Object.values(p.scores).forEach(s => totalScore += s);
+                        const hide = (data.state === 'playing');
+                        
+                        let rows = '';
+                        Object.keys(categories).forEach(k => {
+                            const val = (p.answers && p.answers[k]) ? p.answers[k] : '';
+                            const score = (p.scores && p.scores[k]) !== undefined ? p.scores[k] : 0;
+                            let badgeClass = 'bg-0';
+                            if(score === 10) badgeClass = 'bg-10';
+                            if(score === 5) badgeClass = 'bg-5';
+                            
+                            rows += `<tr>
+                                <td class="res-cat">${categories[k]}</td>
+                                <td class="res-val">${hide ? '...' : val}</td>
+                                <td>${hide ? '' : `<span class="score-badge ${badgeClass}">${score}</span>`}</td>
+                            </tr>`;
+                        });
 
-            Object.values(players).forEach(p => {
-                if(p.answers) {
-                    let html = `<div class="result-card"><div class="res-name">${p.name}</div>`;
-                    html += `<div class="res-item"><span class="res-lbl">إنسان:</span> <span>${p.answers.human || '-'}</span></div>`;
-                    html += `<div class="res-item"><span class="res-lbl">حيوان:</span> <span>${p.answers.animal || '-'}</span></div>`;
-                    html += `<div class="res-item"><span class="res-lbl">نبات:</span> <span>${p.answers.plant || '-'}</span></div>`;
-                    html += `<div class="res-item"><span class="res-lbl">جماد:</span> <span>${p.answers.object || '-'}</span></div>`;
-                    html += `<div class="res-item"><span class="res-lbl">بلاد:</span> <span>${p.answers.country || '-'}</span></div>`;
-                    html += `</div>`;
-                    grid.innerHTML += html;
+                        grid.innerHTML += `
+                            <div class="result-card">
+                                <div class="res-header">
+                                    <div class="res-name">${p.name}</div>
+                                    <div class="res-total">${totalScore}</div>
+                                </div>
+                                <table class="res-table">${rows}</table>
+                            </div>
+                        `;
+                    });
                 }
             });
         }
 
         // --- Player Logic ---
-        function pLogin() {
-            const name = document.getElementById('p-name-in').value.trim();
-            if(!name) return;
-            
+        function initPlayer() {
+            showScreen('scr-player');
+            const grid = document.getElementById('name-selection-area');
+            playersList.forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = 'name-btn';
+                btn.innerText = p.name;
+                btn.onclick = () => loginCheck(p);
+                grid.appendChild(btn);
+            });
+        }
+
+        function loginCheck(playerObj) {
+            if(playerObj.name === "آخر") {
+                document.getElementById('name-selection-area').style.display = 'none';
+                document.getElementById('custom-name-area').style.display = 'block';
+            } else {
+                login(playerObj.name, playerObj.img);
+            }
+        }
+
+        function submitCustomName() {
+            const n = document.getElementById('custom-name-input').value.trim();
+            if(!n) return alert("اكتب اسمك");
+            login(n, "other.jpg");
+        }
+
+        function cancelCustomName() {
+            document.getElementById('custom-name-area').style.display = 'none';
+            document.getElementById('name-selection-area').style.display = 'grid';
+        }
+
+        function login(name, img) {
+            myName = name;
             db.ref(`insan/${roomId}/players/${myId}`).update({ name: name });
             
             document.getElementById('p-login').style.display = 'none';
-            listenPlayerState(name);
+            document.getElementById('p-dashboard').style.display = 'block';
+            document.getElementById('p-img').src = img;
+            document.getElementById('p-name-disp').innerText = name;
+
+            listenGame();
         }
 
-        function listenPlayerState(name) {
+        function listenGame() {
             db.ref(`insan/${roomId}`).on('value', snap => {
                 const data = snap.val();
                 if(!data) return;
 
+                document.getElementById('p-char').innerText = data.char;
                 const pWait = document.getElementById('p-wait');
                 const pGame = document.getElementById('p-game');
                 const overlay = document.getElementById('stop-overlay');
-                
-                document.getElementById('p-char').innerText = data.char;
 
                 if(data.state === 'playing') {
                     pWait.style.display = 'none';
                     pGame.style.display = 'block';
                     overlay.style.display = 'none';
-                    
-                    // فتح الحقول
-                    enableInputs(true);
+                    document.querySelectorAll('.game-input').forEach(i => i.disabled = false);
+                    document.querySelector('.btn-stop').disabled = false;
                 } else if (data.state === 'stopped') {
-                    // تجميد الحقول وإرسال الإجابة فوراً
-                    enableInputs(false);
-                    submitAnswers(); // إرسال ما تم كتابته
-                    
+                    document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
+                    document.querySelector('.btn-stop').disabled = true;
+                    submitAnswers();
                     document.getElementById('stopper-name').innerText = data.stopper;
                     overlay.style.display = 'flex';
+                    setTimeout(() => { overlay.style.display = 'none'; }, 3000);
                 } else {
                     pWait.style.display = 'block';
                     pGame.style.display = 'none';
                     overlay.style.display = 'none';
-                    clearInputs();
+                    document.querySelectorAll('.game-input').forEach(i => i.value = '');
                 }
             });
         }
 
-        function enableInputs(enable) {
-            const inputs = document.querySelectorAll('.game-input');
-            const btn = document.getElementById('btn-stop-game');
-            inputs.forEach(i => i.disabled = !enable);
-            btn.disabled = !enable;
-        }
-
-        function clearInputs() {
-            document.querySelectorAll('.game-input').forEach(i => i.value = '');
-        }
-
-        function stopRoundByPlayer() {
-            // اللاعب ضغط قف
-            const name = document.getElementById('p-name-disp')?.innerText || "لاعب"; // fallback
-            // نجيب الاسم من الذاكرة او الداتا بيس افضل، بس للسرعة:
-            db.ref(`insan/${roomId}/players/${myId}/name`).once('value', snap => {
-                const myName = snap.val() || "مجهول";
-                submitAnswers().then(() => {
-                    db.ref(`insan/${roomId}`).update({
-                        state: 'stopped',
-                        stopper: myName
-                    });
-                });
+        function stopRound() {
+            submitAnswers().then(() => {
+                db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: myName });
             });
         }
 
@@ -418,17 +483,46 @@
                 btn.onclick = () => {
                     document.querySelectorAll('.char-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
-                    selectedChar = c;
-                    document.getElementById('adm-selected-char').innerText = c;
+                    document.getElementById('adm-char').innerText = c;
                     db.ref(`insan/${roomId}/char`).set(c);
                 };
                 grid.appendChild(btn);
             });
+
+            db.ref(`insan/${roomId}`).on('value', snap => {
+                const data = snap.val();
+                if(!data || !data.players) return;
+                
+                const area = document.getElementById('admin-scoring-area');
+                area.innerHTML = '';
+
+                Object.keys(data.players).forEach(pid => {
+                    const p = data.players[pid];
+                    let html = `<div class="scoring-card">
+                        <div style="font-weight:bold; margin-bottom:5px;">${p.name}</div>`;
+                    
+                    Object.keys(categories).forEach(cat => {
+                        const val = (p.answers && p.answers[cat]) ? p.answers[cat] : '(فاضي)';
+                        const currentScore = (p.scores && p.scores[cat]) !== undefined ? p.scores[cat] : 0;
+                        
+                        html += `<div class="score-row">
+                            <span style="font-size:0.8rem; width:50px;">${categories[cat]}</span>
+                            <span class="score-val">${val}</span>
+                            <div class="score-btns">
+                                <button class="s-btn btn-10 ${currentScore==10?'active':''}" onclick="setScore('${pid}','${cat}',10)">10</button>
+                                <button class="s-btn btn-5 ${currentScore==5?'active':''}" onclick="setScore('${pid}','${cat}',5)">5</button>
+                                <button class="s-btn btn-0 ${currentScore==0?'active':''}" onclick="setScore('${pid}','${cat}',0)">0</button>
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                    area.innerHTML += html;
+                });
+            });
         }
 
-        function startRound() {
-            if(selectedChar === '') return alert("اختر حرف أولاً");
-            // تصفير إجابات اللاعبين القديمة
+        function startNewRound() {
+            if(document.getElementById('adm-char').innerText === '-') return alert("اختر حرف");
             db.ref(`insan/${roomId}/players`).once('value', snap => {
                 snap.forEach(p => {
                     p.ref.child('answers').remove();
@@ -437,19 +531,12 @@
             });
         }
 
-        function forceStop() {
-            db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: "المقدم" });
-        }
-
-        function showResults() {
-            db.ref(`insan/${roomId}`).update({ state: 'results' });
-        }
-
         function resetRound() {
             db.ref(`insan/${roomId}`).update({ state: 'lobby', char: '?' });
-            document.querySelectorAll('.char-btn').forEach(b => b.classList.remove('selected'));
-            selectedChar = '';
-            document.getElementById('adm-selected-char').innerText = '?';
+        }
+
+        function setScore(pid, cat, score) {
+            db.ref(`insan/${roomId}/players/${pid}/scores/${cat}`).set(score);
         }
 
     </script>
