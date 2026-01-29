@@ -54,24 +54,25 @@
         .qr-img { width: 300px; height: 300px; }
         .qr-tiny { width: 80px; height: 80px; }
 
-        /* --- 3. شاشة التلفزيون (تصميم ملموم) --- */
+        /* --- 3. شاشة التلفزيون --- */
         #scr-tv {
             background: linear-gradient(135deg, #1a237e 0%, #000 100%);
             justify-content: flex-start; padding-top: 10px; overflow-y: auto;
         }
         
-        .tv-header { width: 98%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; height: 100px; }
+        .tv-header { width: 98%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; height: 120px; }
         .status-bar { font-size: 1.2rem; color: white; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
+        /* العجلة */
         .wheel-container { position: relative; width: 100px; height: 100px; margin: 0 auto; transition: transform 0.1s linear; }
         .wheel { width: 100%; height: 100%; border-radius: 50%; border: 3px solid white; background: radial-gradient(circle, var(--bg-purple), #000); display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px var(--primary); }
         .wheel-text { font-size: 3rem; font-weight: 900; color: var(--primary); }
         .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid var(--red); z-index: 10; }
 
-        /* شبكة النتائج الملمومة (4 في الصف) */
+        /* شبكة النتائج */
         .results-grid {
             display: grid; 
-            grid-template-columns: repeat(4, 1fr); /* 4 أعمدة إجبارية */
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px; 
             width: 98%; 
             padding: 5px;
@@ -80,7 +81,7 @@
         .result-card { 
             background: white; color: black; border-radius: 8px; padding: 5px; 
             text-align: right; box-shadow: 0 2px 5px rgba(0,0,0,0.3); 
-            font-size: 0.8rem; /* تصغير الخط العام */
+            font-size: 0.8rem;
         }
         .res-header { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -98,24 +99,50 @@
 
         /* --- 4. شاشة اللاعب --- */
         #scr-player { background: #f5f5f5; color: #333; justify-content: flex-start; overflow-y: auto; padding: 15px; }
-        .p-dashboard-header { display: flex; flex-direction: column; align-items: center; background: white; padding: 10px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
-        .p-img-large { width: 100%; max-width: 200px; aspect-ratio: 1/1; object-fit: cover; border: 3px solid var(--bg-purple); border-radius: 10px; margin-bottom: 5px; }
+        
+        .p-dashboard-header { 
+            display: flex; flex-direction: column; align-items: center; 
+            background: white; padding: 15px; border-radius: 15px; 
+            margin-bottom: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); 
+        }
+        
         .char-strip { background: var(--bg-purple); color: white; padding: 10px; text-align: center; border-radius: 8px; margin-bottom: 15px; font-size: 1.2rem; font-weight: bold; }
         .input-row { display: flex; align-items: center; margin-bottom: 8px; background: white; padding: 5px; border-radius: 8px; border: 1px solid #ddd; }
         .input-label { width: 60px; font-size: 0.9rem; font-weight: bold; color: var(--bg-purple); text-align: center; border-left: 1px solid #eee; padding-left: 5px; }
         .game-input { flex-grow: 1; border: none; padding: 8px; font-size: 1rem; outline: none; font-family: 'Tajawal'; width: 100%; }
+        
         .btn-stop { width: 100%; padding: 15px; background: var(--red); color: white; font-size: 1.5rem; font-weight: 900; border: none; border-radius: 10px; margin-top: 15px; cursor: pointer; }
         .btn-stop:disabled { background: #ccc; cursor: not-allowed; }
         
         .name-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .name-btn { background: white; border: 2px solid var(--bg-purple); color: var(--bg-purple); padding: 10px; border-radius: 8px; font-weight: bold; font-size: 1rem; }
         #custom-name-area { display: none; width: 100%; text-align: center; margin-top: 20px; }
-        .msg-alert-btn { background: linear-gradient(45deg, #ff9800, #ff5722); color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 1rem; margin-bottom: 15px; animation: pulseBtn 2s infinite; cursor: pointer; }
+        
+        .msg-alert-btn { 
+            background: linear-gradient(45deg, #ff9800, #ff5722); color: white; 
+            border: none; padding: 15px; border-radius: 10px; width: 100%; 
+            font-weight: bold; font-size: 1.1rem; margin-bottom: 20px; 
+            animation: pulseBtn 2s infinite; cursor: pointer; 
+        }
         @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        /* منطقة الصورة الثابتة (بعد الإغلاق) */
+        #persistent-image-container {
+            display: none; width: 100%; text-align: center; margin-bottom: 20px;
+            background: white; padding: 10px; border-radius: 15px; border: 2px solid var(--bg-purple);
+        }
+        .p-img-persistent { 
+            width: 100%; max-width: 200px; height: auto; border-radius: 10px; margin-bottom: 10px;
+        }
+        .btn-hide-img {
+            background: #d32f2f; color: white; border: none; padding: 5px 15px; 
+            border-radius: 20px; cursor: pointer; font-size: 0.9rem;
+        }
 
         /* Overlays */
         #private-msg-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; padding: 10px; }
         .full-size-img { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain; }
+        
         #stop-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(244, 67, 54, 0.95); z-index: 999; flex-direction: column; justify-content: center; align-items: center; color: white; }
 
         /* --- 5. شاشة المقدم --- */
@@ -133,7 +160,7 @@
 
     <div id="private-msg-overlay">
         <img id="msg-img-full" class="full-size-img" src="" alt="رسالة">
-        <button style="margin-top:15px; padding:10px 30px; border-radius:20px; font-weight:bold; cursor:pointer;" onclick="toggleMsg(false)">إغلاق ❌</button>
+        <button style="margin-top:15px; padding:10px 40px; border-radius:20px; font-weight:bold; cursor:pointer;" onclick="toggleMsg(false)">إغلاق ❌</button>
     </div>
 
     <div id="stop-overlay">
@@ -182,11 +209,17 @@
         </div>
 
         <div id="p-dashboard" style="display:none; width:100%;">
-            <button class="msg-alert-btn" onclick="toggleMsg(true)">📩 عندك رسالة من أحد الجمهور</button>
             
+            <button class="msg-alert-btn" onclick="toggleMsg(true)">📩 عندك رسالة من أحد الجمهور اضغط لتعرف من هو</button>
+            
+            <div id="persistent-image-container">
+                <img id="p-persistent-img" class="p-img-persistent" src="">
+                <br>
+                <button class="btn-hide-img" onclick="hidePersistentImage()">إخفاء الصورة ❌</button>
+            </div>
+
             <div class="p-dashboard-header">
-                <img id="p-img" class="p-img-large" src="">
-                <h2 style="margin:0; color:var(--bg-purple); font-size:1.5rem;" id="p-name-disp">...</h2>
+                <h2 style="margin:0; color:var(--bg-purple); font-size:1.8rem;" id="p-name-disp">...</h2>
             </div>
 
             <div id="p-wait" style="text-align:center; margin-top:30px;">
@@ -406,19 +439,30 @@
             db.ref(`insan/${roomId}/players/${myId}`).update({ name: name });
             document.getElementById('p-login').style.display = 'none';
             document.getElementById('p-dashboard').style.display = 'block';
-            document.getElementById('p-img').src = img;
             document.getElementById('p-name-disp').innerText = name;
+            
+            // إعداد الصورة الثابتة والمخفية مبدئياً
+            document.getElementById('p-persistent-img').src = img;
+            
             listenGame();
         }
 
         function toggleMsg(show) {
             const overlay = document.getElementById('private-msg-overlay');
+            const persistentDiv = document.getElementById('persistent-image-container');
+            
             if(show) {
                 document.getElementById('msg-img-full').src = currentPImg;
                 overlay.style.display = 'flex';
             } else {
                 overlay.style.display = 'none';
+                // عند الإغلاق، نظهر الصورة الثابتة في الشاشة
+                persistentDiv.style.display = 'block';
             }
+        }
+
+        function hidePersistentImage() {
+            document.getElementById('persistent-image-container').style.display = 'none';
         }
 
         function listenGame() {
@@ -449,6 +493,8 @@
                 } else if(data.state === 'spinning') {
                     pWait.style.display = 'block';
                     pGame.style.display = 'none';
+                    // مسح الخانات تلقائياً عند الدوران
+                    clearInputs();
                 } else if (data.state === 'stopped') {
                     document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
                     document.querySelector('.btn-stop').disabled = true;
@@ -456,9 +502,13 @@
                 } else {
                     pWait.style.display = 'block';
                     pGame.style.display = 'none';
-                    document.querySelectorAll('.game-input').forEach(i => i.value = '');
+                    clearInputs();
                 }
             });
+        }
+
+        function clearInputs() {
+            document.querySelectorAll('.game-input').forEach(i => i.value = '');
         }
 
         function stopRound() {
@@ -478,7 +528,7 @@
             return db.ref(`insan/${roomId}/players/${myId}/answers`).set(ans);
         }
 
-        // --- Admin Logic ---
+        // --- Admin Logic (Smart Scoring) ---
         function initAdmin() {
             showScreen('scr-admin');
             
@@ -486,7 +536,6 @@
                 const data = snap.val();
                 if(!data) return;
 
-                // احتساب النقاط التلقائي عند التوقف (مرة واحدة)
                 if(data.state === 'stopped' && !data.scored) {
                     calculateAutoScores(data.players);
                 }
@@ -517,40 +566,32 @@
             });
         }
 
-        // الخوارزمية الذكية لاحتساب النقاط
         function calculateAutoScores(players) {
             if(!players) return;
-            
             const cats = ['human', 'animal', 'plant', 'object', 'country'];
             let updates = {};
 
             cats.forEach(cat => {
-                let answersMap = {}; // القيمة -> مصفوفة اللاعبين
-                
-                // 1. تجميع الإجابات
+                let answersMap = {}; 
                 Object.keys(players).forEach(pid => {
                     let val = players[pid].answers ? players[pid].answers[cat] : "";
                     if(val) {
-                        val = val.trim().toLowerCase(); // تنظيف المسافات
+                        val = val.trim().toLowerCase(); 
                         if(!answersMap[val]) answersMap[val] = [];
                         answersMap[val].push(pid);
                     } else {
-                        // إجابة فارغة = 0 فوراً
                         updates[`insan/${roomId}/players/${pid}/scores/${cat}`] = 0;
                     }
                 });
-
-                // 2. توزيع النقاط
                 Object.keys(answersMap).forEach(val => {
                     const pids = answersMap[val];
-                    const score = (pids.length > 1) ? 5 : 10; // مكرر=5، وحيد=10
+                    const score = (pids.length > 1) ? 5 : 10;
                     pids.forEach(pid => {
                         updates[`insan/${roomId}/players/${pid}/scores/${cat}`] = score;
                     });
                 });
             });
-
-            updates[`insan/${roomId}/scored`] = true; // علامة أنه تم الحساب
+            updates[`insan/${roomId}/scored`] = true;
             db.ref().update(updates);
         }
 
