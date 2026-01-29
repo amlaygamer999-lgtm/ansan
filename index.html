@@ -34,7 +34,7 @@
 
         /* --- 1. شاشة الهبوط --- */
         #scr-landing {
-            background-image: url('insan_bg.png');
+            background-image: url('insan_bg.png'); /* خلفية البداية */
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -100,30 +100,41 @@
         /* --- 4. شاشة اللاعب --- */
         #scr-player { background: #f5f5f5; color: #333; justify-content: flex-start; overflow-y: auto; padding: 20px; }
         
-        /* تعديل تصميم البروفايل ليكون كبير وواضح */
-        .p-dashboard-header {
-            display: flex; 
-            flex-direction: column; /* ترتيب عمودي */
-            align-items: center; 
-            background: white; 
-            padding: 20px;
-            border-radius: 15px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            text-align: center;
+        /* زر الرسالة الخاص */
+        .msg-alert-btn {
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            color: white; border: none; padding: 15px; border-radius: 12px;
+            width: 100%; font-weight: bold; font-size: 1.1rem; margin-bottom: 20px;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            animation: pulseBtn 2s infinite;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        
-        /* الصورة الكبيرة المربعة */
-        .p-img-large { 
-            width: 100%; 
-            max-width: 250px; /* حد أقصى للحجم عشان ما تغطي الشاشة */
-            height: auto; 
-            aspect-ratio: 1/1; /* مربع */
-            object-fit: cover;
-            border: 4px solid var(--bg-purple); 
-            border-radius: 10px; /* زوايا ناعمة قليلاً */
-            margin-bottom: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        /* نافذة الصورة الكبيرة (Overlay) */
+        #private-msg-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999;
+            flex-direction: column; justify-content: center; align-items: center;
+            padding: 10px;
+        }
+        .full-size-img {
+            max-width: 100%; max-height: 85vh; /* تأخذ أكبر حجم ممكن في الشاشة */
+            width: auto; height: auto;
+            object-fit: contain; /* تمنع القص نهائياً */
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        .close-msg-btn {
+            margin-top: 15px; background: white; color: black;
+            padding: 10px 40px; border-radius: 30px; border: none;
+            font-weight: 900; font-size: 1.2rem; cursor: pointer;
+        }
+
+        .p-dashboard-header {
+            display: flex; flex-direction: column; align-items: center; 
+            background: white; padding: 15px; border-radius: 15px; 
+            margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .char-strip {
@@ -147,17 +158,14 @@
         .name-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .name-btn { background: white; border: 2px solid var(--bg-purple); color: var(--bg-purple); padding: 10px; border-radius: 8px; font-weight: bold; font-size: 1rem; }
 
-        /* Custom Name Area */
         #custom-name-area { display: none; width: 100%; text-align: center; margin-top: 20px; }
 
         /* --- 5. شاشة المقدم --- */
         #scr-admin { background: #eee; color: #333; justify-content: flex-start; padding: 10px; overflow-y: auto; }
-        
         .admin-controls { background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
         .char-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 10px; }
         .char-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 5px; text-align: center; cursor: pointer; border-radius: 5px; }
         .char-btn.selected { background: var(--bg-purple); color: white; }
-
         .scoring-card { background: white; margin-bottom: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ddd; }
         .score-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding: 5px 0; }
         .score-val { flex-grow: 1; margin: 0 10px; font-weight: bold; }
@@ -176,6 +184,11 @@
     </style>
 </head>
 <body>
+
+    <div id="private-msg-overlay">
+        <img id="msg-img-full" class="full-size-img" src="" alt="رسالة">
+        <button class="close-msg-btn" onclick="toggleMsg(false)">إغلاق ❌</button>
+    </div>
 
     <div id="stop-overlay">
         <h1>✋ قف!</h1>
@@ -219,11 +232,13 @@
         </div>
 
         <div id="p-dashboard" style="display:none; width:100%;">
+            
+            <button class="msg-alert-btn" onclick="toggleMsg(true)">
+                📩 عندك رسالة من أحد الجمهور اضغط لتعرف من هو
+            </button>
+
             <div class="p-dashboard-header">
-                <img id="p-img" class="p-img-large" src="">
-                <div>
-                    <h2 style="margin:0; color:var(--bg-purple); font-size:1.8rem;" id="p-name-disp">...</h2>
-                </div>
+                <h2 style="margin:0; color:var(--bg-purple); font-size:1.5rem;" id="p-name-disp">...</h2>
             </div>
 
             <div id="p-wait" style="text-align:center; margin-top:30px;">
@@ -272,7 +287,7 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        // قائمة المتسابقين (عدل الصورة هنا إذا غيرت الصيغة)
+        // قائمة المتسابقين
         const playersList = [
             {name: "هدى", img: "huda.jpg"}, 
             {name: "نور", img: "noor.jpg"},
@@ -280,7 +295,7 @@
             {name: "اماني", img: "amani.jpg"},
             {name: "حنين", img: "haneen.jpg"}, 
             {name: "صالح", img: "saleh.jpg"},
-            {name: "عبودي", img: "aboodi.jpg"}, // تأكد هل هي jpg او png
+            {name: "عبودي", img: "aboodi.jpg"},
             {name: "مرام", img: "maram.jpg"},
             {name: "آخر", img: "other.jpg"}
         ];
@@ -294,6 +309,7 @@
         let myId = localStorage.getItem('insan_uid') || Date.now().toString();
         localStorage.setItem('insan_uid', myId);
         let myName = '';
+        let currentPImg = ''; // لتخزين مسار صورة اللاعب الحالي
 
         window.onload = function() {
             if(!roomId && !role) { /* Landing */ }
@@ -425,14 +441,25 @@
 
         function login(name, img) {
             myName = name;
+            currentPImg = img; // حفظ الصورة لاستخدامها في الرسالة
             db.ref(`insan/${roomId}/players/${myId}`).update({ name: name });
             
             document.getElementById('p-login').style.display = 'none';
             document.getElementById('p-dashboard').style.display = 'block';
-            document.getElementById('p-img').src = img;
             document.getElementById('p-name-disp').innerText = name;
 
             listenGame();
+        }
+
+        // إظهار/إخفاء رسالة الجمهور (الصورة الكبيرة)
+        function toggleMsg(show) {
+            const overlay = document.getElementById('private-msg-overlay');
+            if(show) {
+                document.getElementById('msg-img-full').src = currentPImg;
+                overlay.style.display = 'flex';
+            } else {
+                overlay.style.display = 'none';
+            }
         }
 
         function listenGame() {
