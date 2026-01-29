@@ -32,9 +32,9 @@
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; }
         .active { display: flex; }
 
-        /* --- 1. شاشة الهبوط (الخلفية PNG) --- */
+        /* --- 1. شاشة الهبوط --- */
         #scr-landing {
-            background-image: url('insan_bg.png'); /* اسم الخلفية الجديد */
+            background-image: url('insan_bg.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -100,11 +100,31 @@
         /* --- 4. شاشة اللاعب --- */
         #scr-player { background: #f5f5f5; color: #333; justify-content: flex-start; overflow-y: auto; padding: 20px; }
         
+        /* تعديل تصميم البروفايل ليكون كبير وواضح */
         .p-dashboard-header {
-            display: flex; align-items: center; background: white; padding: 10px;
-            border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex; 
+            flex-direction: column; /* ترتيب عمودي */
+            align-items: center; 
+            background: white; 
+            padding: 20px;
+            border-radius: 15px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-align: center;
         }
-        .p-img-small { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--bg-purple); margin-left: 10px; }
+        
+        /* الصورة الكبيرة المربعة */
+        .p-img-large { 
+            width: 100%; 
+            max-width: 250px; /* حد أقصى للحجم عشان ما تغطي الشاشة */
+            height: auto; 
+            aspect-ratio: 1/1; /* مربع */
+            object-fit: cover;
+            border: 4px solid var(--bg-purple); 
+            border-radius: 10px; /* زوايا ناعمة قليلاً */
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
         
         .char-strip {
             background: var(--bg-purple); color: white; padding: 15px;
@@ -130,7 +150,7 @@
         /* Custom Name Area */
         #custom-name-area { display: none; width: 100%; text-align: center; margin-top: 20px; }
 
-        /* --- 5. شاشة المقدم (التحكم في النقاط) --- */
+        /* --- 5. شاشة المقدم --- */
         #scr-admin { background: #eee; color: #333; justify-content: flex-start; padding: 10px; overflow-y: auto; }
         
         .admin-controls { background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
@@ -138,19 +158,11 @@
         .char-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 5px; text-align: center; cursor: pointer; border-radius: 5px; }
         .char-btn.selected { background: var(--bg-purple); color: white; }
 
-        .scoring-card {
-            background: white; margin-bottom: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ddd;
-        }
-        .score-row {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #f0f0f0; padding: 5px 0;
-        }
+        .scoring-card { background: white; margin-bottom: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ddd; }
+        .score-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding: 5px 0; }
         .score-val { flex-grow: 1; margin: 0 10px; font-weight: bold; }
         .score-btns { display: flex; gap: 5px; }
-        .s-btn { 
-            width: 35px; height: 35px; border: none; border-radius: 5px; 
-            font-weight: bold; color: white; cursor: pointer; opacity: 0.3;
-        }
+        .s-btn { width: 35px; height: 35px; border: none; border-radius: 5px; font-weight: bold; color: white; cursor: pointer; opacity: 0.3; }
         .s-btn.active { opacity: 1; transform: scale(1.1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .btn-10 { background: #00e676; }
         .btn-5 { background: #ff9800; }
@@ -208,13 +220,13 @@
 
         <div id="p-dashboard" style="display:none; width:100%;">
             <div class="p-dashboard-header">
-                <img id="p-img" class="p-img-small" src="">
+                <img id="p-img" class="p-img-large" src="">
                 <div>
-                    <h3 style="margin:0; color:var(--bg-purple);" id="p-name-disp">...</h3>
+                    <h2 style="margin:0; color:var(--bg-purple); font-size:1.8rem;" id="p-name-disp">...</h2>
                 </div>
             </div>
 
-            <div id="p-wait" style="text-align:center; margin-top:50px;">
+            <div id="p-wait" style="text-align:center; margin-top:30px;">
                 <h3>انتظر البداية...</h3>
                 <div style="font-size:3rem;">⏳</div>
             </div>
@@ -260,7 +272,7 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        // قائمة المتسابقين بأسماء الصور الجديدة (JPG)
+        // قائمة المتسابقين (عدل الصورة هنا إذا غيرت الصيغة)
         const playersList = [
             {name: "هدى", img: "huda.jpg"}, 
             {name: "نور", img: "noor.jpg"},
@@ -268,9 +280,9 @@
             {name: "اماني", img: "amani.jpg"},
             {name: "حنين", img: "haneen.jpg"}, 
             {name: "صالح", img: "saleh.jpg"},
-            {name: "عبودي", img: "aboodi.jpg"}, 
+            {name: "عبودي", img: "aboodi.jpg"}, // تأكد هل هي jpg او png
             {name: "مرام", img: "maram.jpg"},
-            {name: "آخر", img: "other.jpg"} // هذا الخيار يفتح خانة الكتابة
+            {name: "آخر", img: "other.jpg"}
         ];
         
         const arabicChars = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split('');
