@@ -99,16 +99,16 @@
         }
         .score-pill span { color: var(--gold); font-weight: 900; font-size: 1.1rem; }
 
-        /* TV Stop Overlay (التنبيه الكبير) */
+        /* TV Stop Overlay */
         #tv-stop-alert {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(220, 38, 38, 0.95); z-index: 9999;
             flex-direction: column; justify-content: center; align-items: center;
             animation: pulseBg 0.5s infinite alternate;
         }
-        @keyframes pulseBg { from { opacity: 0.95; transform: scale(1); } to { opacity: 1; transform: scale(1.02); } }
-        #tv-stop-alert h1 { font-size: 7rem; color: white; margin: 0; text-shadow: 0 10px 30px rgba(0,0,0,0.5); font-weight: 900; }
-        #tv-stop-alert h2 { font-size: 4rem; color: var(--gold); margin: 0; }
+        @keyframes pulseBg { from { opacity: 0.9; } to { opacity: 1; } }
+        #tv-stop-alert h1 { font-size: 6rem; color: white; margin: 0; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #tv-stop-alert h2 { font-size: 3rem; color: var(--gold); margin: 0; }
 
         #btn-tv-qr {
             position: absolute; top: 70px; left: 20px; z-index: 100;
@@ -164,6 +164,7 @@
         /* --- 4. Player --- */
         #scr-player { padding: 20px; max-width: 600px; margin: 0 auto; }
         
+        /* قائمة اللاعبين (بدون صور) */
         .player-select-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); 
             gap: 15px; width: 100%; margin-top: 20px;
@@ -513,7 +514,6 @@
                         status.innerText = "توقف اللعب!";
                         setTimeout(() => { tvStopAlert.style.display = 'none'; }, 3000);
                     }
-                    // Auto reveal answers immediately on Stop
                     renderTVResults(data, false); 
                 } else if (data.state === 'playing' || data.state === 'lobby') {
                     stopOverlayShown = false;
@@ -557,13 +557,11 @@
                         
                         let badgeHtml = '';
                         if(score !== null) {
-                            // Show specific score badge if available
                             let cls = 'ts-0'; 
                             if(score===10) cls='ts-10'; 
                             if(score===5) cls='ts-5';
                             badgeHtml = `<span class="tv-score-badge ${cls}">${score}</span>`;
                         } else if(data.state === 'correction') {
-                            // Only show '?' if in correction AND score is not set yet
                             badgeHtml = `<span class="tv-score-badge" style="background:#555">؟</span>`;
                         }
 
@@ -696,14 +694,26 @@
 
                 document.getElementById('p-char').innerText = data.char;
                 
-                ['p-dashboard','p-rating-screen','p-suggestion-screen'].forEach(id => document.getElementById(id).style.display='none');
+                // Logic to FORCE show dashboard unless specifically in special states
+                const state = data.state || 'lobby';
                 
-                if(data.state === 'rating' || data.state === 'rating_reveal') {
-                    document.getElementById('p-rating-screen').style.display = 'block';
-                } else if(data.state.startsWith('suggestion')) {
-                    document.getElementById('p-suggestion-screen').style.display = 'block';
+                const pDash = document.getElementById('p-dashboard');
+                const pRate = document.getElementById('p-rating-screen');
+                const pSugg = document.getElementById('p-suggestion-screen');
+
+                // Reset visibility
+                pRate.style.display = 'none';
+                pSugg.style.display = 'none';
+                
+                if (state === 'rating' || state === 'rating_reveal') {
+                    pDash.style.display = 'none';
+                    pRate.style.display = 'block';
+                } else if (state.startsWith('suggestion')) {
+                    pDash.style.display = 'none';
+                    pSugg.style.display = 'block';
                 } else {
-                    document.getElementById('p-dashboard').style.display = 'block';
+                    // Default for all game states (lobby, playing, stopped, correction)
+                    pDash.style.display = 'block';
                     
                     const pWait = document.getElementById('p-wait');
                     const pGame = document.getElementById('p-game');
@@ -711,7 +721,7 @@
                     const stopOver = document.getElementById('stop-overlay');
 
                     // Player Stop Overlay
-                    if(data.state === 'stopped') {
+                    if(state === 'stopped') {
                         if(!stopOverlayShown) {
                             document.getElementById('stopper-name').innerText = data.stopper;
                             stopOver.style.display = 'flex';
@@ -721,7 +731,7 @@
 
                     pWait.style.display='none'; pGame.style.display='none'; pCorr.style.display='none';
 
-                    if(data.state === 'playing') {
+                    if(state === 'playing') {
                         pGame.style.display = 'block';
                         document.querySelectorAll('.game-input').forEach(i => i.disabled = false);
                         document.querySelector('.btn-stop').disabled = false;
@@ -729,21 +739,21 @@
                             document.querySelectorAll('.game-input').forEach(i => i.value = '');
                             window.roundCleaned = true;
                         }
-                    } else if (data.state === 'spinning') {
+                    } else if (state === 'spinning') {
                         pWait.style.display = 'block';
                         window.roundCleaned = false; 
-                    } else if (data.state === 'stopped') {
+                    } else if (state === 'stopped') {
                         pGame.style.display = 'block';
                         document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
                         document.querySelector('.btn-stop').disabled = true;
                         
-                        // Force save immediately so TV updates
                         saveAnswersLocally();
 
-                    } else if (data.state === 'correction') {
+                    } else if (state === 'correction') {
                         pCorr.style.display = 'block';
                         renderCorrection();
                     } else {
+                        // Lobby or any other state
                         pWait.style.display = 'block';
                     }
                 }
