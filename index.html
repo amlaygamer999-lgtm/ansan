@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنسان حيوان 🦁</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>إنسان حيوان PRO 🦁</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -11,12 +11,16 @@
 
     <style>
         :root {
-            --bg-dark: #121212;
-            --bg-purple: #4a148c; 
-            --primary: #ffeb3b; 
-            --secondary: #00e676; 
-            --red: #f44336; 
-            --text: #fff;
+            --bg-dark: #0f172a;
+            --bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --primary: #8b5cf6; /* Violet */
+            --secondary: #ec4899; /* Pink */
+            --accent: #10b981; /* Emerald */
+            --danger: #f43f5e; /* Rose */
+            --text: #f8fafc;
+            --gold: #fbbf24;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -25,153 +29,232 @@
             margin: 0; padding: 0;
             font-family: 'Tajawal', sans-serif;
             background: var(--bg-dark);
-            background-image: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text);
             height: 100vh;
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
+        /* الخلفية المتحركة الخفيفة */
+        body::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%);
+            animation: rotateBG 60s linear infinite; z-index: -1;
+        }
+        @keyframes rotateBG { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; }
         .active { display: flex; }
 
         /* UI Components */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
-        }
-        .btn-main {
-            background: linear-gradient(135deg, var(--primary), #f59e0b);
-            color: black; border: none; padding: 12px 30px;
-            font-size: 1.1rem; font-weight: bold; border-radius: 50px;
-            cursor: pointer; font-family: 'Tajawal'; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: var(--glass);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* --- 1. Landing (JPG Background) --- */
+        .btn-main {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 12px 30px;
+            font-size: 1.1rem; font-weight: bold; border-radius: 50px;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            font-family: 'Tajawal'; width: 100%; max-width: 300px;
+        }
+        .btn-main:active { transform: scale(0.98); }
+
+        /* --- 1. Landing --- */
         #scr-landing {
             justify-content: center; 
-            /* هنا تم التغيير إلى JPG للسرعة القصوى */
+            /* تأكد ان الصورة بصيغة JPG واسمها صحيح */
             background-image: url('insan_bg.jpg'); 
             background-size: cover; background-position: center;
         }
         #scr-landing::after {
             content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.3); z-index: 1; pointer-events: none;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+            z-index: 1; pointer-events: none;
         }
         #btn-start-landing {
             position: absolute; bottom: 40px; right: 30px; z-index: 10;
-            padding: 15px 50px; font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--gold), #d97706); color: black;
+            font-size: 1.3rem; padding: 15px 40px;
         }
 
         /* --- 2. Connect --- */
-        #scr-connect { justify-content: center; }
-        .qr-box { background: white; padding: 20px; border-radius: 20px; text-align: center; }
+        #scr-connect { justify-content: center; padding: 20px; }
+        .qr-box { 
+            background: white; padding: 20px; border-radius: 20px; text-align: center; 
+            box-shadow: 0 0 40px rgba(255,255,255,0.1); margin-bottom: 20px;
+        }
         .qr-img { width: 250px; height: 250px; }
 
-        /* --- 3. TV --- */
+        /* --- 3. TV Screen --- */
         #scr-tv { padding-top: 70px; }
+        
+        /* شريط النقاط العلوي */
         #tv-top-scores {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            background: rgba(0,0,0,0.9); border-bottom: 1px solid #333;
-            display: flex; align-items: center; overflow-x: auto; padding: 0 20px; z-index: 90; gap: 10px;
+            background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px); display: flex; align-items: center; 
+            overflow-x: auto; padding: 0 20px; z-index: 90; gap: 10px; scrollbar-width: none;
         }
         .score-pill {
-            background: #333; color: white; padding: 5px 15px; border-radius: 20px;
-            border: 1px solid #555; white-space: nowrap; font-size: 0.9rem;
+            background: rgba(255,255,255,0.05); color: white; padding: 5px 15px; 
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); 
+            white-space: nowrap; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;
         }
-        .score-pill span { color: var(--secondary); font-weight: bold; margin-right: 5px; }
+        .score-pill span { color: var(--gold); font-weight: 900; font-size: 1.1rem; }
+
+        /* زر الباركود في التلفزيون */
+        #btn-tv-qr {
+            position: absolute; top: 70px; left: 20px; z-index: 100;
+            background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        /* نافذة الباركود المنبثقة */
+        #tv-qr-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000;
+            flex-direction: column; justify-content: center; align-items: center;
+        }
 
         .tv-header { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
         .big-char-display {
-            font-size: 8rem; font-weight: 900; color: var(--primary);
-            border: 5px solid rgba(255,255,255,0.2); border-radius: 20px; width: 180px; height: 180px;
-            display: flex; justify-content: center; align-items: center;
-            background: rgba(0,0,0,0.3); margin-top: 20px;
+            font-size: 8rem; font-weight: 900; color: transparent;
+            background: linear-gradient(to bottom, #fff, #cbd5e1); -webkit-background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+            border: 5px solid rgba(255,255,255,0.1); border-radius: 30px; 
+            width: 180px; height: 180px; display: flex; justify-content: center; align-items: center;
+            background-color: rgba(255,255,255,0.02); margin-top: 10px;
         }
+        .status-bar { 
+            font-size: 1.8rem; font-weight: bold; margin-top: 15px; 
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text; color: transparent;
+        }
+
         .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 98%; padding: 10px; align-content: start; }
-        .result-card { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; text-align: right; }
+        .result-card { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 12px; padding: 10px; text-align: right; 
+            transition: 0.3s; animation: popIn 0.3s ease-out;
+        }
         .res-header { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 5px; }
-        .res-name { font-weight: bold; color: var(--primary); }
-        .res-table { width: 100%; font-size: 0.8rem; }
-        .res-table td { padding: 3px; color: #ddd; }
-        .score-badge { padding: 1px 5px; border-radius: 3px; font-weight: bold; font-size: 0.7rem; }
-        .bg-10 { background: #00e676; color: black; } .bg-5 { background: #ff9800; color: black; } .bg-0 { background: #f44336; color: white; }
+        .res-name { font-weight: bold; color: white; }
+        .res-total { background: var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; }
+        
+        .res-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; }
+        .res-table td { padding: 3px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .res-cat { color: #94a3b8; width: 50px; font-weight: bold; }
+        .res-val { color: white; font-weight: bold; }
+        
+        .score-badge { padding: 1px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; display: inline-block; min-width: 25px; text-align: center; }
+        .bg-10 { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; } 
+        .bg-5 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; } 
+        .bg-0 { background: rgba(244, 63, 94, 0.2); color: #fda4af; border: 1px solid #f43f5e; }
 
         /* --- 4. Player --- */
         #scr-player { padding: 20px; max-width: 600px; margin: 0 auto; }
         #p-login { width: 100%; text-align: center; padding-top: 20px; }
         .name-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
-        .name-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1rem; }
+        .name-btn { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); 
+            color: white; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1rem; 
+        }
         
         .msg-alert-btn {
             background: linear-gradient(45deg, #ff6b6b, #f06595); color: white; border: none;
-            padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; margin-bottom: 20px;
-            animation: pulse 2s infinite; cursor: pointer;
+            padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; margin-bottom: 20px;
+            animation: pulse 2s infinite; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        .input-row { display: flex; align-items: center; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 10px; }
-        .input-label { width: 60px; font-size: 0.9rem; font-weight: bold; color: #ccc; text-align: center; border-left: 1px solid rgba(255,255,255,0.2); }
-        .game-input { flex-grow: 1; background: transparent; border: none; padding: 8px; color: white; font-size: 1rem; font-family: 'Tajawal'; text-align: right; }
+        .input-row { 
+            display: flex; align-items: center; margin-bottom: 10px; 
+            background: rgba(255,255,255,0.05); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .input-label { width: 60px; font-size: 0.9rem; font-weight: bold; color: #94a3b8; text-align: center; border-left: 1px solid rgba(255,255,255,0.1); }
+        .game-input { flex-grow: 1; background: transparent; border: none; padding: 10px; color: white; font-size: 1rem; font-family: 'Tajawal'; text-align: right; }
         
-        .btn-stop { width: 100%; padding: 15px; background: var(--red); color: white; font-weight: 900; border: none; border-radius: 10px; margin-top: 10px; font-size: 1.2rem; }
-        .btn-stop:disabled { background: #333; color: #777; }
+        .btn-stop { width: 100%; padding: 15px; background: var(--danger); color: white; font-weight: 900; border: none; border-radius: 12px; margin-top: 10px; font-size: 1.3rem; box-shadow: 0 5px 20px rgba(244, 63, 94, 0.4); }
+        .btn-stop:disabled { background: #334155; color: #64748b; box-shadow: none; cursor: not-allowed; }
 
         #persistent-image-container { display: none; width: 100%; text-align: center; margin-bottom: 15px; }
         .p-img-persistent { width: 100%; max-width: 200px; border-radius: 10px; border: 2px solid var(--primary); }
 
         /* Correction Screen */
-        .correction-card { background: rgba(255,255,255,0.1); padding: 10px; margin-bottom: 10px; border-radius: 10px; }
-        .corr-ans { display: block; font-size: 1.2rem; font-weight: bold; margin: 5px 0; color: var(--primary); }
+        .correction-card { background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .corr-title { font-size: 0.8rem; color: #94a3b8; display: block; margin-bottom: 5px; }
+        .corr-ans { display: block; font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: white; }
         .corr-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-        .c-btn { padding: 8px; border-radius: 5px; border: 1px solid #555; background: transparent; color: #aaa; font-weight: bold; }
-        .c-btn.selected { color: white; border-color: white; }
-        .cb-10.selected { background: #00e676; color: black; }
-        .cb-5.selected { background: #ff9800; color: black; }
-        .cb-0.selected { background: #f44336; }
+        .c-btn { padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #94a3b8; font-weight: bold; }
+        .c-btn.selected { color: white; border-color: white; box-shadow: 0 0 10px rgba(255,255,255,0.1) inset; }
+        .cb-10.selected { background: var(--accent); border-color: var(--accent); }
+        .cb-5.selected { background: #f59e0b; border-color: #f59e0b; }
+        .cb-0.selected { background: var(--danger); border-color: var(--danger); }
 
         /* --- 5. Admin --- */
-        #scr-admin { padding: 10px; }
-        .admin-controls { width: 100%; margin-bottom: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
-        .char-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 15px; }
-        .char-btn { background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
-        .char-btn.used { background: #000; color: #555; text-decoration: line-through; }
+        #scr-admin { padding: 15px; max-width: 600px; }
+        .admin-controls { width: 100%; margin-bottom: 15px; padding: 15px; }
+        .char-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 15px; }
+        .char-btn { 
+            background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 8px; 
+            cursor: pointer; color: white; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); 
+        }
+        .char-btn:hover { background: var(--primary); border-color: var(--primary); }
+        .char-btn.used { background: #000; color: #444; text-decoration: line-through; cursor: default; border-color: #333; }
         
-        .player-manage-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.1); padding: 10px; margin-bottom: 5px; border-radius: 5px; }
-        .btn-edit-score { background: var(--primary); border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; }
-        .btn-delete-player { background: var(--red); color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; }
+        .player-manage-row { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-radius: 8px; 
+        }
+        .btn-icon { border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 0.9rem; }
+        .btn-edit { background: var(--primary); color: white; }
+        .btn-del { background: var(--danger); color: white; }
 
         /* Overlays */
-        #tv-rating-view, #tv-suggestions-view { display: none; text-align: center; margin-top: 30px; }
-        .rating-score { font-size: 8rem; font-weight: 900; color: var(--primary); }
-        #private-msg-overlay, #tv-qr-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .full-size-img { max-width: 95%; max-height: 80vh; border-radius: 10px; }
-        #stop-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(244, 63, 94, 0.95); z-index: 9000; flex-direction: column; justify-content: center; align-items: center; }
+        #tv-rating-view, #tv-suggestions-view { display: none; text-align: center; margin-top: 30px; width: 100%; }
+        .rating-score { font-size: 10rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 50px rgba(251, 191, 36, 0.5); }
+        .sugg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; width: 95%; margin: 0 auto; }
+        .sugg-card { background: white; color: #0f172a; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; }
+
+        #private-msg-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+        .full-size-img { max-width: 95%; max-height: 80vh; border-radius: 12px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        #stop-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(244, 63, 94, 0.95); backdrop-filter: blur(5px); z-index: 9000; flex-direction: column; justify-content: center; align-items: center; }
+        #stop-overlay h1 { font-size: 5rem; margin: 0; color: white; text-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="private-msg-overlay">
         <img id="msg-img-full" class="full-size-img" src="" alt="رسالة">
-        <button class="btn-main" style="margin-top:20px; background:white; color:black;" onclick="toggleMsg(false)">إغلاق ❌</button>
+        <button class="btn-main" style="margin-top:20px; background:white; color:black; width:auto;" onclick="toggleMsg(false)">إغلاق ❌</button>
     </div>
 
     <div id="stop-overlay">
-        <h1 style="font-size:4rem; margin:0; color:white;">✋ قف!</h1>
-        <h2 id="stopper-name" style="font-size:2rem; color:white;">...</h2>
+        <h1>✋ قف!</h1>
+        <h2 id="stopper-name" style="font-size:2rem; color:white; margin-top:10px;">...</h2>
     </div>
 
-    <div id="scr-landing" class="screen">
+    <div id="scr-landing" class="screen active">
         <button id="btn-start-landing" class="btn-main" onclick="createGame()">ابدأ اللعبة 🚀</button>
     </div>
 
     <div id="scr-connect" class="screen">
         <div class="qr-box">
             <div id="qr-players"></div>
-            <h3 style="color:#333;">امسح للكود للدخول</h3>
+            <h3 style="color:#333; margin:10px 0 0;">امسح للكود للدخول</h3>
         </div>
         <button class="btn-main" style="margin-top:30px;" onclick="goTV()">فتح الشاشة 📺</button>
-        <div style="position:absolute; bottom:10px; left:10px; background:white; padding:5px;">
+        <div style="position:absolute; bottom:20px; left:20px; background:white; padding:5px; border-radius:5px;">
             <div id="qr-admin" class="qr-tiny"></div>
         </div>
     </div>
@@ -179,41 +262,41 @@
     <div id="scr-tv" class="screen">
         <div id="tv-top-scores"></div>
 
-        <button onclick="document.getElementById('tv-qr-overlay').style.display='flex'" style="position:absolute; top:70px; left:20px; z-index:100; background:white; border:none; padding:5px 15px; border-radius:20px; font-weight:bold; cursor:pointer;">📱 الباركود</button>
+        <button id="btn-tv-qr" onclick="document.getElementById('tv-qr-overlay').style.display='flex'">📱 الباركود</button>
 
         <div id="tv-qr-overlay" onclick="this.style.display='none'">
-            <div style="background:#1e1b4b; padding:30px; border-radius:30px; text-align:center; border:2px solid white;">
+            <div style="background:#1e1b4b; padding:40px; border-radius:30px; text-align:center; border:1px solid rgba(255,255,255,0.2);">
                 <h2 style="color:white; margin-bottom:20px;">انضم للعبة</h2>
                 <div id="tv-qr-img-container"></div>
             </div>
         </div>
 
         <div class="tv-header">
-            <div class="big-char-display glass-panel" id="tv-char-display">?</div>
+            <div class="big-char-display" id="tv-char-display">?</div>
             <div class="status-bar" id="tv-status">انتظار المقدم...</div>
         </div>
         
         <div id="tv-results" class="results-grid"></div>
 
         <div id="tv-rating-view">
-            <div class="rating-label" style="color:white; font-size:2rem;">تقييم الجمهور</div>
+            <div class="rating-label" style="color:white; font-size:2rem; margin-bottom:20px;">تقييم الجمهور</div>
             <div class="rating-score" id="tv-final-score">0.0</div>
         </div>
 
         <div id="tv-suggestions-view">
-            <h2 style="color:white; text-align:center;">اقتراحاتكم 💡</h2>
+            <h2 style="color:white; text-align:center; margin-bottom:30px;">اقتراحاتكم 💡</h2>
             <div id="tv-sugg-grid" class="sugg-grid"></div>
         </div>
     </div>
 
     <div id="scr-player" class="screen">
         <div id="p-login">
-            <h2 style="color:white; margin-bottom:20px;">اختر هويتك 👇</h2>
+            <h2 style="color:white; margin-bottom:30px;">اختر هويتك 👇</h2>
             <div id="name-selection-area" class="name-grid"></div>
             <div id="custom-name-area" style="display:none;">
-                <input type="text" id="custom-name-input" class="game-input" style="border:1px solid #ccc; text-align:center; margin-bottom:10px;" placeholder="اكتب اسمك...">
-                <button class="btn-main" style="width:100%;" onclick="submitCustomName()">دخول ✅</button>
-                <button onclick="cancelCustomName()" style="background:none; border:none; margin-top:10px; color:#aaa;">رجوع</button>
+                <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px; border:1px solid rgba(255,255,255,0.3);" placeholder="اكتب اسمك...">
+                <button class="btn-main" onclick="submitCustomName()">دخول ✅</button>
+                <button onclick="cancelCustomName()" style="background:none; border:none; margin-top:15px; color:#cbd5e1; font-weight:bold;">رجوع</button>
             </div>
         </div>
 
@@ -233,11 +316,11 @@
 
             <div id="p-wait" style="text-align:center; margin-top:50px;">
                 <div style="font-size:3rem;">⏳</div>
-                <h3>انتظر الحرف...</h3>
+                <h3 style="color:#94a3b8;">انتظر الحرف...</h3>
             </div>
 
             <div id="p-game" style="display:none;">
-                <div class="char-strip">الحرف: <span id="p-char" style="color:var(--primary); font-size:1.5em;">?</span></div>
+                <div class="char-strip glass-panel">الحرف: <span id="p-char" style="color:var(--gold); font-size:1.5em; font-weight:900;">?</span></div>
                 
                 <div class="input-row"><div class="input-label">إنسان</div><input type="text" id="in-human" class="game-input"></div>
                 <div class="input-row"><div class="input-label">حيوان</div><input type="text" id="in-animal" class="game-input"></div>
@@ -251,48 +334,47 @@
             <div id="p-correction-screen">
                 <h3 style="text-align:center; margin-bottom:20px; color:white;">صحح لنفسك 😉</h3>
                 <div id="correction-list"></div>
-                <div style="text-align:center; margin-top:20px; color:#999;">انتظر النتائج...</div>
+                <div style="text-align:center; margin-top:20px; color:#94a3b8;">انتظر النتائج...</div>
             </div>
         </div>
 
         <div id="p-rating-screen" style="display:none;">
-            <h2 style="color:white;">كم تقيم اللعبة؟ ⭐</h2>
-            <div class="rating-btns" id="rating-btns" style="display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin:20px 0;"></div>
-            <button class="btn-main" onclick="submitRating()">إرسال</button>
+            <h2 style="color:white; margin-bottom:20px;">كم تقيم اللعبة؟ ⭐</h2>
+            <div class="rating-btns" id="rating-btns" style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:20px 0;"></div>
+            <button class="btn-main" onclick="submitRating()">إرسال التقييم</button>
         </div>
 
         <div id="p-suggestion-screen" style="display:none;">
-            <h2 style="color:white;">عندك فكرة؟ 💡</h2>
-            <textarea id="suggestion-input" class="game-input" style="height:100px; border:1px solid #555; text-align:right;" placeholder="اكتب اقتراحك..."></textarea>
+            <h2 style="color:white; margin-bottom:20px;">عندك فكرة؟ 💡</h2>
+            <textarea id="suggestion-input" class="game-input glass-panel" style="height:120px; text-align:right; border:1px solid rgba(255,255,255,0.2);" placeholder="اكتب اقتراحك هنا..."></textarea>
             <button class="btn-main" style="margin-top:20px;" onclick="submitSuggestion()">إرسال</button>
         </div>
     </div>
 
     <div id="scr-admin" class="screen">
-        <div class="admin-controls">
-            <h3 style="color:var(--primary); margin-top:0;">🎮 التحكم</h3>
+        <div class="admin-controls glass-panel">
+            <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">🎮 التحكم</h3>
             
-            <div class="adm-section-title">اختر الحرف</div>
+            <div class="adm-section-title">اختر الحرف (يبدأ فوراً)</div>
             <div id="chars-grid" class="char-grid"></div>
             
-            <button class="btn-main" style="width:100%; background:orange; color:black; margin-top:10px;" onclick="startSelfCorrection()">📝 تفعيل التصحيح</button>
-            <button class="btn-main" style="width:100%; margin-top:10px;" onclick="showResultsToTV()">👀 إظهار النتائج</button>
+            <button class="btn-main" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:black; margin-top:15px;" onclick="startSelfCorrection()">📝 تفعيل التصحيح الذاتي</button>
+            <button class="btn-main" style="margin-top:10px;" onclick="showResultsToTV()">👀 إظهار النتائج في التلفزيون</button>
             
             <div class="adm-section-title">إدارة اللاعبين</div>
             <div id="adm-players-list"></div>
 
             <div class="adm-section-title">النهاية</div>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <button class="btn-main" style="font-size:0.9rem; background:var(--red); color:white;" onclick="startRatingPhase()">⭐ التقييم</button>
-                <button class="btn-main" style="font-size:0.9rem; background:#333; color:white;" onclick="showRatingResult()">📊 النتيجة</button>
-                <button class="btn-main" style="font-size:0.9rem; background:var(--secondary); color:black;" onclick="startSuggestionPhase()">💡 الاقتراحات</button>
-                <button class="btn-main" style="font-size:0.9rem; background:#333; color:white;" onclick="showSuggestionsResult()">👀 العرض</button>
+                <button class="btn-main" style="font-size:0.9rem; background:var(--danger);" onclick="startRatingPhase()">⭐ التقييم</button>
+                <button class="btn-main" style="font-size:0.9rem; background:rgba(255,255,255,0.1);" onclick="showRatingResult()">📊 النتيجة</button>
+                <button class="btn-main" style="font-size:0.9rem; background:var(--accent); color:black;" onclick="startSuggestionPhase()">💡 الاقتراحات</button>
+                <button class="btn-main" style="font-size:0.9rem; background:rgba(255,255,255,0.1);" onclick="showSuggestionsResult()">👀 العرض</button>
             </div>
             
             <div class="adm-section-title">الطوارئ</div>
-            <button class="btn-main" style="width:100%; background:black; border:1px solid #333; color:white;" onclick="fullReset()">⚠️ تصفير اللعبة بالكامل</button>
+            <button class="btn-main" style="background:black; border:1px solid #333;" onclick="fullReset()">⚠️ تصفير اللعبة بالكامل</button>
         </div>
-        <div id="admin-scoring-area"></div>
     </div>
 
     <script>
@@ -329,9 +411,8 @@
         let selectedRating = 0;
         let myCurrentAnswers = {}; 
 
-        // --- التوجيه الذكي المباشر (Instant Routing) ---
+        // --- التوجيه الذكي (بدون شاشة تحميل - فوري) ---
         window.onload = function() {
-            // نخفي كل الشاشات أولاً
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
             if(role === 'admin') {
@@ -341,11 +422,9 @@
                 document.getElementById('scr-player').classList.add('active');
                 initPlayer();
             } else if(roomId) {
-                // إذا في room بس بدون role، هذا يعتبر شاشة "Connect"
                 document.getElementById('scr-connect').classList.add('active');
                 generateQRs();
             } else {
-                // شاشة الهبوط (بدون باراميترز)
                 document.getElementById('scr-landing').classList.add('active');
             }
         };
@@ -359,7 +438,6 @@
             roomId = Math.random().toString(36).substr(2, 6);
             window.history.pushState({}, '', `?room=${roomId}`);
             db.ref(`insan/${roomId}`).set({ state: 'lobby', char: '?' });
-            // تحديث فوري
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('scr-connect').classList.add('active');
             generateQRs();
@@ -394,7 +472,7 @@
                 const suggView = document.getElementById('tv-suggestions-view');
                 const topScores = document.getElementById('tv-top-scores');
 
-                // Top Scores Bar
+                // Top Scores Bar (التراكمي)
                 topScores.innerHTML = '';
                 if(data.players) {
                     const sortedPlayers = Object.values(data.players).sort((a, b) => {
@@ -499,7 +577,6 @@
 
         // --- Player Logic ---
         function initPlayer() {
-            // (الآن يتم استدعاؤها من window.onload)
             const rateGrid = document.getElementById('rating-btns');
             rateGrid.innerHTML = '';
             for(let i=1; i<=10; i++) rateGrid.innerHTML += `<div class="rate-btn" onclick="selectRate(this, ${i})">${i}</div>`;
@@ -672,7 +749,6 @@
 
         // --- Admin Logic ---
         function initAdmin() {
-            // (يتم استدعاؤها من window.onload)
             const grid = document.getElementById('chars-grid');
             arabicChars.forEach(c => {
                 const btn = document.createElement('div');
@@ -690,21 +766,16 @@
                 const data = snap.val();
                 if(!data || !data.players) return;
                 
-                // 1. Manage Players List
                 const pList = document.getElementById('adm-players-list');
                 pList.innerHTML = '';
                 Object.keys(data.players).forEach(pid => {
                     const p = data.players[pid];
                     const currentScore = (p.grandTotal || 0) + getRoundScore(p.scores);
                     pList.innerHTML += `<div class="player-manage-row"><div class="pm-name">${p.name} <span style="color:#aaa">(${currentScore})</span></div><div class="pm-actions">
-                            <button class="btn-edit-score" onclick="editPlayerScore('${pid}', ${p.grandTotal||0})">✏️</button>
-                            <button class="btn-delete-player" onclick="deletePlayer('${pid}', '${p.name}')">🗑️</button>
+                            <button class="btn-icon btn-edit" onclick="editPlayerScore('${pid}', ${p.grandTotal||0})">✏️</button>
+                            <button class="btn-icon btn-del" onclick="deletePlayer('${pid}', '${p.name}')">🗑️</button>
                         </div></div>`;
                 });
-
-                // 2. Scoring Area (Optional view for admin)
-                const area = document.getElementById('admin-scoring-area');
-                area.innerHTML = ''; // Can keep empty if self-correct is main focus
             });
         }
 
