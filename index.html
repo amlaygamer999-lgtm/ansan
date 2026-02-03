@@ -102,15 +102,14 @@
         /* TV Stop Overlay (التنبيه الكبير) */
         #tv-stop-alert {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(220, 38, 38, 0.9); z-index: 9999;
+            background: rgba(220, 38, 38, 0.95); z-index: 9999;
             flex-direction: column; justify-content: center; align-items: center;
-            animation: pulseBg 1s infinite alternate;
+            animation: pulseBg 0.5s infinite alternate;
         }
-        @keyframes pulseBg { from { background: rgba(220, 38, 38, 0.8); } to { background: rgba(185, 28, 28, 0.95); } }
-        #tv-stop-alert h1 { font-size: 8rem; color: white; margin: 0; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        @keyframes pulseBg { from { opacity: 0.95; transform: scale(1); } to { opacity: 1; transform: scale(1.02); } }
+        #tv-stop-alert h1 { font-size: 7rem; color: white; margin: 0; text-shadow: 0 10px 30px rgba(0,0,0,0.5); font-weight: 900; }
         #tv-stop-alert h2 { font-size: 4rem; color: var(--gold); margin: 0; }
 
-        /* زر الباركود في التلفزيون */
         #btn-tv-qr {
             position: absolute; top: 70px; left: 20px; z-index: 100;
             background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);
@@ -152,36 +151,30 @@
         .res-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; }
         .res-table td { padding: 4px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
         .res-cat { color: #94a3b8; width: 50px; font-weight: bold; }
-        .res-val { color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .res-val { color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         
-        /* شارات النقاط الفردية في التلفزيون */
         .tv-score-badge { 
-            padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; 
-            margin-right: 5px; min-width: 25px; text-align: center; 
+            padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; 
+            margin-right: 5px; min-width: 25px; text-align: center; display: inline-block;
         }
-        .ts-10 { background: #00e676; color: black; } 
+        .ts-10 { background: #00e676; color: black; box-shadow: 0 0 5px #00e676; } 
         .ts-5 { background: #f59e0b; color: black; } 
         .ts-0 { background: #f43f5e; color: white; }
 
         /* --- 4. Player --- */
         #scr-player { padding: 20px; max-width: 600px; margin: 0 auto; }
         
-        /* تصميم قائمة اختيار اللاعبين (Grid Avatar) */
         .player-select-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+            display: grid; grid-template-columns: repeat(2, 1fr); 
             gap: 15px; width: 100%; margin-top: 20px;
         }
         .player-select-card {
             background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px; padding: 15px 5px; text-align: center; cursor: pointer;
-            transition: 0.2s; display: flex; flex-direction: column; align-items: center;
+            border-radius: 15px; padding: 20px; text-align: center; cursor: pointer;
+            transition: 0.2s; display: flex; justify-content: center; align-items: center;
         }
-        .player-select-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); border-color: var(--primary); }
-        .player-avatar {
-            width: 70px; height: 70px; border-radius: 50%; object-fit: cover;
-            border: 2px solid var(--gold); margin-bottom: 10px;
-        }
-        .player-name-txt { font-weight: bold; color: white; font-size: 1rem; }
+        .player-select-card:hover { transform: translateY(-3px); background: var(--primary); border-color: white; }
+        .player-name-txt { font-weight: bold; color: white; font-size: 1.2rem; }
 
         .msg-alert-btn {
             background: linear-gradient(45deg, #ff6b6b, #f06595); color: white; border: none;
@@ -480,7 +473,6 @@
             document.getElementById('qr-admin').innerHTML = `<img class="qr-tiny" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(aUrl)}" />`;
             document.getElementById('tv-qr-img-container').innerHTML = `<img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(pUrl)}" />`;
             
-            // Auto TV init if mode=tv
             if(new URLSearchParams(window.location.search).get('mode') === 'tv') {
                 document.getElementById('scr-connect').classList.remove('active');
                 document.getElementById('scr-tv').classList.add('active');
@@ -500,7 +492,6 @@
                 const resultsGrid = document.getElementById('tv-results');
                 const topScores = document.getElementById('tv-top-scores');
 
-                // Update Top Scores (Live)
                 if(data.players) {
                     const sorted = Object.values(data.players).sort((a,b) => (b.grandTotal||0) - (a.grandTotal||0));
                     topScores.innerHTML = '';
@@ -510,13 +501,11 @@
                     });
                 }
 
-                // Handle States
                 resultsGrid.style.display = 'grid';
                 document.getElementById('tv-rating-view').style.display = 'none';
                 document.getElementById('tv-suggestions-view').style.display = 'none';
 
                 if(data.state === 'stopped') {
-                    // Show massive overlay
                     if(!stopOverlayShown) {
                         stopOverlayShown = true;
                         document.getElementById('tv-stopper-name').innerText = data.stopper;
@@ -524,15 +513,17 @@
                         status.innerText = "توقف اللعب!";
                         setTimeout(() => { tvStopAlert.style.display = 'none'; }, 3000);
                     }
+                    // Auto reveal answers immediately on Stop
+                    renderTVResults(data, false); 
                 } else if (data.state === 'playing' || data.state === 'lobby') {
                     stopOverlayShown = false;
                     tvStopAlert.style.display = 'none';
                     status.innerText = (data.state === 'playing') ? "انطلقوا! 🔥" : "انتظار...";
-                    renderTVResults(data, true); // Hide answers
+                    renderTVResults(data, true); 
                 } else if (data.state === 'correction') {
                     tvStopAlert.style.display = 'none';
                     status.innerText = "التصحيح... قارن إجابتك";
-                    renderTVResults(data, false); // Show answers
+                    renderTVResults(data, false); 
                 } else if (data.state === 'results') {
                     status.innerText = "النتائج النهائية للجولة";
                     renderTVResults(data, false);
@@ -566,11 +557,13 @@
                         
                         let badgeHtml = '';
                         if(score !== null) {
+                            // Show specific score badge if available
                             let cls = 'ts-0'; 
                             if(score===10) cls='ts-10'; 
                             if(score===5) cls='ts-5';
                             badgeHtml = `<span class="tv-score-badge ${cls}">${score}</span>`;
                         } else if(data.state === 'correction') {
+                            // Only show '?' if in correction AND score is not set yet
                             badgeHtml = `<span class="tv-score-badge" style="background:#555">؟</span>`;
                         }
 
@@ -608,11 +601,10 @@
 
         // --- Player Logic ---
         function initPlayer() {
-            // Setup Rating
             const rb = document.getElementById('rating-btns');
             for(let i=1; i<=10; i++) rb.innerHTML += `<div class="c-btn" onclick="selectRate(this, ${i})" style="border:1px solid #fff; cursor:pointer;">${i}</div>`;
 
-            // Setup Login Grid with Images
+            // Updated Player List (Without Photos as requested)
             const grid = document.getElementById('name-selection-area');
             playersList.forEach(p => {
                 const card = document.createElement('div');
@@ -626,20 +618,16 @@
                     }
                 };
                 
-                card.innerHTML = `
-                    <img src="${p.img}" class="player-avatar" alt="${p.name}">
-                    <span class="player-name-txt">${p.name}</span>
-                `;
+                // Only showing Name now (No Image)
+                card.innerHTML = `<span class="player-name-txt" style="font-size:1.2rem;">${p.name}</span>`;
                 grid.appendChild(card);
             });
 
-            // Auto-login check
             const storedId = localStorage.getItem('insan_uid');
             if(storedId) {
                 db.ref(`insan/${roomId}/players/${storedId}`).once('value', snap => {
                     if(snap.exists()) {
                         myName = snap.val().name;
-                        // For simplicity, reusing a default image if re-logging
                         login(myName, "other.jpg"); 
                     }
                 });
@@ -685,16 +673,12 @@
             }
         }
 
-        // --- Fast Stop Implementation ---
         function fastStop() {
-            // 1. Send Stop Signal INSTANTLY (Firebase Priority)
             db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: myName });
             
-            // 2. Disable Inputs Locally
             document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
             document.querySelector('.btn-stop').disabled = true;
 
-            // 3. Save Answers
             myCurrentAnswers = {
                 human: document.getElementById('in-human').value,
                 animal: document.getElementById('in-animal').value,
@@ -753,15 +737,8 @@
                         document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
                         document.querySelector('.btn-stop').disabled = true;
                         
-                        // Local fallback for answers
-                        myCurrentAnswers = {
-                            human: document.getElementById('in-human').value,
-                            animal: document.getElementById('in-animal').value,
-                            plant: document.getElementById('in-plant').value,
-                            object: document.getElementById('in-object').value,
-                            country: document.getElementById('in-country').value
-                        };
-                        db.ref(`insan/${roomId}/players/${myId}/answers`).update(myCurrentAnswers);
+                        // Force save immediately so TV updates
+                        saveAnswersLocally();
 
                     } else if (data.state === 'correction') {
                         pCorr.style.display = 'block';
@@ -771,6 +748,17 @@
                     }
                 }
             });
+        }
+
+        function saveAnswersLocally() {
+            myCurrentAnswers = {
+                human: document.getElementById('in-human').value,
+                animal: document.getElementById('in-animal').value,
+                plant: document.getElementById('in-plant').value,
+                object: document.getElementById('in-object').value,
+                country: document.getElementById('in-country').value
+            };
+            db.ref(`insan/${roomId}/players/${myId}/answers`).update(myCurrentAnswers);
         }
 
         function renderCorrection() {
@@ -847,7 +835,6 @@
 
         function startRound(char, btn) {
             if(btn.classList.contains('used')) return;
-            // Archive old scores
             db.ref(`insan/${roomId}/players`).once('value', snap => {
                 let updates = {};
                 if(snap.val()) {
