@@ -7,6 +7,7 @@
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
@@ -61,13 +62,9 @@
         /* --- 1. Landing --- */
         #scr-landing {
             justify-content: center; 
-            background-image: url('insan_bg.jpg'); 
+            /* خلفية بسيطة إذا لم تتوفر الصورة */
+            background: var(--bg-gradient); 
             background-size: cover; background-position: center;
-        }
-        #scr-landing::after {
-            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
-            z-index: 1; pointer-events: none;
         }
         #btn-start-landing {
             position: absolute; bottom: 40px; right: 30px; z-index: 10;
@@ -80,8 +77,11 @@
         .qr-box { 
             background: white; padding: 20px; border-radius: 20px; text-align: center; 
             box-shadow: 0 0 40px rgba(255,255,255,0.1); margin-bottom: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .qr-img { width: 250px; height: 250px; }
+        /* تعديل لعرض الباركود بشكل صحيح */
+        .qr-code-display { padding: 10px; background: white; }
+        .qr-code-display img { display: block; margin: 0 auto; }
 
         /* --- 3. TV Screen --- */
         #scr-tv { padding-top: 70px; }
@@ -164,7 +164,7 @@
         /* --- 4. Player --- */
         #scr-player { padding: 20px; max-width: 600px; margin: 0 auto; }
         
-        /* قائمة اللاعبين (بدون صور) */
+        /* قائمة اللاعبين */
         .player-select-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); 
             gap: 15px; width: 100%; margin-top: 20px;
@@ -261,12 +261,12 @@
 
     <div id="scr-connect" class="screen">
         <div class="qr-box">
-            <div id="qr-players"></div>
-            <h3 style="color:#333; margin:10px 0 0;">امسح للكود للدخول</h3>
+            <div id="qr-players" class="qr-code-display"></div>
+            <h3 style="color:#333; margin:10px 0 0;">امسح الكود للدخول</h3>
         </div>
         <button class="btn-main" style="margin-top:30px;" onclick="goTV()">فتح الشاشة 📺</button>
         <div style="position:absolute; bottom:20px; left:20px; background:white; padding:5px; border-radius:5px;">
-            <div id="qr-admin" class="qr-tiny"></div>
+            <div id="qr-admin" class="qr-code-display"></div>
         </div>
     </div>
 
@@ -283,7 +283,7 @@
         <div id="tv-qr-overlay" onclick="this.style.display='none'">
             <div style="background:#1e1b4b; padding:40px; border-radius:30px; text-align:center; border:1px solid rgba(255,255,255,0.2);">
                 <h2 style="color:white; margin-bottom:20px;">انضم للعبة</h2>
-                <div id="tv-qr-img-container"></div>
+                <div id="tv-qr-img-container" class="qr-code-display" style="border-radius:10px;"></div>
             </div>
         </div>
 
@@ -442,8 +442,14 @@
                 document.getElementById('scr-player').classList.add('active');
                 initPlayer();
             } else if(roomId) {
-                document.getElementById('scr-connect').classList.add('active');
-                generateQRs();
+                // إذا دخل عن طريق رابط الغرفة (الشاشة أو الجوال)
+                if(new URLSearchParams(window.location.search).get('mode') === 'tv') {
+                    document.getElementById('scr-tv').classList.add('active');
+                    initTV();
+                } else {
+                    document.getElementById('scr-connect').classList.add('active');
+                    generateQRs();
+                }
             } else {
                 document.getElementById('scr-landing').classList.add('active');
             }
@@ -470,19 +476,35 @@
             const pUrl = base+`?room=${roomId}&role=player`;
             const aUrl = base+`?room=${roomId}&role=admin`;
             
-            document.getElementById('qr-players').innerHTML = `<img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pUrl)}" />`;
-            document.getElementById('qr-admin').innerHTML = `<img class="qr-tiny" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(aUrl)}" />`;
-            document.getElementById('tv-qr-img-container').innerHTML = `<img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(pUrl)}" />`;
-            
-            if(new URLSearchParams(window.location.search).get('mode') === 'tv') {
-                document.getElementById('scr-connect').classList.remove('active');
-                document.getElementById('scr-tv').classList.add('active');
-                initTV();
-            }
+            // استخدام مكتبة qrcodejs بدلاً من الصور الخارجية لضمان السرعة والظهور
+            document.getElementById('qr-players').innerHTML = '';
+            new QRCode(document.getElementById('qr-players'), {
+                text: pUrl,
+                width: 250,
+                height: 250
+            });
+
+            document.getElementById('qr-admin').innerHTML = '';
+            new QRCode(document.getElementById('qr-admin'), {
+                text: aUrl,
+                width: 100,
+                height: 100
+            });
+
+            // توليد باركود التلفزيون أيضاً ليكون جاهزاً عند الطلب
+            document.getElementById('tv-qr-img-container').innerHTML = '';
+            new QRCode(document.getElementById('tv-qr-img-container'), {
+                text: pUrl,
+                width: 300,
+                height: 300
+            });
         }
 
         // --- TV Logic ---
         function initTV() {
+            // تأكد من توليد الباركود الاحتياطي للتلفزيون حتى لو دخلنا مباشرة
+            generateQRs();
+
             db.ref(`insan/${roomId}`).on('value', snap => {
                 const data = snap.val();
                 if(!data) return;
@@ -602,7 +624,6 @@
             const rb = document.getElementById('rating-btns');
             for(let i=1; i<=10; i++) rb.innerHTML += `<div class="c-btn" onclick="selectRate(this, ${i})" style="border:1px solid #fff; cursor:pointer;">${i}</div>`;
 
-            // Updated Player List (Without Photos as requested)
             const grid = document.getElementById('name-selection-area');
             playersList.forEach(p => {
                 const card = document.createElement('div');
@@ -616,7 +637,6 @@
                     }
                 };
                 
-                // Only showing Name now (No Image)
                 card.innerHTML = `<span class="player-name-txt" style="font-size:1.2rem;">${p.name}</span>`;
                 grid.appendChild(card);
             });
@@ -672,11 +692,7 @@
         }
 
         function fastStop() {
-            db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: myName });
-            
-            document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
-            document.querySelector('.btn-stop').disabled = true;
-
+            // حفظ الإجابات قبل إرسال التوقف
             myCurrentAnswers = {
                 human: document.getElementById('in-human').value,
                 animal: document.getElementById('in-animal').value,
@@ -684,7 +700,12 @@
                 object: document.getElementById('in-object').value,
                 country: document.getElementById('in-country').value
             };
-            db.ref(`insan/${roomId}/players/${myId}/answers`).set(myCurrentAnswers);
+            db.ref(`insan/${roomId}/players/${myId}/answers`).set(myCurrentAnswers).then(() => {
+                db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: myName });
+            });
+
+            document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
+            document.querySelector('.btn-stop').disabled = true;
         }
 
         function listenGame() {
@@ -693,15 +714,12 @@
                 if(!data) return;
 
                 document.getElementById('p-char').innerText = data.char;
-                
-                // Logic to FORCE show dashboard unless specifically in special states
                 const state = data.state || 'lobby';
                 
                 const pDash = document.getElementById('p-dashboard');
                 const pRate = document.getElementById('p-rating-screen');
                 const pSugg = document.getElementById('p-suggestion-screen');
 
-                // Reset visibility
                 pRate.style.display = 'none';
                 pSugg.style.display = 'none';
                 
@@ -712,7 +730,6 @@
                     pDash.style.display = 'none';
                     pSugg.style.display = 'block';
                 } else {
-                    // Default for all game states (lobby, playing, stopped, correction)
                     pDash.style.display = 'block';
                     
                     const pWait = document.getElementById('p-wait');
@@ -720,7 +737,6 @@
                     const pCorr = document.getElementById('p-correction-screen');
                     const stopOver = document.getElementById('stop-overlay');
 
-                    // Player Stop Overlay
                     if(state === 'stopped') {
                         if(!stopOverlayShown) {
                             document.getElementById('stopper-name').innerText = data.stopper;
@@ -735,13 +751,16 @@
                         pGame.style.display = 'block';
                         document.querySelectorAll('.game-input').forEach(i => i.disabled = false);
                         document.querySelector('.btn-stop').disabled = false;
+                        
+                        // [FIX] مسح قائمة التصحيح القديمة عند بدء جولة جديدة
+                        document.getElementById('correction-list').innerHTML = '';
+                        // [FIX] تصفير الإجابات المحفوظة في الذاكرة لتجنب ظهور القديمة
+                        myCurrentAnswers = {};
+
                         if(!window.roundCleaned) {
                             document.querySelectorAll('.game-input').forEach(i => i.value = '');
                             window.roundCleaned = true;
                         }
-                    } else if (state === 'spinning') {
-                        pWait.style.display = 'block';
-                        window.roundCleaned = false; 
                     } else if (state === 'stopped') {
                         pGame.style.display = 'block';
                         document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
@@ -753,8 +772,8 @@
                         pCorr.style.display = 'block';
                         renderCorrection();
                     } else {
-                        // Lobby or any other state
                         pWait.style.display = 'block';
+                        window.roundCleaned = false; 
                     }
                 }
             });
