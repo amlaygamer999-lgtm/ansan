@@ -62,7 +62,6 @@
         /* --- 1. Landing --- */
         #scr-landing {
             justify-content: center; 
-            /* خلفية بسيطة إذا لم تتوفر الصورة */
             background: var(--bg-gradient); 
             background-size: cover; background-position: center;
         }
@@ -79,7 +78,6 @@
             box-shadow: 0 0 40px rgba(255,255,255,0.1); margin-bottom: 20px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        /* تعديل لعرض الباركود بشكل صحيح */
         .qr-code-display { padding: 10px; background: white; }
         .qr-code-display img { display: block; margin: 0 auto; }
 
@@ -442,7 +440,6 @@
                 document.getElementById('scr-player').classList.add('active');
                 initPlayer();
             } else if(roomId) {
-                // إذا دخل عن طريق رابط الغرفة (الشاشة أو الجوال)
                 if(new URLSearchParams(window.location.search).get('mode') === 'tv') {
                     document.getElementById('scr-tv').classList.add('active');
                     initTV();
@@ -476,7 +473,6 @@
             const pUrl = base+`?room=${roomId}&role=player`;
             const aUrl = base+`?room=${roomId}&role=admin`;
             
-            // استخدام مكتبة qrcodejs بدلاً من الصور الخارجية لضمان السرعة والظهور
             document.getElementById('qr-players').innerHTML = '';
             new QRCode(document.getElementById('qr-players'), {
                 text: pUrl,
@@ -491,7 +487,6 @@
                 height: 100
             });
 
-            // توليد باركود التلفزيون أيضاً ليكون جاهزاً عند الطلب
             document.getElementById('tv-qr-img-container').innerHTML = '';
             new QRCode(document.getElementById('tv-qr-img-container'), {
                 text: pUrl,
@@ -502,9 +497,7 @@
 
         // --- TV Logic ---
         function initTV() {
-            // تأكد من توليد الباركود الاحتياطي للتلفزيون حتى لو دخلنا مباشرة
             generateQRs();
-
             db.ref(`insan/${roomId}`).on('value', snap => {
                 const data = snap.val();
                 if(!data) return;
@@ -757,6 +750,7 @@
                         // [FIX] تصفير الإجابات المحفوظة في الذاكرة لتجنب ظهور القديمة
                         myCurrentAnswers = {};
 
+                        // [FIX] التأكد من مسح الخانات إذا لم يتم مسحها في هذه الجولة
                         if(!window.roundCleaned) {
                             document.querySelectorAll('.game-input').forEach(i => i.value = '');
                             window.roundCleaned = true;
@@ -767,10 +761,14 @@
                         document.querySelector('.btn-stop').disabled = true;
                         
                         saveAnswersLocally();
+                        // [FIX] إعادة ضبط المؤشر ليتم المسح في بداية الجولة القادمة
+                        window.roundCleaned = false;
 
                     } else if (state === 'correction') {
                         pCorr.style.display = 'block';
                         renderCorrection();
+                        // [FIX] إعادة ضبط المؤشر
+                        window.roundCleaned = false;
                     } else {
                         pWait.style.display = 'block';
                         window.roundCleaned = false; 
