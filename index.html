@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>إنسان حيوان PRO 🦁</title>
     
+    <!-- مكاتب Firebase والباركود -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -81,6 +82,12 @@
         .qr-code-display { padding: 10px; background: white; }
         .qr-code-display img { display: block; margin: 0 auto; }
 
+        /* Warning Banner */
+        #local-warning {
+            display: none; background: #f59e0b; color: #000; padding: 10px; 
+            border-radius: 8px; margin-bottom: 15px; font-weight: bold; text-align: center; font-size: 0.9rem;
+        }
+
         /* --- 3. TV Screen --- */
         #scr-tv { padding-top: 70px; }
         
@@ -97,7 +104,14 @@
         }
         .score-pill span { color: var(--gold); font-weight: 900; font-size: 1.1rem; }
 
-        /* TV Stop Overlay */
+        /* TV Timer & Stop Overlay */
+        .timer-display {
+            font-size: 4rem; font-weight: 900; color: var(--gold);
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            margin: 10px 0;
+        }
+        .timer-critical { color: var(--danger); animation: pulse 0.5s infinite; }
+
         #tv-stop-alert {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(220, 38, 38, 0.95); z-index: 9999;
@@ -189,8 +203,10 @@
         .input-label { width: 60px; font-size: 0.9rem; font-weight: bold; color: #94a3b8; text-align: center; border-left: 1px solid rgba(255,255,255,0.1); }
         .game-input { flex-grow: 1; background: transparent; border: none; padding: 10px; color: white; font-size: 1rem; font-family: 'Tajawal'; text-align: right; }
         
-        .btn-stop { width: 100%; padding: 15px; background: var(--danger); color: white; font-weight: 900; border: none; border-radius: 12px; margin-top: 10px; font-size: 1.3rem; box-shadow: 0 5px 20px rgba(244, 63, 94, 0.4); }
-        .btn-stop:disabled { background: #334155; color: #64748b; box-shadow: none; cursor: not-allowed; }
+        /* مؤقت اللاعب */
+        #p-timer {
+            font-size: 2.5rem; color: var(--gold); text-align: center; margin: 10px 0; font-weight: bold;
+        }
 
         #persistent-image-container { display: none; width: 100%; text-align: center; margin-bottom: 15px; }
         .p-img-persistent { width: 100%; max-width: 200px; border-radius: 10px; border: 2px solid var(--primary); }
@@ -259,6 +275,8 @@
 
     <div id="scr-connect" class="screen">
         <div class="qr-box">
+            <!-- تحذير الاستضافة -->
+            <div id="local-warning">⚠️ تنبيه: لكي يعمل الباركود على الجوالات، يجب رفع هذا الملف على استضافة (Hosting) ليصبح رابطاً حقيقياً.</div>
             <div id="qr-players" class="qr-code-display"></div>
             <h3 style="color:#333; margin:10px 0 0;">امسح الكود للدخول</h3>
         </div>
@@ -273,7 +291,6 @@
 
         <div id="tv-stop-alert">
             <h1>🚨 انتهى الوقت!</h1>
-            <h2 id="tv-stopper-name">...</h2>
         </div>
 
         <button id="btn-tv-qr" onclick="document.getElementById('tv-qr-overlay').style.display='flex'">📱 الباركود</button>
@@ -282,11 +299,13 @@
             <div style="background:#1e1b4b; padding:40px; border-radius:30px; text-align:center; border:1px solid rgba(255,255,255,0.2);">
                 <h2 style="color:white; margin-bottom:20px;">انضم للعبة</h2>
                 <div id="tv-qr-img-container" class="qr-code-display" style="border-radius:10px;"></div>
+                <p style="color:#ccc; margin-top:10px;">* تأكد أن الموقع مرفوع على استضافة</p>
             </div>
         </div>
 
         <div class="tv-header">
             <div class="big-char-display" id="tv-char-display">?</div>
+            <div id="tv-timer" class="timer-display">15</div>
             <div class="status-bar" id="tv-status">انتظار المقدم...</div>
         </div>
         
@@ -339,6 +358,7 @@
 
             <div id="p-game" style="display:none;">
                 <div class="char-strip glass-panel">الحرف: <span id="p-char" style="color:var(--gold); font-size:1.5em; font-weight:900;">?</span></div>
+                <div id="p-timer">15</div>
                 
                 <div class="input-row"><div class="input-label">إنسان</div><input type="text" id="in-human" class="game-input"></div>
                 <div class="input-row"><div class="input-label">حيوان</div><input type="text" id="in-animal" class="game-input"></div>
@@ -346,7 +366,7 @@
                 <div class="input-row"><div class="input-label">جماد</div><input type="text" id="in-object" class="game-input"></div>
                 <div class="input-row"><div class="input-label">بلاد</div><input type="text" id="in-country" class="game-input"></div>
 
-                <button class="btn-stop" onclick="fastStop()">✋ قف (خلصت!)</button>
+                <div style="text-align:center; color:#aaa; margin-top:20px; font-size:0.9rem;">سينتهي الوقت تلقائياً</div>
             </div>
 
             <div id="p-correction-screen">
@@ -428,6 +448,7 @@
         let stopOverlayShown = false; 
         let selectedRating = 0;
         let myCurrentAnswers = {}; 
+        let timerInterval = null;
 
         // --- Fast Init ---
         window.onload = function() {
@@ -473,6 +494,11 @@
             const pUrl = base+`?room=${roomId}&role=player`;
             const aUrl = base+`?room=${roomId}&role=admin`;
             
+            // تحقق من البروتوكول
+            if(window.location.protocol === 'file:') {
+                document.getElementById('local-warning').style.display = 'block';
+            }
+
             document.getElementById('qr-players').innerHTML = '';
             new QRCode(document.getElementById('qr-players'), {
                 text: pUrl,
@@ -493,6 +519,39 @@
                 width: 300,
                 height: 300
             });
+        }
+
+        // --- Timer Logic ---
+        function updateTimerUI(endTime) {
+            const now = Date.now();
+            const left = Math.max(0, Math.ceil((endTime - now) / 1000));
+            
+            const tvTimer = document.getElementById('tv-timer');
+            const pTimer = document.getElementById('p-timer');
+            
+            if(tvTimer) tvTimer.innerText = left;
+            if(pTimer) pTimer.innerText = left;
+
+            if(left <= 5) {
+                if(tvTimer) tvTimer.classList.add('timer-critical');
+                if(pTimer) pTimer.style.color = 'var(--danger)';
+            } else {
+                if(tvTimer) tvTimer.classList.remove('timer-critical');
+                if(pTimer) pTimer.style.color = 'var(--gold)';
+            }
+            return left;
+        }
+
+        function startTimer(endTime) {
+            if(timerInterval) clearInterval(timerInterval);
+            updateTimerUI(endTime);
+            timerInterval = setInterval(() => {
+                const left = updateTimerUI(endTime);
+                if(left <= 0) {
+                    clearInterval(timerInterval);
+                    document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
+                }
+            }, 1000);
         }
 
         // --- TV Logic ---
@@ -522,18 +581,24 @@
                 document.getElementById('tv-suggestions-view').style.display = 'none';
 
                 if(data.state === 'stopped') {
+                    if(timerInterval) clearInterval(timerInterval);
                     if(!stopOverlayShown) {
                         stopOverlayShown = true;
-                        document.getElementById('tv-stopper-name').innerText = data.stopper;
                         tvStopAlert.style.display = 'flex';
-                        status.innerText = "توقف اللعب!";
+                        status.innerText = "انتهى الوقت!";
                         setTimeout(() => { tvStopAlert.style.display = 'none'; }, 3000);
                     }
                     renderTVResults(data, false); 
-                } else if (data.state === 'playing' || data.state === 'lobby') {
+                } else if (data.state === 'playing') {
                     stopOverlayShown = false;
                     tvStopAlert.style.display = 'none';
-                    status.innerText = (data.state === 'playing') ? "انطلقوا! 🔥" : "انتظار...";
+                    status.innerText = "انطلقوا! 🔥";
+                    renderTVResults(data, true);
+                    
+                    if(data.endTime) startTimer(data.endTime);
+
+                } else if (data.state === 'lobby') {
+                    status.innerText = "انتظار...";
                     renderTVResults(data, true); 
                 } else if (data.state === 'correction') {
                     tvStopAlert.style.display = 'none';
@@ -684,23 +749,6 @@
             }
         }
 
-        function fastStop() {
-            // حفظ الإجابات قبل إرسال التوقف
-            myCurrentAnswers = {
-                human: document.getElementById('in-human').value,
-                animal: document.getElementById('in-animal').value,
-                plant: document.getElementById('in-plant').value,
-                object: document.getElementById('in-object').value,
-                country: document.getElementById('in-country').value
-            };
-            db.ref(`insan/${roomId}/players/${myId}/answers`).set(myCurrentAnswers).then(() => {
-                db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: myName });
-            });
-
-            document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
-            document.querySelector('.btn-stop').disabled = true;
-        }
-
         function listenGame() {
             db.ref(`insan/${roomId}`).on('value', snap => {
                 const data = snap.val();
@@ -732,7 +780,7 @@
 
                     if(state === 'stopped') {
                         if(!stopOverlayShown) {
-                            document.getElementById('stopper-name').innerText = data.stopper;
+                            document.getElementById('stopper-name').innerText = "انتهى الوقت!";
                             stopOver.style.display = 'flex';
                             setTimeout(() => stopOver.style.display='none', 3000);
                         }
@@ -743,33 +791,33 @@
                     if(state === 'playing') {
                         pGame.style.display = 'block';
                         document.querySelectorAll('.game-input').forEach(i => i.disabled = false);
-                        document.querySelector('.btn-stop').disabled = false;
                         
-                        // [FIX] مسح قائمة التصحيح القديمة عند بدء جولة جديدة
+                        // بدء المؤقت المحلي
+                        if(data.endTime) startTimer(data.endTime);
+
                         document.getElementById('correction-list').innerHTML = '';
-                        // [FIX] تصفير الإجابات المحفوظة في الذاكرة لتجنب ظهور القديمة
                         myCurrentAnswers = {};
 
-                        // [FIX] التأكد من مسح الخانات إذا لم يتم مسحها في هذه الجولة
                         if(!window.roundCleaned) {
                             document.querySelectorAll('.game-input').forEach(i => i.value = '');
                             window.roundCleaned = true;
                         }
                     } else if (state === 'stopped') {
+                        if(timerInterval) clearInterval(timerInterval);
                         pGame.style.display = 'block';
                         document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
-                        document.querySelector('.btn-stop').disabled = true;
                         
                         saveAnswersLocally();
-                        // [FIX] إعادة ضبط المؤشر ليتم المسح في بداية الجولة القادمة
+                        
                         window.roundCleaned = false;
 
                     } else if (state === 'correction') {
+                        if(timerInterval) clearInterval(timerInterval);
                         pCorr.style.display = 'block';
                         renderCorrection();
-                        // [FIX] إعادة ضبط المؤشر
                         window.roundCleaned = false;
                     } else {
+                        if(timerInterval) clearInterval(timerInterval);
                         pWait.style.display = 'block';
                         window.roundCleaned = false; 
                     }
@@ -820,7 +868,6 @@
         function selectRate(btn, val) {
             document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-            btn.style.backgroundColor = "var(--primary)";
             selectedRating = val;
         }
         function submitRating() { if(!selectedRating) return; db.ref(`insan/${roomId}/players/${myId}/rating`).set(selectedRating); alert("تم الإرسال"); }
@@ -862,6 +909,10 @@
 
         function startRound(char, btn) {
             if(btn.classList.contains('used')) return;
+            
+            // حساب وقت النهاية (15 ثانية من الآن)
+            const endTime = Date.now() + 15000;
+
             db.ref(`insan/${roomId}/players`).once('value', snap => {
                 let updates = {};
                 if(snap.val()) {
@@ -876,9 +927,15 @@
                 }
                 updates[`insan/${roomId}/state`] = 'playing';
                 updates[`insan/${roomId}/char`] = char;
+                updates[`insan/${roomId}/endTime`] = endTime;
                 updates[`insan/${roomId}/usedChars/${char}`] = true;
                 db.ref().update(updates);
                 btn.classList.add('used');
+
+                // إيقاف اللعبة تلقائياً بعد 15 ثانية
+                setTimeout(() => {
+                    db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: 'الوقت انتهى' });
+                }, 15000);
             });
         }
 
