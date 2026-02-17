@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- إعدادات SEO للظهور في جوجل -->
-    <title>لعبة إنسان حيوان PRO - تحدي الـ 15 ثانية 🦁</title>
-    <meta name="description" content="لعبة إنسان حيوان نبات جماد بلاد أونلاين. تحدي السرعة بدون مؤقت في الجوال! العب مع أصدقائك الآن.">
-    <meta name="keywords" content="لعبة إنسان حيوان, مسابقات, ألعاب جماعية, تحدي, ذكاء">
+    <title>إنسان حيوان PRO 🦁</title>
     
-    <!-- مكاتب Firebase والباركود -->
+    <!-- Firebase & QRCode -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -18,9 +15,6 @@
     <style>
         :root {
             --bg-dark: #0f172a;
-            --bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
-            --glass: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
             --primary: #8b5cf6; 
             --secondary: #ec4899; 
             --accent: #10b981; 
@@ -34,9 +28,7 @@
         body {
             margin: 0; padding: 0;
             font-family: 'Tajawal', sans-serif;
-            background: var(--bg-dark);
-            background-image: var(--bg-gradient);
-            background-attachment: fixed;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
             color: var(--text);
             height: 100vh;
             overflow: hidden;
@@ -47,9 +39,8 @@
         .active { display: flex; }
 
         .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
@@ -57,207 +48,190 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white; border: none; padding: 12px 30px;
             font-size: 1.1rem; font-weight: bold; border-radius: 50px;
-            cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-            font-family: 'Tajawal'; width: 100%; max-width: 300px;
+            cursor: pointer; margin: 5px; width: 90%; max-width: 300px;
         }
-        .btn-main:active { transform: scale(0.98); }
-
-        /* --- Landing & Connect --- */
-        #scr-landing { justify-content: center; background: var(--bg-gradient); background-size: cover; }
-        #btn-start-landing { position: absolute; bottom: 40px; right: 30px; z-index: 10; background: linear-gradient(135deg, var(--gold), #d97706); color: black; }
         
-        #scr-connect { justify-content: center; padding: 20px; }
-        .qr-box { background: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
-        .qr-code-display { padding: 10px; background: white; }
-        .qr-code-display img { display: block; margin: 0 auto; }
-        #local-warning { display: none; background: #f59e0b; color: #000; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; font-size: 0.9rem; text-align: center; }
-
-        /* --- TV Screen --- */
-        #scr-tv { padding-top: 70px; }
+        /* --- TV Styles --- */
+        #scr-tv { padding-top: 20px; }
+        .timer-display { font-size: 6rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); margin: 10px 0; }
+        .big-char { font-size: 8rem; font-weight: 900; color: white; background: rgba(255,255,255,0.1); width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; border-radius: 30px; }
         
-        #tv-top-scores {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px); display: flex; align-items: center; 
-            overflow-x: auto; padding: 0 20px; z-index: 90; gap: 10px; scrollbar-width: none;
-        }
-        .score-pill {
-            background: rgba(255,255,255,0.05); color: white; padding: 5px 15px; 
-            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); 
-            white-space: nowrap; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;
-        }
-        .score-pill span { color: var(--gold); font-weight: 900; font-size: 1.1rem; }
-
-        /* TV Timer */
-        .timer-display {
-            font-size: 6rem; font-weight: 900; color: var(--gold);
-            text-shadow: 0 0 30px rgba(251, 191, 36, 0.6);
-            margin: 10px 0; font-family: 'Courier New', monospace;
-        }
-        .timer-critical { color: var(--danger); animation: pulse 0.5s infinite; }
-
-        #tv-stop-alert {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(220, 38, 38, 0.95); z-index: 9999;
-            flex-direction: column; justify-content: center; align-items: center;
-            animation: pulseBg 0.5s infinite alternate;
-        }
-        @keyframes pulseBg { from { opacity: 0.9; } to { opacity: 1; } }
-        #tv-stop-alert h1 { font-size: 6rem; color: white; margin: 0; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-
-        #btn-tv-qr { position: absolute; top: 70px; left: 20px; z-index: 100; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); }
-        #tv-qr-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; }
-
-        .tv-header { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
-        .big-char-display {
-            font-size: 8rem; font-weight: 900; color: transparent;
-            background: linear-gradient(to bottom, #fff, #cbd5e1); -webkit-background-clip: text;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
-            border: 5px solid rgba(255,255,255,0.1); border-radius: 30px; 
-            width: 150px; height: 150px; display: flex; justify-content: center; align-items: center;
-            background-color: rgba(255,255,255,0.02); margin-top: 10px;
-        }
-        .status-bar { font-size: 1.5rem; font-weight: bold; margin-top: 10px; color: #cbd5e1; }
-
-        /* Results Grid */
-        .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 98%; padding: 10px; align-content: start; }
-        .result-card { 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 12px; padding: 10px; text-align: right; 
-            transition: 0.3s; animation: popIn 0.3s ease-out;
-        }
-        .res-header { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 5px; }
-        .res-name { font-weight: bold; color: white; }
-        .res-total { background: var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; }
-        .res-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; }
-        .res-table td { padding: 4px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
-        .res-cat { color: #94a3b8; width: 50px; font-weight: bold; }
-        .res-val { color: white; font-weight: bold; }
+        .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 98%; padding: 10px; }
+        .result-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 10px; text-align: right; }
+        .res-header { display: flex; justify-content: space-between; border-bottom: 1px solid #ffffff22; padding-bottom: 5px; margin-bottom: 5px; }
+        .res-name { font-weight: bold; color: var(--gold); }
+        .res-total { background: var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.9rem; }
+        .res-table td { padding: 3px; border-bottom: 1px solid #ffffff11; font-size: 0.85rem; }
         
-        .tv-score-badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-right: 5px; display: inline-block; }
-        .ts-10 { background: #00e676; color: black; } 
-        .ts-5 { background: #f59e0b; color: black; } 
-        .ts-0 { background: #f43f5e; color: white; }
+        .ts-10 { background: #10b981; color: black; padding: 0 5px; border-radius: 4px; }
+        .ts-5 { background: #f59e0b; color: black; padding: 0 5px; border-radius: 4px; }
+        .ts-0 { background: #f43f5e; color: white; padding: 0 5px; border-radius: 4px; }
 
-        /* --- Player Screen --- */
-        #scr-player { padding: 20px; max-width: 600px; margin: 0 auto; }
-        .player-select-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-        .player-select-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; }
-        .input-row { display: flex; align-items: center; margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
-        .input-label { width: 60px; font-size: 0.9rem; font-weight: bold; color: #94a3b8; text-align: center; border-left: 1px solid rgba(255,255,255,0.1); }
-        .game-input { flex-grow: 1; background: transparent; border: none; padding: 10px; color: white; font-size: 1rem; font-family: 'Tajawal'; text-align: right; }
+        /* --- Player Styles --- */
+        #scr-player { padding: 20px; max-width: 600px; }
+        .player-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 20px; }
+        .player-card-btn { background: rgba(255,255,255,0.1); border: 1px solid #ffffff33; padding: 20px; border-radius: 15px; color: white; font-size: 1.2rem; cursor: pointer; }
         
-        /* رسالة التوقف للاعب */
-        #p-stop-msg { text-align: center; color: var(--danger); font-weight: bold; margin-top: 20px; display: none; font-size: 1.2rem; }
+        .input-row { display: flex; align-items: center; margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 10px; }
+        .input-label { width: 60px; text-align: center; color: #ccc; font-weight: bold; border-left: 1px solid #ffffff33; }
+        .game-input { flex-grow: 1; background: transparent; border: none; padding: 10px; color: white; font-size: 1.1rem; text-align: right; }
+        
+        /* Correction UI */
+        .correction-card { background: rgba(255,255,255,0.05); padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ffffff22; }
+        .corr-ans { display: block; font-size: 1.3rem; font-weight: bold; margin: 10px 0; color: var(--gold); }
+        .corr-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .c-btn { padding: 10px; border-radius: 8px; border: 1px solid #ffffff44; background: transparent; color: white; font-weight: bold; cursor: pointer; }
+        .c-btn.selected { border: 2px solid white; box-shadow: 0 0 10px white; }
+        .cb-10.selected { background: var(--accent); }
+        .cb-5.selected { background: #f59e0b; }
+        .cb-0.selected { background: var(--danger); }
 
-        /* --- Admin --- */
-        #scr-admin { padding: 15px; max-width: 600px; }
-        .admin-controls { padding: 15px; }
-        .char-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 15px; }
-        .char-btn { background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
-        .char-btn:hover { background: var(--primary); }
-        .char-btn.used { background: #000; color: #444; text-decoration: line-through; cursor: default; }
-        .player-manage-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-radius: 8px; }
+        /* Suggestions UI */
+        .sugg-area { width: 100%; height: 150px; background: rgba(255,255,255,0.1); border: 1px solid #ffffff44; color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; }
 
-        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        /* --- Admin Styles --- */
+        .admin-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px; }
+        .adm-btn { border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin-left: 5px; font-weight: bold; }
+        .btn-del { background: var(--danger); color: white; }
+        .btn-edit { background: var(--gold); color: black; }
+        
+        .char-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 20px; }
+        .char-btn { background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; }
+        .char-btn.used { background: #000; color: #555; text-decoration: line-through; }
+
+        /* Overlays */
+        #tv-stop-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(220, 38, 38, 0.95); z-index: 99; flex-direction: column; justify-content: center; align-items: center; }
+        #tv-stop-alert h1 { font-size: 5rem; margin: 0; }
+        
+        #local-warning { display: none; background: #f59e0b; color: black; padding: 10px; margin: 10px; border-radius: 5px; text-align: center; }
     </style>
 </head>
 <body>
 
+    <!-- ==================== Landing ==================== -->
     <div id="scr-landing" class="screen active">
-        <button id="btn-start-landing" class="btn-main" onclick="createGame()">ابدأ اللعبة 🚀</button>
+        <h1 style="font-size:3rem; margin-bottom:10px;">إنسان حيوان PRO</h1>
+        <button class="btn-main" onclick="createGame()">إنشاء غرفة جديدة 🎮</button>
     </div>
 
+    <!-- ==================== Connect (QR) ==================== -->
     <div id="scr-connect" class="screen">
-        <div class="qr-box">
+        <div class="glass-panel" style="padding:20px; text-align:center; margin-top:50px;">
             <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
-            <div id="qr-players" class="qr-code-display"></div>
-            <h3 style="color:#333; margin:10px 0 0;">امسح الكود للدخول</h3>
+            <div id="qr-players" style="background:white; padding:10px; display:inline-block; border-radius:10px;"></div>
+            <h3>امسح للكود للدخول</h3>
         </div>
-        <button class="btn-main" style="margin-top:30px;" onclick="goTV()">فتح الشاشة 📺</button>
-        <div style="position:absolute; bottom:20px; left:20px; background:white; padding:5px; border-radius:5px;">
-            <div id="qr-admin" class="qr-code-display"></div>
+        <button class="btn-main" onclick="goTV()">شاشة التلفزيون 📺</button>
+        <div style="position:fixed; bottom:10px; left:10px; background:white; padding:5px;">
+            <div id="qr-admin"></div>
+            <small>Admin</small>
         </div>
     </div>
 
+    <!-- ==================== TV Screen ==================== -->
     <div id="scr-tv" class="screen">
-        <div id="tv-top-scores"></div>
+        <div id="tv-stop-alert"><h1>🛑 انتهى الوقت!</h1></div>
 
-        <div id="tv-stop-alert">
-            <h1>🚨 انتهى الوقت!</h1>
-        </div>
-
-        <button id="btn-tv-qr" onclick="document.getElementById('tv-qr-overlay').style.display='flex'">📱</button>
-
-        <div id="tv-qr-overlay" onclick="this.style.display='none'">
-            <div style="background:#1e1b4b; padding:40px; border-radius:30px; text-align:center; border:1px solid rgba(255,255,255,0.2);">
-                <div id="tv-qr-img-container" class="qr-code-display" style="border-radius:10px;"></div>
-            </div>
-        </div>
-
-        <div class="tv-header">
-            <div class="big-char-display" id="tv-char-display">?</div>
+        <!-- Top Bar -->
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:0 20px;">
+            <div id="tv-status" style="font-size:1.5rem; color:#ccc;">انتظار...</div>
             <div id="tv-timer" class="timer-display">15</div>
-            <div class="status-bar" id="tv-status">انتظار المقدم...</div>
         </div>
-        
+
+        <div style="display:flex; flex-direction:column; align-items:center; margin:20px 0;">
+            <div id="tv-char" class="big-char">?</div>
+        </div>
+
         <div id="tv-results" class="results-grid"></div>
+        
+        <!-- Suggestions View -->
+        <div id="tv-suggestions" style="display:none; width:100%; padding:20px;">
+            <h2 style="text-align:center; color:var(--gold);">💡 اقتراحات الجمهور</h2>
+            <div id="tv-sugg-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:15px;"></div>
+        </div>
     </div>
 
+    <!-- ==================== Player Screen ==================== -->
     <div id="scr-player" class="screen">
-        <div id="p-login" style="width:100%; text-align:center; padding-top:20px;">
-            <h2 style="color:white; margin-bottom:20px;">اختر اسمك 👇</h2>
-            <div id="name-selection-area" class="player-select-grid"></div>
-            
-            <div id="custom-name-area" style="display:none; margin-top:20px;">
-                <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px; border:1px solid rgba(255,255,255,0.3);" placeholder="اكتب اسمك...">
-                <button class="btn-main" onclick="submitCustomName()">دخول ✅</button>
-                <button onclick="cancelCustomName()" style="background:none; border:none; margin-top:15px; color:#cbd5e1;">رجوع</button>
+        
+        <!-- 1. Login -->
+        <div id="p-login" style="width:100%; text-align:center;">
+            <h2>اختر اسمك</h2>
+            <div id="name-grid" class="player-select-grid"></div>
+            <div id="custom-name-box" style="display:none;">
+                <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px;" placeholder="اكتب اسمك...">
+                <button class="btn-main" onclick="loginCustom()">دخول</button>
+                <button class="btn-main" style="background:transparent; border:1px solid #666;" onclick="showNameGrid()">رجوع</button>
             </div>
         </div>
 
+        <!-- 2. Dashboard -->
         <div id="p-dashboard" style="display:none; width:100%;">
-            <div class="p-dashboard-header" style="text-align:center; margin-bottom:20px;">
-                <h2 id="p-name-disp" style="color:var(--primary); margin:0;">...</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 id="p-name-disp" style="margin:0; color:var(--gold);">...</h3>
+                <button onclick="location.reload()" style="background:transparent; border:1px solid #666; color:#aaa; border-radius:10px; padding:5px 10px;">خروج</button>
             </div>
 
+            <!-- Wait State -->
             <div id="p-wait" style="text-align:center; margin-top:50px;">
-                <div style="font-size:3rem;">👀</div>
-                <h3 style="color:#94a3b8;">ركز مع التلفزيون...</h3>
+                <h1>⏳</h1>
+                <h3>انتظر الأدمن...</h3>
             </div>
 
+            <!-- Game State -->
             <div id="p-game" style="display:none;">
-                <div class="char-strip glass-panel" style="text-align:center; margin-bottom:20px; font-size:1.5rem;">
-                    الحرف: <span id="p-char" style="color:var(--gold); font-weight:900;">?</span>
+                <div class="glass-panel" style="text-align:center; margin-bottom:15px; padding:10px;">
+                    الحرف: <span id="p-char" style="color:var(--gold); font-size:1.5rem; font-weight:bold;">?</span>
                 </div>
-                
-                <div class="input-row"><div class="input-label">إنسان</div><input type="text" id="in-human" class="game-input"></div>
-                <div class="input-row"><div class="input-label">حيوان</div><input type="text" id="in-animal" class="game-input"></div>
-                <div class="input-row"><div class="input-label">نبات</div><input type="text" id="in-plant" class="game-input"></div>
-                <div class="input-row"><div class="input-label">جماد</div><input type="text" id="in-object" class="game-input"></div>
-                <div class="input-row"><div class="input-label">بلاد</div><input type="text" id="in-country" class="game-input"></div>
+                <div class="input-row"><div class="input-label">إنسان</div><input id="in-human" class="game-input"></div>
+                <div class="input-row"><div class="input-label">حيوان</div><input id="in-animal" class="game-input"></div>
+                <div class="input-row"><div class="input-label">نبات</div><input id="in-plant" class="game-input"></div>
+                <div class="input-row"><div class="input-label">جماد</div><input id="in-object" class="game-input"></div>
+                <div class="input-row"><div class="input-label">بلاد</div><input id="in-country" class="game-input"></div>
+                <div id="p-msg" style="text-align:center; color:#ccc; margin-top:10px;">أسرع! الوقت يمضي ⏱️</div>
+            </div>
 
-                <div id="p-stop-msg">🛑 انتهى الوقت! تم إرسال إجاباتك</div>
+            <!-- Correction State -->
+            <div id="p-correction" style="display:none;">
+                <h2 style="text-align:center; color:var(--gold);">صحح لنفسك 📝</h2>
+                <div id="correction-list"></div>
+                <div style="text-align:center; margin-top:20px; color:#aaa;">النتائج تظهر في التلفزيون</div>
+            </div>
+
+            <!-- Suggestion State -->
+            <div id="p-suggestion" style="display:none;">
+                <h2 style="text-align:center;">اكتب اقتراحك 💡</h2>
+                <textarea id="sugg-input" class="sugg-area" placeholder="اكتب هنا..."></textarea>
+                <button class="btn-main" onclick="sendSuggestion()">إرسال</button>
             </div>
         </div>
     </div>
 
+    <!-- ==================== Admin Screen ==================== -->
     <div id="scr-admin" class="screen">
-        <div class="admin-controls glass-panel">
-            <h3 style="color:var(--gold);">🎮 التحكم</h3>
-            <div class="adm-section-title">اختر الحرف (15 ثانية تبدأ فوراً)</div>
-            <div id="chars-grid" class="char-grid"></div>
+        <div class="glass-panel admin-controls" style="width:100%; max-width:600px; padding:15px; margin-top:20px;">
+            <h3>🎮 التحكم</h3>
             
-            <button class="btn-main" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:black; margin-top:15px;" onclick="startSelfCorrection()">📝 تفعيل التصحيح الذاتي</button>
-            <button class="btn-main" style="margin-top:10px;" onclick="showResultsToTV()">👀 إظهار النتائج</button>
-            <div id="adm-players-list" style="margin-top:20px;"></div>
-            <button class="btn-main" style="background:black; border:1px solid #333; margin-top:20px;" onclick="fullReset()">⚠️ تصفير اللعبة</button>
+            <div style="margin-bottom:15px;">اختر الحرف (يبدأ الـ 15 ثانية):</div>
+            <div id="chars-grid" class="char-grid"></div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
+                <button class="btn-main" style="width:100%; margin:0; font-size:0.9rem; background:linear-gradient(135deg, #f59e0b, #d97706); color:black;" onclick="startCorrection()">📝 بدء التصحيح</button>
+                <button class="btn-main" style="width:100%; margin:0; font-size:0.9rem;" onclick="showResults()">👀 إظهار النتائج</button>
+                <button class="btn-main" style="width:100%; margin:0; background:var(--accent); color:black;" onclick="openSuggestions()">💡 فتح الاقتراحات</button>
+                <button class="btn-main" style="width:100%; margin:0;" onclick="showSuggestionsOnTV()">📺 عرض الاقتراحات</button>
+            </div>
+
+            <h4 style="margin-top:30px; border-bottom:1px solid #444; padding-bottom:5px;">إدارة اللاعبين</h4>
+            <div id="adm-players-list"></div>
+            
+            <button class="btn-main" style="background:black; width:100%; margin-top:20px;" onclick="fullReset()">⚠️ تصفير اللعبة</button>
         </div>
     </div>
 
+    <!-- Script -->
     <script>
+        // --- Firebase Config ---
         const firebaseConfig = {
             apiKey: "AIzaSyDh4v9gRCICA_XRCJXsDpbtCySYAoFsfhk",
             authDomain: "bagera-word.firebaseapp.com",
@@ -270,201 +244,174 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        const playersList = [{name: "هدى"}, {name: "نور"}, {name: "تهاني"}, {name: "اماني"}, {name: "حنين"}, {name: "صالح"}, {name: "عبودي"}, {name: "مرام"}, {name: "آخر"}];
-        const arabicChars = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split('');
-        const categories = {human:'إنسان', animal:'حيوان', plant:'نبات', object:'جماد', country:'بلاد'};
-        const catKeys = ['human', 'animal', 'plant', 'object', 'country'];
-
-        const urlParams = new URLSearchParams(window.location.search);
-        let roomId = urlParams.get('room');
-        let role = urlParams.get('role');
-        let myId = localStorage.getItem('insan_uid') || Date.now().toString();
-        localStorage.setItem('insan_uid', myId);
-        let myName = ''; 
-        let stopOverlayShown = false; 
-        let timerInterval = null;
-        let myCurrentAnswers = {};
-
+        // --- Data ---
+        const namesList = ["هدى", "نور", "تهاني", "اماني", "حنين", "صالح", "عبودي", "مرام", "آخر"];
+        const chars = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split('');
+        const cats = {human:'إنسان', animal:'حيوان', plant:'نبات', object:'جماد', country:'بلاد'};
+        const catKeys = Object.keys(cats);
+        
+        let roomId = new URLSearchParams(window.location.search).get('room');
+        const role = new URLSearchParams(window.location.search).get('role');
+        
+        // --- Init ---
         window.onload = function() {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            if(role === 'admin') { document.getElementById('scr-admin').classList.add('active'); initAdmin(); }
-            else if(role === 'player') { document.getElementById('scr-player').classList.add('active'); initPlayer(); }
+            if(role === 'admin') { show('scr-admin'); initAdmin(); }
+            else if(role === 'player') { show('scr-player'); initPlayer(); }
             else if(roomId) {
-                if(new URLSearchParams(window.location.search).get('mode') === 'tv') { document.getElementById('scr-tv').classList.add('active'); initTV(); }
-                else { document.getElementById('scr-connect').classList.add('active'); generateQRs(); }
-            } else { document.getElementById('scr-landing').classList.add('active'); }
+                if(new URLSearchParams(window.location.search).get('mode') === 'tv') { show('scr-tv'); initTV(); }
+                else { show('scr-connect'); generateQRs(); }
+            } else { show('scr-landing'); }
         };
+
+        function show(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
 
         function createGame() {
             roomId = Math.random().toString(36).substr(2, 6);
             window.history.pushState({}, '', `?room=${roomId}`);
             db.ref(`insan/${roomId}`).set({ state: 'lobby', char: '?' });
-            // هنا نستخدم href لتجنب خطأ pushState في المعاينة
-            window.location.href = `?room=${roomId}`;
+            location.reload();
         }
-
         function goTV() { window.location.href = `?room=${roomId}&mode=tv`; }
 
         function generateQRs() {
-            const base = window.location.href.split('?')[0];
             if(window.location.protocol === 'file:') document.getElementById('local-warning').style.display = 'block';
+            const base = window.location.href.split('?')[0];
+            const pUrl = base + `?room=${roomId}&role=player`; // Notice: Removed &uid to force new login
+            const aUrl = base + `?room=${roomId}&role=admin`;
             
-            const pUrl = base+`?room=${roomId}&role=player`;
-            const aUrl = base+`?room=${roomId}&role=admin`;
-            
-            document.getElementById('qr-players').innerHTML = ''; new QRCode(document.getElementById('qr-players'), { text: pUrl, width: 250, height: 250 });
-            document.getElementById('qr-admin').innerHTML = ''; new QRCode(document.getElementById('qr-admin'), { text: aUrl, width: 100, height: 100 });
-            document.getElementById('tv-qr-img-container').innerHTML = ''; new QRCode(document.getElementById('tv-qr-img-container'), { text: pUrl, width: 300, height: 300 });
+            document.getElementById('qr-players').innerHTML=''; new QRCode(document.getElementById('qr-players'), {text:pUrl, width:200, height:200});
+            document.getElementById('qr-admin').innerHTML=''; new QRCode(document.getElementById('qr-admin'), {text:aUrl, width:100, height:100});
         }
 
         // --- TV Logic ---
-        function updateTimerUI(endTime) {
-            const now = Date.now();
-            const left = Math.max(0, Math.ceil((endTime - now) / 1000));
-            const tvTimer = document.getElementById('tv-timer');
-            if(tvTimer) {
-                tvTimer.innerText = left;
-                if(left <= 5) tvTimer.classList.add('timer-critical');
-                else tvTimer.classList.remove('timer-critical');
-            }
-            return left;
-        }
-
-        function startTimer(endTime) {
-            if(timerInterval) clearInterval(timerInterval);
-            updateTimerUI(endTime);
-            timerInterval = setInterval(() => {
-                if(updateTimerUI(endTime) <= 0) clearInterval(timerInterval);
-            }, 1000);
-        }
-
+        let timerInt = null;
         function initTV() {
-            generateQRs();
             db.ref(`insan/${roomId}`).on('value', snap => {
                 const data = snap.val();
                 if(!data) return;
 
-                document.getElementById('tv-char-display').innerText = data.char;
+                document.getElementById('tv-char').innerText = data.char;
                 const status = document.getElementById('tv-status');
-                const tvStopAlert = document.getElementById('tv-stop-alert');
-                const topScores = document.getElementById('tv-top-scores');
-
-                // تحديث أعلى النتائج
-                if(data.players) {
-                    const sorted = Object.values(data.players).sort((a,b) => (b.grandTotal||0) - (a.grandTotal||0));
-                    topScores.innerHTML = '';
-                    sorted.forEach(p => {
-                        const score = (p.grandTotal||0) + getRoundScore(p.scores);
-                        topScores.innerHTML += `<div class="score-pill"><span>${score}</span> ${p.name}</div>`;
-                    });
-                }
-
-                if(data.state === 'stopped') {
-                    if(timerInterval) clearInterval(timerInterval);
-                    if(!stopOverlayShown) {
-                        stopOverlayShown = true;
-                        tvStopAlert.style.display = 'flex';
-                        status.innerText = "انتهى الوقت!";
-                        setTimeout(() => { tvStopAlert.style.display = 'none'; }, 3000);
-                    }
-                    // هنا نظهر النتائج مكشوفة (hide = false) فوراً عند التوقف
-                    renderTVResults(data, false); 
-                    
-                } else if (data.state === 'playing') {
-                    stopOverlayShown = false;
-                    tvStopAlert.style.display = 'none';
+                const alert = document.getElementById('tv-stop-alert');
+                
+                // State Handling
+                if(data.state === 'playing') {
                     status.innerText = "انطلقوا! 🔥";
-                    renderTVResults(data, true); // إخفاء الإجابات أثناء اللعب
-                    if(data.endTime) startTimer(data.endTime);
-
-                } else if (data.state === 'lobby') {
+                    alert.style.display = 'none';
+                    renderResults(data, true); // Hide answers
+                    if(data.endTime) runTimer(data.endTime);
+                } 
+                else if(data.state === 'stopped') {
+                    if(timerInt) clearInterval(timerInt);
+                    if(alert.style.display === 'none') {
+                        alert.style.display = 'flex';
+                        setTimeout(() => alert.style.display='none', 3000);
+                    }
+                    status.innerText = "انتهى الوقت";
+                    renderResults(data, false); // Show answers
+                }
+                else if(data.state === 'correction') {
+                    alert.style.display = 'none';
+                    status.innerText = "جاري التصحيح...";
+                    renderResults(data, false);
+                }
+                else if(data.state === 'suggestions_view') {
+                    document.getElementById('tv-results').style.display='none';
+                    document.getElementById('tv-suggestions').style.display='block';
+                    renderTvSuggestions(data.players);
+                }
+                else {
+                    document.getElementById('tv-results').style.display='grid';
+                    document.getElementById('tv-suggestions').style.display='none';
                     status.innerText = "انتظار...";
-                    renderTVResults(data, true); 
-                } else if (data.state === 'correction') {
-                    tvStopAlert.style.display = 'none';
-                    status.innerText = "التصحيح...";
-                    renderTVResults(data, false); 
+                    renderResults(data, true);
                 }
             });
         }
 
-        function getRoundScore(scores) {
-            let s = 0;
-            if(scores) Object.values(scores).forEach(v => s += v);
-            return s;
+        function runTimer(end) {
+            if(timerInt) clearInterval(timerInt);
+            const el = document.getElementById('tv-timer');
+            const tick = () => {
+                const left = Math.max(0, Math.ceil((end - Date.now())/1000));
+                el.innerText = left;
+                if(left<=0) clearInterval(timerInt);
+            };
+            tick();
+            timerInt = setInterval(tick, 1000);
         }
 
-        function renderTVResults(data, hide) {
+        function renderResults(data, hide) {
             const grid = document.getElementById('tv-results');
             grid.innerHTML = '';
-            if(data.players) {
-                Object.values(data.players).forEach(p => {
-                    let rows = '';
-                    catKeys.forEach(k => {
-                        const val = (p.answers && p.answers[k]) ? p.answers[k] : '';
-                        const score = (p.scores && p.scores[k]) !== undefined ? p.scores[k] : null;
-                        
-                        let badgeHtml = '';
-                        if(score !== null) {
-                            let cls = score===10 ? 'ts-10' : (score===5 ? 'ts-5' : 'ts-0');
-                            badgeHtml = `<span class="tv-score-badge ${cls}">${score}</span>`;
-                        }
+            if(!data.players) return;
 
-                        rows += `<tr>
-                            <td class="res-cat">${categories[k]}</td>
-                            <td>
-                                <div class="res-val">
-                                    <span>${hide ? '...' : val}</span>
-                                    ${hide ? '' : badgeHtml}
-                                </div>
-                            </td>
-                        </tr>`;
-                    });
-                    const total = (p.grandTotal||0) + getRoundScore(p.scores);
-                    grid.innerHTML += `<div class="result-card"><div class="res-header"><div class="res-name">${p.name}</div><div class="res-total">${total}</div></div><table class="res-table">${rows}</table></div>`;
+            const sorted = Object.values(data.players).sort((a,b) => (b.grandTotal||0) - (a.grandTotal||0));
+            
+            sorted.forEach(p => {
+                let rows = '';
+                let roundScore = 0;
+                catKeys.forEach(k => {
+                    const val = (p.answers && p.answers[k]) ? p.answers[k] : '';
+                    const score = (p.scores && p.scores[k]) !== undefined ? p.scores[k] : null;
+                    if(score) roundScore += score;
+
+                    let badge = '';
+                    if(score !== null) badge = `<span class="${score==10?'ts-10':(score==5?'ts-5':'ts-0')}">${score}</span>`;
+
+                    rows += `<tr><td>${cats[k]}</td><td style="display:flex; justify-content:space-between;"><span>${hide?'...':val}</span>${hide?'':badge}</td></tr>`;
                 });
-            }
+                
+                const total = (p.grandTotal||0) + roundScore;
+                grid.innerHTML += `
+                <div class="result-card">
+                    <div class="res-header"><span class="res-name">${p.name}</span><span class="res-total">${total}</span></div>
+                    <table class="res-table" style="width:100%">${rows}</table>
+                </div>`;
+            });
+        }
+        
+        function renderTvSuggestions(players) {
+            const grid = document.getElementById('tv-sugg-grid');
+            grid.innerHTML = '';
+            if(!players) return;
+            Object.values(players).forEach(p => {
+                if(p.suggestion) grid.innerHTML += `<div class="glass-panel" style="padding:15px; background:white; color:black;"><b>${p.suggestion}</b><br><small>- ${p.name}</small></div>`;
+            });
         }
 
         // --- Player Logic ---
+        let myId = null; 
+        // We generate ID only on login to ensure "Scan = New User"
+        
         function initPlayer() {
-            const grid = document.getElementById('name-selection-area');
-            playersList.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'player-select-card';
-                card.onclick = () => {
-                    if(p.name === "آخر") {
-                        document.getElementById('name-selection-area').style.display='none';
-                        document.getElementById('custom-name-area').style.display='block';
-                    } else { login(p.name); }
+            // Force Name Selection Screen on Load (No Auto Login)
+            const grid = document.getElementById('name-grid');
+            namesList.forEach(n => {
+                const btn = document.createElement('div');
+                btn.className = 'player-card-btn';
+                btn.innerText = n;
+                btn.onclick = () => {
+                    if(n === 'آخر') { document.getElementById('p-login').children[1].style.display='none'; document.getElementById('custom-name-box').style.display='block'; }
+                    else doLogin(n);
                 };
-                card.innerHTML = `<span class="player-name-txt" style="font-size:1.2rem;">${p.name}</span>`;
-                grid.appendChild(card);
+                grid.appendChild(btn);
             });
-
-            const storedId = localStorage.getItem('insan_uid');
-            if(storedId) {
-                db.ref(`insan/${roomId}/players/${storedId}`).once('value', snap => {
-                    if(snap.exists()) { myName = snap.val().name; login(myName); }
-                });
-            }
         }
-
-        function submitCustomName() {
-            const n = document.getElementById('custom-name-input').value.trim();
-            if(n) login(n);
-        }
-        function cancelCustomName() {
-            document.getElementById('custom-name-area').style.display='none';
-            document.getElementById('name-selection-area').style.display='grid';
-        }
-
-        function login(name) {
-            myName = name;
-            db.ref(`insan/${roomId}/players/${myId}`).update({ name: name });
+        function showNameGrid() { document.getElementById('p-login').children[1].style.display='grid'; document.getElementById('custom-name-box').style.display='none'; }
+        function loginCustom() { const n = document.getElementById('custom-name-input').value; if(n) doLogin(n); }
+        
+        function doLogin(name) {
+            myId = Date.now().toString(); // Generate NEW ID every login
+            db.ref(`insan/${roomId}/players/${myId}`).set({ name: name, grandTotal: 0 });
+            
             document.getElementById('p-login').style.display = 'none';
             document.getElementById('p-dashboard').style.display = 'block';
             document.getElementById('p-name-disp').innerText = name;
+            
             listenGame();
         }
 
@@ -473,120 +420,176 @@
                 const data = snap.val();
                 if(!data) return;
 
+                const state = data.state;
                 document.getElementById('p-char').innerText = data.char;
-                const state = data.state || 'lobby';
-                
-                const pWait = document.getElementById('p-wait');
-                const pGame = document.getElementById('p-game');
-                const pStopMsg = document.getElementById('p-stop-msg');
 
-                pWait.style.display='none'; pGame.style.display='none';
+                // Hide all sections first
+                ['p-wait', 'p-game', 'p-correction', 'p-suggestion'].forEach(id => document.getElementById(id).style.display = 'none');
 
                 if(state === 'playing') {
-                    pGame.style.display = 'block';
-                    pStopMsg.style.display = 'none';
-                    document.querySelectorAll('.game-input').forEach(i => i.disabled = false);
-                    
-                    myCurrentAnswers = {};
-                    if(!window.roundCleaned) {
-                        document.querySelectorAll('.game-input').forEach(i => i.value = '');
-                        window.roundCleaned = true;
-                    }
-                } else if (state === 'stopped') {
-                    pGame.style.display = 'block';
-                    pStopMsg.style.display = 'block';
+                    document.getElementById('p-game').style.display = 'block';
+                    document.querySelectorAll('.game-input').forEach(i => { i.value = ''; i.disabled = false; });
+                    document.getElementById('p-msg').innerText = "اكتب بسرعة! 🏃";
+                }
+                else if(state === 'stopped') {
+                    document.getElementById('p-game').style.display = 'block';
                     document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
-                    
-                    saveAnswersLocally();
-                    window.roundCleaned = false;
-
-                } else if (state === 'correction') {
-                    // في مرحلة التصحيح، يمكن إظهار شاشة بسيطة للاعب تقول "تصحيح..."
-                    // لكن لتبسيط الطلب، سنبقيه يرى إجاباته المتوقفة
-                    pGame.style.display = 'block';
-                    pStopMsg.innerText = "جاري التصحيح...";
-                    pStopMsg.style.display = 'block';
-                } else {
-                    pWait.style.display = 'block';
-                    window.roundCleaned = false; 
+                    document.getElementById('p-msg').innerText = "🛑 انتهى الوقت";
+                    saveAnswers();
+                }
+                else if(state === 'correction') {
+                    document.getElementById('p-correction').style.display = 'block';
+                    renderCorrectionUI();
+                }
+                else if(state === 'suggestions') {
+                    document.getElementById('p-suggestion').style.display = 'block';
+                    document.getElementById('sugg-input').value = '';
+                    document.getElementById('sugg-input').disabled = false; // Ensure enabled
+                }
+                else {
+                    document.getElementById('p-wait').style.display = 'block';
                 }
             });
         }
 
-        function saveAnswersLocally() {
-            myCurrentAnswers = {
+        function saveAnswers() {
+            const answers = {
                 human: document.getElementById('in-human').value,
                 animal: document.getElementById('in-animal').value,
                 plant: document.getElementById('in-plant').value,
                 object: document.getElementById('in-object').value,
                 country: document.getElementById('in-country').value
             };
-            db.ref(`insan/${roomId}/players/${myId}/answers`).update(myCurrentAnswers);
+            db.ref(`insan/${roomId}/players/${myId}/answers`).set(answers);
+        }
+
+        function renderCorrectionUI() {
+            const list = document.getElementById('correction-list');
+            list.innerHTML = '';
+            
+            // Get my answers from DOM directly since we are in same session
+            const answers = {
+                human: document.getElementById('in-human').value,
+                animal: document.getElementById('in-animal').value,
+                plant: document.getElementById('in-plant').value,
+                object: document.getElementById('in-object').value,
+                country: document.getElementById('in-country').value
+            };
+
+            catKeys.forEach(k => {
+                const val = answers[k] || "-";
+                list.innerHTML += `
+                <div class="correction-card">
+                    <small>${cats[k]}</small>
+                    <span class="corr-ans">${val}</span>
+                    <div class="corr-btns">
+                        <button class="c-btn cb-10" onclick="rate('${k}', 10, this)">10</button>
+                        <button class="c-btn cb-5" onclick="rate('${k}', 5, this)">5</button>
+                        <button class="c-btn cb-0" onclick="rate('${k}', 0, this)">0</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function rate(cat, score, btn) {
+            Array.from(btn.parentElement.children).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            db.ref(`insan/${roomId}/players/${myId}/scores/${cat}`).set(score);
+        }
+        
+        function sendSuggestion() {
+            const txt = document.getElementById('sugg-input').value;
+            if(txt) {
+                db.ref(`insan/${roomId}/players/${myId}/suggestion`).set(txt);
+                alert("تم الإرسال!");
+            }
         }
 
         // --- Admin Logic ---
         function initAdmin() {
             const grid = document.getElementById('chars-grid');
-            arabicChars.forEach(c => {
+            chars.forEach(c => {
                 const b = document.createElement('div');
                 b.className = 'char-btn'; b.innerText = c;
                 b.onclick = () => startRound(c, b);
                 grid.appendChild(b);
             });
-
+            
             db.ref(`insan/${roomId}/usedChars`).on('value', snap => {
                 const used = snap.val() || {};
-                document.querySelectorAll('.char-btn').forEach(btn => { if(used[btn.innerText]) btn.classList.add('used'); });
+                document.querySelectorAll('.char-btn').forEach(b => { if(used[b.innerText]) b.classList.add('used'); });
             });
-            
+
+            // Player Management List
             db.ref(`insan/${roomId}/players`).on('value', snap => {
                 const list = document.getElementById('adm-players-list');
                 list.innerHTML = '';
-                if(snap.val()) {
-                    Object.keys(snap.val()).forEach(pid => {
-                        const p = snap.val()[pid];
-                        list.innerHTML += `<div class="player-manage-row">
-                            <span style="font-weight:bold">${p.name}</span> 
-                            <button onclick="if(confirm('طرد؟')) db.ref('insan/${roomId}/players/${pid}').remove()">🗑️</button>
-                        </div>`;
-                    });
-                }
+                if(!snap.val()) return;
+                
+                Object.keys(snap.val()).forEach(pid => {
+                    const p = snap.val()[pid];
+                    const row = document.createElement('div');
+                    row.className = 'admin-row';
+                    row.innerHTML = `
+                        <span>${p.name} <b style="color:var(--gold)">(${p.grandTotal || 0})</b></span>
+                        <div>
+                            <button class="adm-btn btn-edit" onclick="editScore('${pid}', ${p.grandTotal||0})">✏️</button>
+                            <button class="adm-btn btn-del" onclick="kick('${pid}')">🗑️</button>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
             });
         }
 
         function startRound(char, btn) {
             if(btn.classList.contains('used')) return;
             
-            const endTime = Date.now() + 15000;
-
+            // Clean round scores
             db.ref(`insan/${roomId}/players`).once('value', snap => {
-                let updates = {};
+                const updates = {};
                 if(snap.val()) {
                     Object.keys(snap.val()).forEach(pid => {
                         const p = snap.val()[pid];
-                        let rScore = 0;
-                        if(p.scores) Object.values(p.scores).forEach(v => rScore += v);
-                        updates[`insan/${roomId}/players/${pid}/grandTotal`] = (p.grandTotal||0) + rScore;
-                        updates[`insan/${roomId}/players/${pid}/answers`] = null;
-                        updates[`insan/${roomId}/players/${pid}/scores`] = null;
+                        let round = 0;
+                        if(p.scores) Object.values(p.scores).forEach(v => round += v);
+                        updates[`players/${pid}/grandTotal`] = (p.grandTotal||0) + round;
+                        updates[`players/${pid}/answers`] = null;
+                        updates[`players/${pid}/scores`] = null;
+                        updates[`players/${pid}/suggestion`] = null;
                     });
                 }
-                updates[`insan/${roomId}/state`] = 'playing';
-                updates[`insan/${roomId}/char`] = char;
-                updates[`insan/${roomId}/endTime`] = endTime;
-                updates[`insan/${roomId}/usedChars/${char}`] = true;
-                db.ref().update(updates);
-                btn.classList.add('used');
-
-                setTimeout(() => {
-                    db.ref(`insan/${roomId}`).update({ state: 'stopped' });
-                }, 15000);
+                updates['state'] = 'playing';
+                updates['char'] = char;
+                updates['endTime'] = Date.now() + 15000;
+                updates[`usedChars/${char}`] = true;
+                
+                db.ref(`insan/${roomId}`).update(updates);
+                
+                // Auto Stop
+                setTimeout(() => db.ref(`insan/${roomId}`).update({state: 'stopped'}), 15000);
             });
         }
 
-        function startSelfCorrection() { db.ref(`insan/${roomId}`).update({ state: 'correction' }); }
-        function showResultsToTV() { db.ref(`insan/${roomId}`).update({ state: 'results' }); }
-        function fullReset() { if(confirm("تصفير؟")) db.ref(`insan/${roomId}`).set({state:'lobby', char:'?'}); }
+        function startCorrection() { db.ref(`insan/${roomId}`).update({ state: 'correction' }); }
+        function showResults() { db.ref(`insan/${roomId}`).update({ state: 'results' }); }
+        function openSuggestions() { db.ref(`insan/${roomId}`).update({ state: 'suggestions' }); }
+        function showSuggestionsOnTV() { db.ref(`insan/${roomId}`).update({ state: 'suggestions_view' }); }
+        function fullReset() { if(confirm('متأكد؟')) db.ref(`insan/${roomId}`).set({state:'lobby', char:'?'}); }
+
+        // New Admin Features
+        function kick(pid) {
+            if(confirm("حذف اللاعب نهائياً؟")) {
+                db.ref(`insan/${roomId}/players/${pid}`).remove();
+            }
+        }
+        function editScore(pid, current) {
+            const val = prompt(`النقاط الحالية: ${current}\nكم تريد أن تضيف؟ (اكتب سالب للخصم)`, "0");
+            const num = parseInt(val);
+            if(!isNaN(num)) {
+                db.ref(`insan/${roomId}/players/${pid}/grandTotal`).set(current + num);
+            }
+        }
 
     </script>
 </body>
