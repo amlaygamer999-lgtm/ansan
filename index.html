@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>إنسان حيوان PRO 🦁</title>
+    
+    <!-- إعدادات SEO للظهور في جوجل -->
+    <title>لعبة إنسان حيوان PRO - تحدي الـ 15 ثانية 🦁</title>
+    <meta name="description" content="لعبة إنسان حيوان نبات جماد بلاد أونلاين. تحدي السرعة بدون مؤقت في الجوال! العب مع أصدقائك الآن.">
+    <meta name="keywords" content="لعبة إنسان حيوان, مسابقات, ألعاب جماعية, تحدي, ذكاء">
     
     <!-- مكاتب Firebase والباركود -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -42,7 +46,6 @@
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; }
         .active { display: flex; }
 
-        /* UI Components */
         .glass-panel {
             background: var(--glass);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -60,35 +63,17 @@
         }
         .btn-main:active { transform: scale(0.98); }
 
-        /* --- 1. Landing --- */
-        #scr-landing {
-            justify-content: center; 
-            background: var(--bg-gradient); 
-            background-size: cover; background-position: center;
-        }
-        #btn-start-landing {
-            position: absolute; bottom: 40px; right: 30px; z-index: 10;
-            background: linear-gradient(135deg, var(--gold), #d97706); color: black;
-            font-size: 1.3rem; padding: 15px 40px;
-        }
-
-        /* --- 2. Connect --- */
+        /* --- Landing & Connect --- */
+        #scr-landing { justify-content: center; background: var(--bg-gradient); background-size: cover; }
+        #btn-start-landing { position: absolute; bottom: 40px; right: 30px; z-index: 10; background: linear-gradient(135deg, var(--gold), #d97706); color: black; }
+        
         #scr-connect { justify-content: center; padding: 20px; }
-        .qr-box { 
-            background: white; padding: 20px; border-radius: 20px; text-align: center; 
-            box-shadow: 0 0 40px rgba(255,255,255,0.1); margin-bottom: 20px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
+        .qr-box { background: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
         .qr-code-display { padding: 10px; background: white; }
         .qr-code-display img { display: block; margin: 0 auto; }
+        #local-warning { display: none; background: #f59e0b; color: #000; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; font-size: 0.9rem; text-align: center; }
 
-        /* Warning Banner */
-        #local-warning {
-            display: none; background: #f59e0b; color: #000; padding: 10px; 
-            border-radius: 8px; margin-bottom: 15px; font-weight: bold; text-align: center; font-size: 0.9rem;
-        }
-
-        /* --- 3. TV Screen --- */
+        /* --- TV Screen --- */
         #scr-tv { padding-top: 70px; }
         
         #tv-top-scores {
@@ -104,11 +89,11 @@
         }
         .score-pill span { color: var(--gold); font-weight: 900; font-size: 1.1rem; }
 
-        /* TV Timer & Stop Overlay */
+        /* TV Timer */
         .timer-display {
-            font-size: 4rem; font-weight: 900; color: var(--gold);
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-            margin: 10px 0;
+            font-size: 6rem; font-weight: 900; color: var(--gold);
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.6);
+            margin: 10px 0; font-family: 'Courier New', monospace;
         }
         .timer-critical { color: var(--danger); animation: pulse 0.5s infinite; }
 
@@ -120,20 +105,9 @@
         }
         @keyframes pulseBg { from { opacity: 0.9; } to { opacity: 1; } }
         #tv-stop-alert h1 { font-size: 6rem; color: white; margin: 0; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #tv-stop-alert h2 { font-size: 3rem; color: var(--gold); margin: 0; }
 
-        #btn-tv-qr {
-            position: absolute; top: 70px; left: 20px; z-index: 100;
-            background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;
-            backdrop-filter: blur(5px);
-        }
-
-        #tv-qr-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 2000;
-            flex-direction: column; justify-content: center; align-items: center;
-        }
+        #btn-tv-qr { position: absolute; top: 70px; left: 20px; z-index: 100; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); }
+        #tv-qr-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; }
 
         .tv-header { width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
         .big-char-display {
@@ -141,15 +115,12 @@
             background: linear-gradient(to bottom, #fff, #cbd5e1); -webkit-background-clip: text;
             filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
             border: 5px solid rgba(255,255,255,0.1); border-radius: 30px; 
-            width: 180px; height: 180px; display: flex; justify-content: center; align-items: center;
+            width: 150px; height: 150px; display: flex; justify-content: center; align-items: center;
             background-color: rgba(255,255,255,0.02); margin-top: 10px;
         }
-        .status-bar { 
-            font-size: 1.8rem; font-weight: bold; margin-top: 15px; 
-            background: linear-gradient(90deg, var(--secondary), var(--primary));
-            -webkit-background-clip: text; color: transparent;
-        }
+        .status-bar { font-size: 1.5rem; font-weight: bold; margin-top: 10px; color: #cbd5e1; }
 
+        /* Results Grid */
         .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 98%; padding: 10px; align-content: start; }
         .result-card { 
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
@@ -159,115 +130,41 @@
         .res-header { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 5px; }
         .res-name { font-weight: bold; color: white; }
         .res-total { background: var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.8rem; }
-        
         .res-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; }
         .res-table td { padding: 4px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
         .res-cat { color: #94a3b8; width: 50px; font-weight: bold; }
-        .res-val { color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .res-val { color: white; font-weight: bold; }
         
-        .tv-score-badge { 
-            padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; 
-            margin-right: 5px; min-width: 25px; text-align: center; display: inline-block;
-        }
-        .ts-10 { background: #00e676; color: black; box-shadow: 0 0 5px #00e676; } 
+        .tv-score-badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-right: 5px; display: inline-block; }
+        .ts-10 { background: #00e676; color: black; } 
         .ts-5 { background: #f59e0b; color: black; } 
         .ts-0 { background: #f43f5e; color: white; }
 
-        /* --- 4. Player --- */
+        /* --- Player Screen --- */
         #scr-player { padding: 20px; max-width: 600px; margin: 0 auto; }
-        
-        /* قائمة اللاعبين */
-        .player-select-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; width: 100%; margin-top: 20px;
-        }
-        .player-select-card {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px; padding: 20px; text-align: center; cursor: pointer;
-            transition: 0.2s; display: flex; justify-content: center; align-items: center;
-        }
-        .player-select-card:hover { transform: translateY(-3px); background: var(--primary); border-color: white; }
-        .player-name-txt { font-weight: bold; color: white; font-size: 1.2rem; }
-
-        .msg-alert-btn {
-            background: linear-gradient(45deg, #ff6b6b, #f06595); color: white; border: none;
-            padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; margin-bottom: 20px;
-            animation: pulse 2s infinite; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
-        .input-row { 
-            display: flex; align-items: center; margin-bottom: 10px; 
-            background: rgba(255,255,255,0.05); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-        }
+        .player-select-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .player-select-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; }
+        .input-row { display: flex; align-items: center; margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
         .input-label { width: 60px; font-size: 0.9rem; font-weight: bold; color: #94a3b8; text-align: center; border-left: 1px solid rgba(255,255,255,0.1); }
         .game-input { flex-grow: 1; background: transparent; border: none; padding: 10px; color: white; font-size: 1rem; font-family: 'Tajawal'; text-align: right; }
         
-        /* مؤقت اللاعب */
-        #p-timer {
-            font-size: 2.5rem; color: var(--gold); text-align: center; margin: 10px 0; font-weight: bold;
-        }
+        /* رسالة التوقف للاعب */
+        #p-stop-msg { text-align: center; color: var(--danger); font-weight: bold; margin-top: 20px; display: none; font-size: 1.2rem; }
 
-        #persistent-image-container { display: none; width: 100%; text-align: center; margin-bottom: 15px; }
-        .p-img-persistent { width: 100%; max-width: 200px; border-radius: 10px; border: 2px solid var(--primary); }
-
-        /* Correction Screen */
-        .correction-card { background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .corr-title { font-size: 0.8rem; color: #94a3b8; display: block; margin-bottom: 5px; }
-        .corr-ans { display: block; font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: white; }
-        .corr-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-        .c-btn { padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #94a3b8; font-weight: bold; }
-        .c-btn.selected { color: white; border-color: white; box-shadow: 0 0 10px rgba(255,255,255,0.1) inset; }
-        .cb-10.selected { background: var(--accent); border-color: var(--accent); }
-        .cb-5.selected { background: #f59e0b; border-color: #f59e0b; }
-        .cb-0.selected { background: var(--danger); border-color: var(--danger); }
-
-        /* --- 5. Admin --- */
+        /* --- Admin --- */
         #scr-admin { padding: 15px; max-width: 600px; }
-        .admin-controls { width: 100%; margin-bottom: 15px; padding: 15px; }
+        .admin-controls { padding: 15px; }
         .char-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 15px; }
-        .char-btn { 
-            background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 8px; 
-            cursor: pointer; color: white; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); 
-        }
-        .char-btn:hover { background: var(--primary); border-color: var(--primary); }
-        .char-btn.used { background: #000; color: #444; text-decoration: line-through; cursor: default; border-color: #333; }
-        
-        .player-manage-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-radius: 8px; 
-        }
-        .btn-icon { border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 0.9rem; }
-        .btn-edit { background: var(--primary); color: white; }
-        .btn-del { background: var(--danger); color: white; }
-
-        /* Overlays */
-        #tv-rating-view, #tv-suggestions-view { display: none; text-align: center; margin-top: 30px; width: 100%; }
-        .rating-score { font-size: 10rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 50px rgba(251, 191, 36, 0.5); }
-        .sugg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; width: 95%; margin: 0 auto; }
-        .sugg-card { background: white; color: #0f172a; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; }
-
-        #private-msg-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .full-size-img { max-width: 95%; max-height: 80vh; border-radius: 12px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
-        
-        /* Player Stop Overlay */
-        #stop-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(244, 63, 94, 0.95); backdrop-filter: blur(5px); z-index: 9000; flex-direction: column; justify-content: center; align-items: center; }
-        #stop-overlay h1 { font-size: 5rem; margin: 0; color: white; text-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .char-btn { background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
+        .char-btn:hover { background: var(--primary); }
+        .char-btn.used { background: #000; color: #444; text-decoration: line-through; cursor: default; }
+        .player-manage-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-radius: 8px; }
 
         @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
-
-    <div id="private-msg-overlay">
-        <img id="msg-img-full" class="full-size-img" src="" alt="رسالة">
-        <button class="btn-main" style="margin-top:20px; background:white; color:black; width:auto;" onclick="toggleMsg(false)">إغلاق ❌</button>
-    </div>
-
-    <div id="stop-overlay">
-        <h1>✋ قف!</h1>
-        <h2 id="stopper-name" style="font-size:2rem; color:white; margin-top:10px;">...</h2>
-    </div>
 
     <div id="scr-landing" class="screen active">
         <button id="btn-start-landing" class="btn-main" onclick="createGame()">ابدأ اللعبة 🚀</button>
@@ -275,8 +172,7 @@
 
     <div id="scr-connect" class="screen">
         <div class="qr-box">
-            <!-- تحذير الاستضافة -->
-            <div id="local-warning">⚠️ تنبيه: لكي يعمل الباركود على الجوالات، يجب رفع هذا الملف على استضافة (Hosting) ليصبح رابطاً حقيقياً.</div>
+            <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
             <div id="qr-players" class="qr-code-display"></div>
             <h3 style="color:#333; margin:10px 0 0;">امسح الكود للدخول</h3>
         </div>
@@ -293,13 +189,11 @@
             <h1>🚨 انتهى الوقت!</h1>
         </div>
 
-        <button id="btn-tv-qr" onclick="document.getElementById('tv-qr-overlay').style.display='flex'">📱 الباركود</button>
+        <button id="btn-tv-qr" onclick="document.getElementById('tv-qr-overlay').style.display='flex'">📱</button>
 
         <div id="tv-qr-overlay" onclick="this.style.display='none'">
             <div style="background:#1e1b4b; padding:40px; border-radius:30px; text-align:center; border:1px solid rgba(255,255,255,0.2);">
-                <h2 style="color:white; margin-bottom:20px;">انضم للعبة</h2>
                 <div id="tv-qr-img-container" class="qr-code-display" style="border-radius:10px;"></div>
-                <p style="color:#ccc; margin-top:10px;">* تأكد أن الموقع مرفوع على استضافة</p>
             </div>
         </div>
 
@@ -310,55 +204,34 @@
         </div>
         
         <div id="tv-results" class="results-grid"></div>
-
-        <div id="tv-rating-view">
-            <div class="rating-label" style="color:white; font-size:2rem; margin-bottom:20px;">تقييم الجمهور</div>
-            <div class="rating-score" id="tv-final-score">0.0</div>
-        </div>
-
-        <div id="tv-suggestions-view">
-            <h2 style="color:white; text-align:center; margin-bottom:30px;">اقتراحاتكم 💡</h2>
-            <div id="tv-sugg-grid" class="sugg-grid"></div>
-        </div>
     </div>
 
     <div id="scr-player" class="screen">
         <div id="p-login" style="width:100%; text-align:center; padding-top:20px;">
-            <h2 style="color:white; margin-bottom:20px;">اختر شخصيتك 👇</h2>
+            <h2 style="color:white; margin-bottom:20px;">اختر اسمك 👇</h2>
             <div id="name-selection-area" class="player-select-grid"></div>
             
             <div id="custom-name-area" style="display:none; margin-top:20px;">
                 <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px; border:1px solid rgba(255,255,255,0.3);" placeholder="اكتب اسمك...">
                 <button class="btn-main" onclick="submitCustomName()">دخول ✅</button>
-                <button onclick="cancelCustomName()" style="background:none; border:none; margin-top:15px; color:#cbd5e1; font-weight:bold;">رجوع</button>
+                <button onclick="cancelCustomName()" style="background:none; border:none; margin-top:15px; color:#cbd5e1;">رجوع</button>
             </div>
         </div>
 
         <div id="p-dashboard" style="display:none; width:100%;">
-            
-            <button id="btn-msg-reveal" class="msg-alert-btn" onclick="toggleMsg(true)">
-                <span>📩</span> رسالة سرية من الجمهور
-            </button>
-            
-            <div id="persistent-image-container">
-                <img id="p-persistent-img" class="p-img-persistent" src="">
-            </div>
-
-            <div class="p-dashboard-header">
-                <div style="display:flex; justify-content:space-between; width:100%; margin-bottom:10px;">
-                    <button onclick="logoutPlayer()" style="background:transparent; border:1px solid #666; color:#aaa; border-radius:15px; padding:2px 10px;">خروج</button>
-                    <h2 id="p-name-disp" style="color:var(--primary); margin:0;">...</h2>
-                </div>
+            <div class="p-dashboard-header" style="text-align:center; margin-bottom:20px;">
+                <h2 id="p-name-disp" style="color:var(--primary); margin:0;">...</h2>
             </div>
 
             <div id="p-wait" style="text-align:center; margin-top:50px;">
-                <div style="font-size:3rem;">⏳</div>
-                <h3 style="color:#94a3b8;">انتظر الحرف...</h3>
+                <div style="font-size:3rem;">👀</div>
+                <h3 style="color:#94a3b8;">ركز مع التلفزيون...</h3>
             </div>
 
             <div id="p-game" style="display:none;">
-                <div class="char-strip glass-panel">الحرف: <span id="p-char" style="color:var(--gold); font-size:1.5em; font-weight:900;">?</span></div>
-                <div id="p-timer">15</div>
+                <div class="char-strip glass-panel" style="text-align:center; margin-bottom:20px; font-size:1.5rem;">
+                    الحرف: <span id="p-char" style="color:var(--gold); font-weight:900;">?</span>
+                </div>
                 
                 <div class="input-row"><div class="input-label">إنسان</div><input type="text" id="in-human" class="game-input"></div>
                 <div class="input-row"><div class="input-label">حيوان</div><input type="text" id="in-animal" class="game-input"></div>
@@ -366,52 +239,21 @@
                 <div class="input-row"><div class="input-label">جماد</div><input type="text" id="in-object" class="game-input"></div>
                 <div class="input-row"><div class="input-label">بلاد</div><input type="text" id="in-country" class="game-input"></div>
 
-                <div style="text-align:center; color:#aaa; margin-top:20px; font-size:0.9rem;">سينتهي الوقت تلقائياً</div>
+                <div id="p-stop-msg">🛑 انتهى الوقت! تم إرسال إجاباتك</div>
             </div>
-
-            <div id="p-correction-screen">
-                <h3 style="text-align:center; margin-bottom:20px; color:white;">صحح لنفسك 😉</h3>
-                <div id="correction-list"></div>
-                <div style="text-align:center; margin-top:20px; color:#94a3b8;">انتظر النتائج...</div>
-            </div>
-        </div>
-
-        <div id="p-rating-screen" style="display:none;">
-            <h2 style="color:white; margin-bottom:20px;">كم تقيم اللعبة؟ ⭐</h2>
-            <div class="rating-btns" id="rating-btns" style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:20px 0;"></div>
-            <button class="btn-main" onclick="submitRating()">إرسال التقييم</button>
-        </div>
-
-        <div id="p-suggestion-screen" style="display:none;">
-            <h2 style="color:white; margin-bottom:20px;">عندك فكرة؟ 💡</h2>
-            <textarea id="suggestion-input" class="game-input glass-panel" style="height:120px; text-align:right; border:1px solid rgba(255,255,255,0.2);" placeholder="اكتب اقتراحك هنا..."></textarea>
-            <button class="btn-main" style="margin-top:20px;" onclick="submitSuggestion()">إرسال</button>
         </div>
     </div>
 
     <div id="scr-admin" class="screen">
         <div class="admin-controls glass-panel">
-            <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">🎮 التحكم</h3>
-            
-            <div class="adm-section-title">اختر الحرف (يبدأ فوراً)</div>
+            <h3 style="color:var(--gold);">🎮 التحكم</h3>
+            <div class="adm-section-title">اختر الحرف (15 ثانية تبدأ فوراً)</div>
             <div id="chars-grid" class="char-grid"></div>
             
             <button class="btn-main" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:black; margin-top:15px;" onclick="startSelfCorrection()">📝 تفعيل التصحيح الذاتي</button>
-            <button class="btn-main" style="margin-top:10px;" onclick="showResultsToTV()">👀 إظهار النتائج في التلفزيون</button>
-            
-            <div class="adm-section-title">إدارة اللاعبين</div>
-            <div id="adm-players-list"></div>
-
-            <div class="adm-section-title">النهاية</div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <button class="btn-main" style="font-size:0.9rem; background:var(--danger);" onclick="startRatingPhase()">⭐ التقييم</button>
-                <button class="btn-main" style="font-size:0.9rem; background:rgba(255,255,255,0.1);" onclick="showRatingResult()">📊 النتيجة</button>
-                <button class="btn-main" style="font-size:0.9rem; background:var(--accent); color:black;" onclick="startSuggestionPhase()">💡 الاقتراحات</button>
-                <button class="btn-main" style="font-size:0.9rem; background:rgba(255,255,255,0.1);" onclick="showSuggestionsResult()">👀 العرض</button>
-            </div>
-            
-            <div class="adm-section-title">الطوارئ</div>
-            <button class="btn-main" style="background:black; border:1px solid #333;" onclick="fullReset()">⚠️ تصفير اللعبة بالكامل</button>
+            <button class="btn-main" style="margin-top:10px;" onclick="showResultsToTV()">👀 إظهار النتائج</button>
+            <div id="adm-players-list" style="margin-top:20px;"></div>
+            <button class="btn-main" style="background:black; border:1px solid #333; margin-top:20px;" onclick="fullReset()">⚠️ تصفير اللعبة</button>
         </div>
     </div>
 
@@ -428,13 +270,7 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        const playersList = [
-            {name: "هدى", img: "huda.jpg"}, {name: "نور", img: "noor.jpg"},
-            {name: "تهاني", img: "tahani.jpg"}, {name: "اماني", img: "amani.jpg"},
-            {name: "حنين", img: "haneen.jpg"}, {name: "صالح", img: "saleh.jpg"},
-            {name: "عبودي", img: "aboodi.jpg"}, {name: "مرام", img: "maram.jpg"},
-            {name: "آخر", img: "other.jpg"}
-        ];
+        const playersList = [{name: "هدى"}, {name: "نور"}, {name: "تهاني"}, {name: "اماني"}, {name: "حنين"}, {name: "صالح"}, {name: "عبودي"}, {name: "مرام"}, {name: "آخر"}];
         const arabicChars = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split('');
         const categories = {human:'إنسان', animal:'حيوان', plant:'نبات', object:'جماد', country:'بلاد'};
         const catKeys = ['human', 'animal', 'plant', 'object', 'country'];
@@ -444,100 +280,52 @@
         let role = urlParams.get('role');
         let myId = localStorage.getItem('insan_uid') || Date.now().toString();
         localStorage.setItem('insan_uid', myId);
-        let myName = ''; let currentPImg = '';
+        let myName = ''; 
         let stopOverlayShown = false; 
-        let selectedRating = 0;
-        let myCurrentAnswers = {}; 
         let timerInterval = null;
+        let myCurrentAnswers = {};
 
-        // --- Fast Init ---
         window.onload = function() {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-
-            if(role === 'admin') {
-                document.getElementById('scr-admin').classList.add('active');
-                initAdmin();
-            } else if(role === 'player') {
-                document.getElementById('scr-player').classList.add('active');
-                initPlayer();
-            } else if(roomId) {
-                if(new URLSearchParams(window.location.search).get('mode') === 'tv') {
-                    document.getElementById('scr-tv').classList.add('active');
-                    initTV();
-                } else {
-                    document.getElementById('scr-connect').classList.add('active');
-                    generateQRs();
-                }
-            } else {
-                document.getElementById('scr-landing').classList.add('active');
-            }
+            if(role === 'admin') { document.getElementById('scr-admin').classList.add('active'); initAdmin(); }
+            else if(role === 'player') { document.getElementById('scr-player').classList.add('active'); initPlayer(); }
+            else if(roomId) {
+                if(new URLSearchParams(window.location.search).get('mode') === 'tv') { document.getElementById('scr-tv').classList.add('active'); initTV(); }
+                else { document.getElementById('scr-connect').classList.add('active'); generateQRs(); }
+            } else { document.getElementById('scr-landing').classList.add('active'); }
         };
-
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
 
         function createGame() {
             roomId = Math.random().toString(36).substr(2, 6);
             window.history.pushState({}, '', `?room=${roomId}`);
             db.ref(`insan/${roomId}`).set({ state: 'lobby', char: '?' });
-            location.reload();
+            // هنا نستخدم href لتجنب خطأ pushState في المعاينة
+            window.location.href = `?room=${roomId}`;
         }
 
-        function goTV() {
-            window.location.href = `?room=${roomId}&mode=tv`;
-        }
+        function goTV() { window.location.href = `?room=${roomId}&mode=tv`; }
 
         function generateQRs() {
             const base = window.location.href.split('?')[0];
+            if(window.location.protocol === 'file:') document.getElementById('local-warning').style.display = 'block';
+            
             const pUrl = base+`?room=${roomId}&role=player`;
             const aUrl = base+`?room=${roomId}&role=admin`;
             
-            // تحقق من البروتوكول
-            if(window.location.protocol === 'file:') {
-                document.getElementById('local-warning').style.display = 'block';
-            }
-
-            document.getElementById('qr-players').innerHTML = '';
-            new QRCode(document.getElementById('qr-players'), {
-                text: pUrl,
-                width: 250,
-                height: 250
-            });
-
-            document.getElementById('qr-admin').innerHTML = '';
-            new QRCode(document.getElementById('qr-admin'), {
-                text: aUrl,
-                width: 100,
-                height: 100
-            });
-
-            document.getElementById('tv-qr-img-container').innerHTML = '';
-            new QRCode(document.getElementById('tv-qr-img-container'), {
-                text: pUrl,
-                width: 300,
-                height: 300
-            });
+            document.getElementById('qr-players').innerHTML = ''; new QRCode(document.getElementById('qr-players'), { text: pUrl, width: 250, height: 250 });
+            document.getElementById('qr-admin').innerHTML = ''; new QRCode(document.getElementById('qr-admin'), { text: aUrl, width: 100, height: 100 });
+            document.getElementById('tv-qr-img-container').innerHTML = ''; new QRCode(document.getElementById('tv-qr-img-container'), { text: pUrl, width: 300, height: 300 });
         }
 
-        // --- Timer Logic ---
+        // --- TV Logic ---
         function updateTimerUI(endTime) {
             const now = Date.now();
             const left = Math.max(0, Math.ceil((endTime - now) / 1000));
-            
             const tvTimer = document.getElementById('tv-timer');
-            const pTimer = document.getElementById('p-timer');
-            
-            if(tvTimer) tvTimer.innerText = left;
-            if(pTimer) pTimer.innerText = left;
-
-            if(left <= 5) {
-                if(tvTimer) tvTimer.classList.add('timer-critical');
-                if(pTimer) pTimer.style.color = 'var(--danger)';
-            } else {
-                if(tvTimer) tvTimer.classList.remove('timer-critical');
-                if(pTimer) pTimer.style.color = 'var(--gold)';
+            if(tvTimer) {
+                tvTimer.innerText = left;
+                if(left <= 5) tvTimer.classList.add('timer-critical');
+                else tvTimer.classList.remove('timer-critical');
             }
             return left;
         }
@@ -546,15 +334,10 @@
             if(timerInterval) clearInterval(timerInterval);
             updateTimerUI(endTime);
             timerInterval = setInterval(() => {
-                const left = updateTimerUI(endTime);
-                if(left <= 0) {
-                    clearInterval(timerInterval);
-                    document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
-                }
+                if(updateTimerUI(endTime) <= 0) clearInterval(timerInterval);
             }, 1000);
         }
 
-        // --- TV Logic ---
         function initTV() {
             generateQRs();
             db.ref(`insan/${roomId}`).on('value', snap => {
@@ -564,9 +347,9 @@
                 document.getElementById('tv-char-display').innerText = data.char;
                 const status = document.getElementById('tv-status');
                 const tvStopAlert = document.getElementById('tv-stop-alert');
-                const resultsGrid = document.getElementById('tv-results');
                 const topScores = document.getElementById('tv-top-scores');
 
+                // تحديث أعلى النتائج
                 if(data.players) {
                     const sorted = Object.values(data.players).sort((a,b) => (b.grandTotal||0) - (a.grandTotal||0));
                     topScores.innerHTML = '';
@@ -576,10 +359,6 @@
                     });
                 }
 
-                resultsGrid.style.display = 'grid';
-                document.getElementById('tv-rating-view').style.display = 'none';
-                document.getElementById('tv-suggestions-view').style.display = 'none';
-
                 if(data.state === 'stopped') {
                     if(timerInterval) clearInterval(timerInterval);
                     if(!stopOverlayShown) {
@@ -588,13 +367,14 @@
                         status.innerText = "انتهى الوقت!";
                         setTimeout(() => { tvStopAlert.style.display = 'none'; }, 3000);
                     }
+                    // هنا نظهر النتائج مكشوفة (hide = false) فوراً عند التوقف
                     renderTVResults(data, false); 
+                    
                 } else if (data.state === 'playing') {
                     stopOverlayShown = false;
                     tvStopAlert.style.display = 'none';
                     status.innerText = "انطلقوا! 🔥";
-                    renderTVResults(data, true);
-                    
+                    renderTVResults(data, true); // إخفاء الإجابات أثناء اللعب
                     if(data.endTime) startTimer(data.endTime);
 
                 } else if (data.state === 'lobby') {
@@ -602,19 +382,8 @@
                     renderTVResults(data, true); 
                 } else if (data.state === 'correction') {
                     tvStopAlert.style.display = 'none';
-                    status.innerText = "التصحيح... قارن إجابتك";
+                    status.innerText = "التصحيح...";
                     renderTVResults(data, false); 
-                } else if (data.state === 'results') {
-                    status.innerText = "النتائج النهائية للجولة";
-                    renderTVResults(data, false);
-                } else if (data.state === 'rating_reveal') {
-                    resultsGrid.style.display = 'none';
-                    document.getElementById('tv-rating-view').style.display = 'block';
-                    calculateRatingDisplay(data.players);
-                } else if (data.state === 'suggestions_reveal') {
-                    resultsGrid.style.display = 'none';
-                    document.getElementById('tv-suggestions-view').style.display = 'block';
-                    renderSuggestions(data.players);
                 }
             });
         }
@@ -637,12 +406,8 @@
                         
                         let badgeHtml = '';
                         if(score !== null) {
-                            let cls = 'ts-0'; 
-                            if(score===10) cls='ts-10'; 
-                            if(score===5) cls='ts-5';
+                            let cls = score===10 ? 'ts-10' : (score===5 ? 'ts-5' : 'ts-0');
                             badgeHtml = `<span class="tv-score-badge ${cls}">${score}</span>`;
-                        } else if(data.state === 'correction') {
-                            badgeHtml = `<span class="tv-score-badge" style="background:#555">؟</span>`;
                         }
 
                         rows += `<tr>
@@ -661,27 +426,8 @@
             }
         }
 
-        function calculateRatingDisplay(players) {
-            if(!players) return;
-            let sum=0, count=0;
-            Object.values(players).forEach(p => { if(p.rating){ sum+=parseInt(p.rating); count++; }});
-            document.getElementById('tv-final-score').innerText = count ? (sum/count).toFixed(1) : "0.0";
-        }
-
-        function renderSuggestions(players) {
-            const grid = document.getElementById('tv-sugg-grid');
-            grid.innerHTML = '';
-            if(!players) return;
-            Object.values(players).forEach(p => {
-                if(p.suggestion) grid.innerHTML += `<div class="sugg-card">${p.suggestion}<br><small style="color:#666">${p.name}</small></div>`;
-            });
-        }
-
         // --- Player Logic ---
         function initPlayer() {
-            const rb = document.getElementById('rating-btns');
-            for(let i=1; i<=10; i++) rb.innerHTML += `<div class="c-btn" onclick="selectRate(this, ${i})" style="border:1px solid #fff; cursor:pointer;">${i}</div>`;
-
             const grid = document.getElementById('name-selection-area');
             playersList.forEach(p => {
                 const card = document.createElement('div');
@@ -690,11 +436,8 @@
                     if(p.name === "آخر") {
                         document.getElementById('name-selection-area').style.display='none';
                         document.getElementById('custom-name-area').style.display='block';
-                    } else {
-                        login(p.name, p.img);
-                    }
+                    } else { login(p.name); }
                 };
-                
                 card.innerHTML = `<span class="player-name-txt" style="font-size:1.2rem;">${p.name}</span>`;
                 grid.appendChild(card);
             });
@@ -702,51 +445,27 @@
             const storedId = localStorage.getItem('insan_uid');
             if(storedId) {
                 db.ref(`insan/${roomId}/players/${storedId}`).once('value', snap => {
-                    if(snap.exists()) {
-                        myName = snap.val().name;
-                        login(myName, "other.jpg"); 
-                    }
+                    if(snap.exists()) { myName = snap.val().name; login(myName); }
                 });
             }
         }
 
         function submitCustomName() {
             const n = document.getElementById('custom-name-input').value.trim();
-            if(n) login(n, "other.jpg");
+            if(n) login(n);
         }
-        
         function cancelCustomName() {
             document.getElementById('custom-name-area').style.display='none';
             document.getElementById('name-selection-area').style.display='grid';
         }
 
-        function login(name, img) {
+        function login(name) {
             myName = name;
             db.ref(`insan/${roomId}/players/${myId}`).update({ name: name });
             document.getElementById('p-login').style.display = 'none';
             document.getElementById('p-dashboard').style.display = 'block';
             document.getElementById('p-name-disp').innerText = name;
-            document.getElementById('p-persistent-img').src = img;
             listenGame();
-        }
-
-        function logoutPlayer() {
-            localStorage.removeItem('insan_uid');
-            location.reload();
-        }
-
-        function toggleMsg(show) {
-            const over = document.getElementById('private-msg-overlay');
-            const persist = document.getElementById('persistent-image-container');
-            const btn = document.getElementById('btn-msg-reveal');
-            if(show) {
-                document.getElementById('msg-img-full').src = document.getElementById('p-persistent-img').src;
-                over.style.display = 'flex';
-            } else {
-                over.style.display = 'none';
-                btn.style.display = 'none';
-                persist.style.display = 'block';
-            }
         }
 
         function listenGame() {
@@ -757,70 +476,39 @@
                 document.getElementById('p-char').innerText = data.char;
                 const state = data.state || 'lobby';
                 
-                const pDash = document.getElementById('p-dashboard');
-                const pRate = document.getElementById('p-rating-screen');
-                const pSugg = document.getElementById('p-suggestion-screen');
+                const pWait = document.getElementById('p-wait');
+                const pGame = document.getElementById('p-game');
+                const pStopMsg = document.getElementById('p-stop-msg');
 
-                pRate.style.display = 'none';
-                pSugg.style.display = 'none';
-                
-                if (state === 'rating' || state === 'rating_reveal') {
-                    pDash.style.display = 'none';
-                    pRate.style.display = 'block';
-                } else if (state.startsWith('suggestion')) {
-                    pDash.style.display = 'none';
-                    pSugg.style.display = 'block';
-                } else {
-                    pDash.style.display = 'block';
+                pWait.style.display='none'; pGame.style.display='none';
+
+                if(state === 'playing') {
+                    pGame.style.display = 'block';
+                    pStopMsg.style.display = 'none';
+                    document.querySelectorAll('.game-input').forEach(i => i.disabled = false);
                     
-                    const pWait = document.getElementById('p-wait');
-                    const pGame = document.getElementById('p-game');
-                    const pCorr = document.getElementById('p-correction-screen');
-                    const stopOver = document.getElementById('stop-overlay');
-
-                    if(state === 'stopped') {
-                        if(!stopOverlayShown) {
-                            document.getElementById('stopper-name').innerText = "انتهى الوقت!";
-                            stopOver.style.display = 'flex';
-                            setTimeout(() => stopOver.style.display='none', 3000);
-                        }
-                    } else stopOver.style.display = 'none';
-
-                    pWait.style.display='none'; pGame.style.display='none'; pCorr.style.display='none';
-
-                    if(state === 'playing') {
-                        pGame.style.display = 'block';
-                        document.querySelectorAll('.game-input').forEach(i => i.disabled = false);
-                        
-                        // بدء المؤقت المحلي
-                        if(data.endTime) startTimer(data.endTime);
-
-                        document.getElementById('correction-list').innerHTML = '';
-                        myCurrentAnswers = {};
-
-                        if(!window.roundCleaned) {
-                            document.querySelectorAll('.game-input').forEach(i => i.value = '');
-                            window.roundCleaned = true;
-                        }
-                    } else if (state === 'stopped') {
-                        if(timerInterval) clearInterval(timerInterval);
-                        pGame.style.display = 'block';
-                        document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
-                        
-                        saveAnswersLocally();
-                        
-                        window.roundCleaned = false;
-
-                    } else if (state === 'correction') {
-                        if(timerInterval) clearInterval(timerInterval);
-                        pCorr.style.display = 'block';
-                        renderCorrection();
-                        window.roundCleaned = false;
-                    } else {
-                        if(timerInterval) clearInterval(timerInterval);
-                        pWait.style.display = 'block';
-                        window.roundCleaned = false; 
+                    myCurrentAnswers = {};
+                    if(!window.roundCleaned) {
+                        document.querySelectorAll('.game-input').forEach(i => i.value = '');
+                        window.roundCleaned = true;
                     }
+                } else if (state === 'stopped') {
+                    pGame.style.display = 'block';
+                    pStopMsg.style.display = 'block';
+                    document.querySelectorAll('.game-input').forEach(i => i.disabled = true);
+                    
+                    saveAnswersLocally();
+                    window.roundCleaned = false;
+
+                } else if (state === 'correction') {
+                    // في مرحلة التصحيح، يمكن إظهار شاشة بسيطة للاعب تقول "تصحيح..."
+                    // لكن لتبسيط الطلب، سنبقيه يرى إجاباته المتوقفة
+                    pGame.style.display = 'block';
+                    pStopMsg.innerText = "جاري التصحيح...";
+                    pStopMsg.style.display = 'block';
+                } else {
+                    pWait.style.display = 'block';
+                    window.roundCleaned = false; 
                 }
             });
         }
@@ -835,43 +523,6 @@
             };
             db.ref(`insan/${roomId}/players/${myId}/answers`).update(myCurrentAnswers);
         }
-
-        function renderCorrection() {
-            const list = document.getElementById('correction-list');
-            if(list.innerHTML !== '') return; 
-            
-            catKeys.forEach(k => {
-                const val = myCurrentAnswers[k] || "لا يوجد إجابة";
-                list.innerHTML += `
-                <div class="correction-card">
-                    <div class="corr-header">
-                        <span class="corr-title">${categories[k]}</span>
-                        <span class="corr-score-disp" id="score-disp-${k}">-</span>
-                    </div>
-                    <span class="corr-ans">${val}</span>
-                    <div class="corr-btns">
-                        <button class="c-btn cb-10" onclick="rateSelf('${k}',10,this)">10</button>
-                        <button class="c-btn cb-5" onclick="rateSelf('${k}',5,this)">5</button>
-                        <button class="c-btn cb-0" onclick="rateSelf('${k}',0,this)">0</button>
-                    </div>
-                </div>`;
-            });
-        }
-
-        function rateSelf(cat, score, btn) {
-            btn.parentElement.querySelectorAll('.c-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            document.getElementById(`score-disp-${cat}`).innerText = score;
-            db.ref(`insan/${roomId}/players/${myId}/scores/${cat}`).set(score);
-        }
-
-        function selectRate(btn, val) {
-            document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            selectedRating = val;
-        }
-        function submitRating() { if(!selectedRating) return; db.ref(`insan/${roomId}/players/${myId}/rating`).set(selectedRating); alert("تم الإرسال"); }
-        function submitSuggestion() { const t = document.getElementById('suggestion-input').value; if(t) db.ref(`insan/${roomId}/players/${myId}/suggestion`).set(t); alert("تم الإرسال"); }
 
         // --- Admin Logic ---
         function initAdmin() {
@@ -894,13 +545,9 @@
                 if(snap.val()) {
                     Object.keys(snap.val()).forEach(pid => {
                         const p = snap.val()[pid];
-                        const total = (p.grandTotal||0) + getRoundScore(p.scores);
                         list.innerHTML += `<div class="player-manage-row">
-                            <span style="font-weight:bold">${p.name} <span style="color:#aaa">(${total})</span></span> 
-                            <div>
-                                <button class="btn-icon btn-edit" onclick="editPlayerScore('${pid}', ${p.grandTotal||0})">✏️</button>
-                                <button class="btn-icon btn-del" onclick="kick('${pid}')">🗑️</button>
-                            </div>
+                            <span style="font-weight:bold">${p.name}</span> 
+                            <button onclick="if(confirm('طرد؟')) db.ref('insan/${roomId}/players/${pid}').remove()">🗑️</button>
                         </div>`;
                     });
                 }
@@ -910,7 +557,6 @@
         function startRound(char, btn) {
             if(btn.classList.contains('used')) return;
             
-            // حساب وقت النهاية (15 ثانية من الآن)
             const endTime = Date.now() + 15000;
 
             db.ref(`insan/${roomId}/players`).once('value', snap => {
@@ -932,22 +578,15 @@
                 db.ref().update(updates);
                 btn.classList.add('used');
 
-                // إيقاف اللعبة تلقائياً بعد 15 ثانية
                 setTimeout(() => {
-                    db.ref(`insan/${roomId}`).update({ state: 'stopped', stopper: 'الوقت انتهى' });
+                    db.ref(`insan/${roomId}`).update({ state: 'stopped' });
                 }, 15000);
             });
         }
 
-        function kick(pid) { if(confirm("طرد؟")) db.ref(`insan/${roomId}/players/${pid}`).remove(); }
-        function editPlayerScore(pid, old) { const n = prompt("نقاط:", old); if(n) db.ref(`insan/${roomId}/players/${pid}/grandTotal`).set(parseInt(n)); }
         function startSelfCorrection() { db.ref(`insan/${roomId}`).update({ state: 'correction' }); }
         function showResultsToTV() { db.ref(`insan/${roomId}`).update({ state: 'results' }); }
         function fullReset() { if(confirm("تصفير؟")) db.ref(`insan/${roomId}`).set({state:'lobby', char:'?'}); }
-        function startRatingPhase() { db.ref(`insan/${roomId}`).update({ state: 'rating' }); }
-        function showRatingResult() { db.ref(`insan/${roomId}`).update({ state: 'rating_reveal' }); }
-        function startSuggestionPhase() { db.ref(`insan/${roomId}`).update({ state: 'suggestions' }); }
-        function showSuggestionsResult() { db.ref(`insan/${roomId}`).update({ state: 'suggestions_reveal' }); }
 
     </script>
 </body>
