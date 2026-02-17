@@ -51,7 +51,8 @@
         }
 
         /* --- TV Styles --- */
-        #scr-tv { padding-top: 60px; } /* مساحة للبار العلوي */
+        #scr-tv { padding-top: 60px; } 
+        
         .tv-top-bar {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #ffffff22;
@@ -59,8 +60,42 @@
             z-index: 100;
         }
         
-        .timer-display { font-size: 6rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); margin: 10px 0; }
-        .big-char { font-size: 8rem; font-weight: 900; color: white; background: rgba(255,255,255,0.1); width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; border-radius: 30px; }
+        /* تنسيق المؤقت الجديد (كبير وواضح في الوسط) */
+        .tv-header-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .timer-display {
+            font-size: 8rem; /* حجم خط عملاق */
+            font-weight: 900; 
+            color: var(--gold); 
+            text-shadow: 0 0 40px rgba(251, 191, 36, 0.4); 
+            margin-top: 10px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums; /* لثبات الأرقام وعدم اهتزازها */
+        }
+        
+        .timer-critical { 
+            color: var(--danger); 
+            text-shadow: 0 0 50px rgba(244, 63, 94, 0.6);
+            animation: pulse 0.5s infinite; 
+        }
+
+        .big-char { 
+            font-size: 6rem; 
+            font-weight: 900; 
+            color: white; 
+            background: rgba(255,255,255,0.1); 
+            width: 120px; height: 120px; 
+            display: flex; justify-content: center; align-items: center; 
+            border-radius: 30px; 
+            border: 2px solid rgba(255,255,255,0.2);
+        }
         
         .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 98%; padding: 10px; }
         .result-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 10px; text-align: right; }
@@ -88,7 +123,6 @@
         .corr-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
         .c-btn { padding: 10px; border-radius: 8px; border: 1px solid #ffffff44; background: transparent; color: white; font-weight: bold; cursor: pointer; transition: 0.1s; }
         
-        /* Active states for buttons */
         .c-btn.active-10 { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
         .c-btn.active-5 { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
         .c-btn.active-0 { background: var(--danger); border-color: var(--danger); box-shadow: 0 0 10px var(--danger); }
@@ -112,7 +146,6 @@
         
         #local-warning { display: none; background: #f59e0b; color: black; padding: 10px; margin: 10px; border-radius: 5px; text-align: center; }
         
-        /* Modal for QR Code */
         #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; flex-direction: column; justify-content: center; align-items: center; }
         .qr-modal-content { background: #1e1b4b; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #ffffff33; }
     </style>
@@ -145,7 +178,6 @@
         <div class="tv-top-bar">
             <button onclick="toggleQrModal(true)" style="background:rgba(255,255,255,0.1); border:1px solid #ffffff44; color:white; padding:8px 15px; border-radius:20px; cursor:pointer;">📱 الباركود</button>
             <div id="tv-status" style="font-size:1.2rem; color:#ccc;">انتظار...</div>
-            <div id="tv-timer" style="font-size:1.5rem; font-weight:bold; color:var(--gold);">15</div>
         </div>
 
         <div id="tv-stop-alert"><h1>🛑 انتهى الوقت!</h1></div>
@@ -159,8 +191,10 @@
             </div>
         </div>
 
-        <div style="display:flex; flex-direction:column; align-items:center; margin:20px 0;">
+        <!-- المنطقة الرئيسية في الوسط: الحرف وتحته الوقت الكبير -->
+        <div class="tv-header-container">
             <div id="tv-char" class="big-char">?</div>
+            <div id="tv-timer" class="timer-display">15</div>
         </div>
 
         <div id="tv-results" class="results-grid"></div>
@@ -302,18 +336,14 @@
             const pUrl = base + `?room=${roomId}&role=player`;
             const aUrl = base + `?room=${roomId}&role=admin`;
             
-            // Player QR
             const qrP = document.getElementById('qr-players'); qrP.innerHTML=''; new QRCode(qrP, {text:pUrl, width:200, height:200});
-            // Admin QR
             const qrA = document.getElementById('qr-admin'); qrA.innerHTML=''; new QRCode(qrA, {text:aUrl, width:100, height:100});
-            // TV Modal QR
             const qrT = document.getElementById('tv-qr-img'); qrT.innerHTML=''; new QRCode(qrT, {text:pUrl, width:250, height:250});
         }
 
         function toggleQrModal(show) {
             document.getElementById('qr-modal').style.display = show ? 'flex' : 'none';
         }
-        function toggleTvQr() { toggleQrModal(true); } // Alias
 
         // --- TV Logic ---
         let timerInt = null;
@@ -367,6 +397,9 @@
             const tick = () => {
                 const left = Math.max(0, Math.ceil((end - Date.now())/1000));
                 el.innerText = left;
+                if(left<=5) el.classList.add('timer-critical');
+                else el.classList.remove('timer-critical');
+                
                 if(left<=0) clearInterval(timerInt);
             };
             tick();
@@ -414,7 +447,7 @@
 
         // --- Player Logic ---
         let myId = null;
-        let isCorrectionRendered = false; // لمنع إعادة الرسم
+        let isCorrectionRendered = false;
 
         function initPlayer() {
             const grid = document.getElementById('name-grid');
@@ -433,7 +466,7 @@
         function loginCustom() { const n = document.getElementById('custom-name-input').value; if(n) doLogin(n); }
         
         function doLogin(name) {
-            myId = Date.now().toString(); // New ID for every login
+            myId = Date.now().toString(); 
             db.ref(`insan/${roomId}/players/${myId}`).set({ name: name, grandTotal: 0 });
             
             document.getElementById('p-login').style.display = 'none';
@@ -451,14 +484,13 @@
                 const state = data.state;
                 document.getElementById('p-char').innerText = data.char;
 
-                // Toggle Views
                 document.getElementById('p-wait').style.display = 'none';
                 document.getElementById('p-game').style.display = 'none';
                 document.getElementById('p-correction').style.display = 'none';
                 document.getElementById('p-suggestion').style.display = 'none';
 
                 if(state === 'playing') {
-                    isCorrectionRendered = false; // Reset for next round
+                    isCorrectionRendered = false; 
                     document.getElementById('p-game').style.display = 'block';
                     document.querySelectorAll('.game-input').forEach(i => { i.value = ''; i.disabled = false; });
                     document.getElementById('p-msg').innerText = "اكتب بسرعة! 🏃";
@@ -472,13 +504,11 @@
                 else if(state === 'correction') {
                     document.getElementById('p-correction').style.display = 'block';
                     
-                    // Render UI only ONCE to prevent flickering
                     if(!isCorrectionRendered) {
                         renderCorrectionUI();
                         isCorrectionRendered = true;
                     }
                     
-                    // Always update active classes based on data
                     if(data.players[myId] && data.players[myId].scores) {
                          updateCorrectionState(data.players[myId].scores);
                     }
@@ -518,7 +548,6 @@
 
             catKeys.forEach(k => {
                 const val = answers[k] || "-";
-                // We create buttons with explicit ID logic to update them easily
                 list.innerHTML += `
                 <div class="correction-card" id="card-${k}">
                     <small>${cats[k]}</small>
@@ -537,12 +566,10 @@
             catKeys.forEach(cat => {
                 const score = scores[cat];
                 if(score !== undefined) {
-                    // Remove all active classes in this category
                     document.getElementById(`btn-${cat}-10`).classList.remove('active-10');
                     document.getElementById(`btn-${cat}-5`).classList.remove('active-5');
                     document.getElementById(`btn-${cat}-0`).classList.remove('active-0');
                     
-                    // Add active class to specific button
                     const btn = document.getElementById(`btn-${cat}-${score}`);
                     if(btn) btn.classList.add(`active-${score}`);
                 }
@@ -550,7 +577,6 @@
         }
 
         function rate(cat, score) {
-            // 1. Visual update IMMEDIATELY (Instant feedback)
             document.getElementById(`btn-${cat}-10`).classList.remove('active-10');
             document.getElementById(`btn-${cat}-5`).classList.remove('active-5');
             document.getElementById(`btn-${cat}-0`).classList.remove('active-0');
@@ -558,7 +584,6 @@
             const btn = document.getElementById(`btn-${cat}-${score}`);
             if(btn) btn.classList.add(`active-${score}`);
 
-            // 2. Send to DB (Only this category to avoid overwriting others)
             db.ref(`insan/${roomId}/players/${myId}/scores/${cat}`).set(score);
         }
         
