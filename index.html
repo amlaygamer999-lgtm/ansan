@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- كود إثبات ملكية الموقع لجوجل -->
+    <!-- 1. كود إثبات الملكية لجوجل -->
     <meta name="google-site-verification" content="znycWNVniKL6yMLVBwjavYHbxtjKIyIaqZHMruzl7-U" />
     
-    <!-- إعدادات العنوان والوصف -->
+    <!-- 2. العنوان والوصف (اللي يظهر في بحث جوجل) -->
     <title>لعبة إنسان حيوان برو - PRO 🦁</title>
     <meta name="description" content="لعبة إنسان حيوان برو (PRO) أونلاين. تحدي السرعة 15 ثانية! العب مع أصدقائك الآن في أفضل نسخة مطورة.">
-    <meta name="keywords" content="لعبة انسان حيوان برو, انسان حيوان برو, لعبة انسان حيوان pro, لعبة انسان حيوان, مسابقات, ألعاب جماعية">
+    <meta name="keywords" content="لعبة انسان حيوان برو, انسان حيوان برو, لعبة انسان حيوان pro, مسابقات, ألعاب جماعية">
     
-    <!-- 🌟 الأيقونة الحقيقية للموقع (لازم ترفع صورة اسمها favicon.png في جيت هب) 🌟 -->
+    <!-- 3. الأيقونة (يجب رفع صورة باسم favicon.png في جيت هب) -->
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- 🌟 إجبار جوجل على قراءة اسم الموقع الرسمي 🌟 -->
+    <!-- 4. أكواد إجبار جوجل ومواقع التواصل على قراءة الاسم الاحترافي -->
     <meta name="application-name" content="لعبة إنسان حيوان PRO">
     <meta property="og:site_name" content="لعبة إنسان حيوان PRO">
     <meta property="og:title" content="لعبة إنسان حيوان برو - PRO">
@@ -23,44 +23,36 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://amlaygamer999-lgtm.github.io/ansan/">
     
-    <!-- سكريبت الفهرسة المتقدم لجوجل (Schema) -->
+    <!-- 5. الكود السري (Schema) لبرمجة روبوتات جوجل على اسم موقعك -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "لعبة إنسان حيوان PRO",
-      "alternateName": "إنسان حيوان برو",
+      "alternateName": ["إنسان حيوان برو", "Insan Hayawan PRO"],
       "url": "https://amlaygamer999-lgtm.github.io/ansan/"
     }
     </script>
     
-    <!-- مكاتب Firebase والباركود -->
+    <!-- مكاتب فايربيس والباركود والخطوط -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-    <!-- بقية ستايل اللعبة CSS... -->
+    <!-- الستايل (CSS) -->
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --primary: #8b5cf6; 
-            --secondary: #ec4899; 
-            --accent: #10b981; 
-            --danger: #f43f5e; 
-            --text: #f8fafc;
-            --gold: #fbbf24;
+            --bg-dark: #0f172a; --primary: #8b5cf6; --secondary: #ec4899; 
+            --accent: #10b981; --danger: #f43f5e; --text: #f8fafc; --gold: #fbbf24;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0; padding: 0;
-            font-family: 'Tajawal', sans-serif;
+            margin: 0; padding: 0; font-family: 'Tajawal', sans-serif;
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-            color: var(--text);
-            height: 100vh;
-            overflow: hidden;
+            color: var(--text); height: 100vh; overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
@@ -68,63 +60,31 @@
         .active { display: flex; }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .btn-main {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; border: none; padding: 12px 30px;
-            font-size: 1.1rem; font-weight: bold; border-radius: 50px;
-            cursor: pointer; margin: 5px; width: 90%; max-width: 300px;
+            color: white; border: none; padding: 12px 30px; font-size: 1.1rem; 
+            font-weight: bold; border-radius: 50px; cursor: pointer; margin: 5px; 
+            width: 90%; max-width: 300px;
         }
 
-        /* --- TV Styles --- */
         #scr-tv { padding-top: 60px; } 
         
         .tv-top-bar {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #ffffff22;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
-            z-index: 100;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 20px; z-index: 100;
         }
         
-        .tv-header-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+        .tv-header-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; margin-bottom: 20px; }
 
-        .timer-display {
-            font-size: 8rem; 
-            font-weight: 900; 
-            color: var(--gold); 
-            text-shadow: 0 0 40px rgba(251, 191, 36, 0.4); 
-            margin-top: 10px;
-            line-height: 1;
-            font-variant-numeric: tabular-nums; 
-        }
-        
-        .timer-critical { 
-            color: var(--danger); 
-            text-shadow: 0 0 50px rgba(244, 63, 94, 0.6);
-            animation: pulse 0.5s infinite; 
-        }
-
-        .big-char { 
-            font-size: 6rem; 
-            font-weight: 900; 
-            color: white; 
-            background: rgba(255,255,255,0.1); 
-            width: 120px; height: 120px; 
-            display: flex; justify-content: center; align-items: center; 
-            border-radius: 30px; 
-            border: 2px solid rgba(255,255,255,0.2);
-        }
+        .timer-display { font-size: 8rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 40px rgba(251, 191, 36, 0.4); margin-top: 10px; line-height: 1; font-variant-numeric: tabular-nums; }
+        .timer-critical { color: var(--danger); text-shadow: 0 0 50px rgba(244, 63, 94, 0.6); animation: pulse 0.5s infinite; }
+        .big-char { font-size: 6rem; font-weight: 900; color: white; background: rgba(255,255,255,0.1); width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; border-radius: 30px; border: 2px solid rgba(255,255,255,0.2); }
         
         .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 98%; padding: 10px; }
         .result-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 10px; text-align: right; }
@@ -137,7 +97,6 @@
         .ts-5 { background: #f59e0b; color: black; padding: 0 5px; border-radius: 4px; }
         .ts-0 { background: #f43f5e; color: white; padding: 0 5px; border-radius: 4px; }
 
-        /* --- Player Styles --- */
         #scr-player { padding: 20px; max-width: 600px; }
         .player-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 20px; }
         .player-card-btn { background: rgba(255,255,255,0.1); border: 1px solid #ffffff33; padding: 20px; border-radius: 15px; color: white; font-size: 1.2rem; cursor: pointer; }
@@ -146,20 +105,16 @@
         .input-label { width: 60px; text-align: center; color: #ccc; font-weight: bold; border-left: 1px solid #ffffff33; }
         .game-input { flex-grow: 1; background: transparent; border: none; padding: 10px; color: white; font-size: 1.1rem; text-align: right; }
         
-        /* Correction UI */
         .correction-card { background: rgba(255,255,255,0.05); padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ffffff22; }
         .corr-ans { display: block; font-size: 1.3rem; font-weight: bold; margin: 10px 0; color: var(--gold); }
         .corr-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
         .c-btn { padding: 10px; border-radius: 8px; border: 1px solid #ffffff44; background: transparent; color: white; font-weight: bold; cursor: pointer; transition: 0.1s; }
-        
         .c-btn.active-10 { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
         .c-btn.active-5 { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
         .c-btn.active-0 { background: var(--danger); border-color: var(--danger); box-shadow: 0 0 10px var(--danger); }
 
-        /* Suggestions UI */
         .sugg-area { width: 100%; height: 150px; background: rgba(255,255,255,0.1); border: 1px solid #ffffff44; color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; }
 
-        /* --- Admin Styles --- */
         .admin-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px; }
         .adm-btn { border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin-left: 5px; font-weight: bold; }
         .btn-del { background: var(--danger); color: white; }
@@ -169,25 +124,21 @@
         .char-btn { background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; }
         .char-btn.used { background: #000; color: #555; text-decoration: line-through; }
 
-        /* Overlays */
         #tv-stop-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(220, 38, 38, 0.95); z-index: 99; flex-direction: column; justify-content: center; align-items: center; }
         #tv-stop-alert h1 { font-size: 5rem; margin: 0; }
-        
         #local-warning { display: none; background: #f59e0b; color: black; padding: 10px; margin: 10px; border-radius: 5px; text-align: center; }
-        
         #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; flex-direction: column; justify-content: center; align-items: center; }
         .qr-modal-content { background: #1e1b4b; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #ffffff33; }
     </style>
 </head>
 <body>
 
-    <!-- ==================== Landing ==================== -->
+    <!-- الواجهات (نفسها بدون تغيير) -->
     <div id="scr-landing" class="screen active">
         <h1 style="font-size:3rem; margin-bottom:10px;">إنسان حيوان PRO</h1>
         <button class="btn-main" onclick="createGame()">إنشاء غرفة جديدة 🎮</button>
     </div>
 
-    <!-- ==================== Connect (QR) ==================== -->
     <div id="scr-connect" class="screen">
         <div class="glass-panel" style="padding:20px; text-align:center; margin-top:50px;">
             <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
@@ -201,17 +152,12 @@
         </div>
     </div>
 
-    <!-- ==================== TV Screen ==================== -->
     <div id="scr-tv" class="screen">
-        <!-- Top Bar with QR Toggle -->
         <div class="tv-top-bar">
             <button onclick="toggleQrModal(true)" style="background:rgba(255,255,255,0.1); border:1px solid #ffffff44; color:white; padding:8px 15px; border-radius:20px; cursor:pointer;">📱 الباركود</button>
             <div id="tv-status" style="font-size:1.2rem; color:#ccc;">انتظار...</div>
         </div>
-
         <div id="tv-stop-alert"><h1>🛑 انتهى الوقت!</h1></div>
-
-        <!-- QR Modal (Pop-up) -->
         <div id="qr-modal">
             <div class="qr-modal-content">
                 <h2 style="color:white; margin-bottom:20px;">انضم للعبة</h2>
@@ -219,25 +165,18 @@
                 <button onclick="toggleQrModal(false)" class="btn-main" style="margin-top:20px;">إغلاق ❌</button>
             </div>
         </div>
-
-        <!-- المنطقة الرئيسية في الوسط: الحرف وتحته الوقت الكبير -->
         <div class="tv-header-container">
             <div id="tv-char" class="big-char">?</div>
             <div id="tv-timer" class="timer-display">15</div>
         </div>
-
         <div id="tv-results" class="results-grid"></div>
-        
         <div id="tv-suggestions" style="display:none; width:100%; padding:20px;">
             <h2 style="text-align:center; color:var(--gold);">💡 اقتراحات الجمهور</h2>
             <div id="tv-sugg-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:15px;"></div>
         </div>
     </div>
 
-    <!-- ==================== Player Screen ==================== -->
     <div id="scr-player" class="screen">
-        
-        <!-- 1. Login -->
         <div id="p-login" style="width:100%; text-align:center;">
             <h2>اختر اسمك</h2>
             <div id="name-grid" class="player-select-grid"></div>
@@ -247,21 +186,12 @@
                 <button class="btn-main" style="background:transparent; border:1px solid #666;" onclick="showNameGrid()">رجوع</button>
             </div>
         </div>
-
-        <!-- 2. Dashboard -->
         <div id="p-dashboard" style="display:none; width:100%;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 id="p-name-disp" style="margin:0; color:var(--gold);">...</h3>
                 <button onclick="location.reload()" style="background:transparent; border:1px solid #666; color:#aaa; border-radius:10px; padding:5px 10px;">خروج</button>
             </div>
-
-            <!-- Wait State -->
-            <div id="p-wait" style="text-align:center; margin-top:50px;">
-                <h1>⏳</h1>
-                <h3>انتظر الأدمن...</h3>
-            </div>
-
-            <!-- Game State -->
+            <div id="p-wait" style="text-align:center; margin-top:50px;"><h1>⏳</h1><h3>انتظر الأدمن...</h3></div>
             <div id="p-game" style="display:none;">
                 <div class="glass-panel" style="text-align:center; margin-bottom:15px; padding:10px;">
                     الحرف: <span id="p-char" style="color:var(--gold); font-size:1.5rem; font-weight:bold;">?</span>
@@ -273,15 +203,11 @@
                 <div class="input-row"><div class="input-label">بلاد</div><input id="in-country" class="game-input"></div>
                 <div id="p-msg" style="text-align:center; color:#ccc; margin-top:10px;">أسرع! الوقت يمضي ⏱️</div>
             </div>
-
-            <!-- Correction State -->
             <div id="p-correction" style="display:none;">
                 <h2 style="text-align:center; color:var(--gold);">صحح لنفسك 📝</h2>
                 <div id="correction-list"></div>
                 <div style="text-align:center; margin-top:20px; color:#aaa;">النتائج تظهر في التلفزيون</div>
             </div>
-
-            <!-- Suggestion State -->
             <div id="p-suggestion" style="display:none;">
                 <h2 style="text-align:center;">اكتب اقتراحك 💡</h2>
                 <textarea id="sugg-input" class="sugg-area" placeholder="اكتب هنا..."></textarea>
@@ -290,31 +216,25 @@
         </div>
     </div>
 
-    <!-- ==================== Admin Screen ==================== -->
     <div id="scr-admin" class="screen">
         <div class="glass-panel admin-controls" style="width:100%; max-width:600px; padding:15px; margin-top:20px;">
             <h3>🎮 التحكم</h3>
-            
             <div style="margin-bottom:15px;">اختر الحرف (يبدأ الـ 15 ثانية):</div>
             <div id="chars-grid" class="char-grid"></div>
-
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
                 <button class="btn-main" style="width:100%; margin:0; font-size:0.9rem; background:linear-gradient(135deg, #f59e0b, #d97706); color:black;" onclick="startCorrection()">📝 بدء التصحيح</button>
                 <button class="btn-main" style="width:100%; margin:0; font-size:0.9rem;" onclick="showResults()">👀 إظهار النتائج</button>
                 <button class="btn-main" style="width:100%; margin:0; background:var(--accent); color:black;" onclick="openSuggestions()">💡 فتح الاقتراحات</button>
                 <button class="btn-main" style="width:100%; margin:0;" onclick="showSuggestionsOnTV()">📺 عرض الاقتراحات</button>
             </div>
-
             <h4 style="margin-top:30px; border-bottom:1px solid #444; padding-bottom:5px;">إدارة اللاعبين</h4>
             <div id="adm-players-list"></div>
-            
             <button class="btn-main" style="background:black; width:100%; margin-top:20px;" onclick="fullReset()">⚠️ تصفير اللعبة</button>
         </div>
     </div>
 
-    <!-- Script -->
+    <!-- برمجة اللعبة -->
     <script>
-        // --- Firebase Config ---
         const firebaseConfig = {
             apiKey: "AIzaSyDh4v9gRCICA_XRCJXsDpbtCySYAoFsfhk",
             authDomain: "bagera-word.firebaseapp.com",
@@ -327,7 +247,6 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        // --- Data ---
         const namesList = ["هدى", "نور", "تهاني", "اماني", "حنين", "صالح", "عبودي", "مرام", "آخر"];
         const chars = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split('');
         const cats = {human:'إنسان', animal:'حيوان', plant:'نبات', object:'جماد', country:'بلاد'};
@@ -336,7 +255,6 @@
         let roomId = new URLSearchParams(window.location.search).get('room');
         const role = new URLSearchParams(window.location.search).get('role');
         
-        // --- Init ---
         window.onload = function() {
             if(role === 'admin') { show('scr-admin'); initAdmin(); }
             else if(role === 'player') { show('scr-player'); initPlayer(); }
@@ -370,11 +288,8 @@
             const qrT = document.getElementById('tv-qr-img'); qrT.innerHTML=''; new QRCode(qrT, {text:pUrl, width:250, height:250});
         }
 
-        function toggleQrModal(show) {
-            document.getElementById('qr-modal').style.display = show ? 'flex' : 'none';
-        }
+        function toggleQrModal(show) { document.getElementById('qr-modal').style.display = show ? 'flex' : 'none'; }
 
-        // --- TV Logic ---
         let timerInt = null;
         function initTV() {
             generateQRs();
@@ -428,7 +343,6 @@
                 el.innerText = left;
                 if(left<=5) el.classList.add('timer-critical');
                 else el.classList.remove('timer-critical');
-                
                 if(left<=0) clearInterval(timerInt);
             };
             tick();
@@ -449,10 +363,8 @@
                     const val = (p.answers && p.answers[k]) ? p.answers[k] : '';
                     const score = (p.scores && p.scores[k]) !== undefined ? p.scores[k] : null;
                     if(score) roundScore += score;
-
                     let badge = '';
                     if(score !== null) badge = `<span class="${score==10?'ts-10':(score==5?'ts-5':'ts-0')}">${score}</span>`;
-
                     rows += `<tr><td>${cats[k]}</td><td style="display:flex; justify-content:space-between;"><span>${hide?'...':val}</span>${hide?'':badge}</td></tr>`;
                 });
                 
@@ -474,7 +386,6 @@
             });
         }
 
-        // --- Player Logic ---
         let myId = null;
         let isCorrectionRendered = false;
 
@@ -497,11 +408,9 @@
         function doLogin(name) {
             myId = Date.now().toString(); 
             db.ref(`insan/${roomId}/players/${myId}`).set({ name: name, grandTotal: 0 });
-            
             document.getElementById('p-login').style.display = 'none';
             document.getElementById('p-dashboard').style.display = 'block';
             document.getElementById('p-name-disp').innerText = name;
-            
             listenGame();
         }
 
@@ -532,32 +441,21 @@
                 }
                 else if(state === 'correction') {
                     document.getElementById('p-correction').style.display = 'block';
-                    
-                    if(!isCorrectionRendered) {
-                        renderCorrectionUI();
-                        isCorrectionRendered = true;
-                    }
-                    
-                    if(data.players[myId] && data.players[myId].scores) {
-                         updateCorrectionState(data.players[myId].scores);
-                    }
+                    if(!isCorrectionRendered) { renderCorrectionUI(); isCorrectionRendered = true; }
+                    if(data.players[myId] && data.players[myId].scores) { updateCorrectionState(data.players[myId].scores); }
                 }
                 else if(state === 'suggestions') {
                     document.getElementById('p-suggestion').style.display = 'block';
                     document.getElementById('sugg-input').disabled = false;
                 }
-                else {
-                    document.getElementById('p-wait').style.display = 'block';
-                }
+                else { document.getElementById('p-wait').style.display = 'block'; }
             });
         }
 
         function saveAnswers() {
             const answers = {
-                human: document.getElementById('in-human').value,
-                animal: document.getElementById('in-animal').value,
-                plant: document.getElementById('in-plant').value,
-                object: document.getElementById('in-object').value,
+                human: document.getElementById('in-human').value, animal: document.getElementById('in-animal').value,
+                plant: document.getElementById('in-plant').value, object: document.getElementById('in-object').value,
                 country: document.getElementById('in-country').value
             };
             db.ref(`insan/${roomId}/players/${myId}/answers`).set(answers);
@@ -566,15 +464,11 @@
         function renderCorrectionUI() {
             const list = document.getElementById('correction-list');
             list.innerHTML = '';
-            
             const answers = {
-                human: document.getElementById('in-human').value,
-                animal: document.getElementById('in-animal').value,
-                plant: document.getElementById('in-plant').value,
-                object: document.getElementById('in-object').value,
+                human: document.getElementById('in-human').value, animal: document.getElementById('in-animal').value,
+                plant: document.getElementById('in-plant').value, object: document.getElementById('in-object').value,
                 country: document.getElementById('in-country').value
             };
-
             catKeys.forEach(k => {
                 const val = answers[k] || "-";
                 list.innerHTML += `
@@ -598,7 +492,6 @@
                     document.getElementById(`btn-${cat}-10`).classList.remove('active-10');
                     document.getElementById(`btn-${cat}-5`).classList.remove('active-5');
                     document.getElementById(`btn-${cat}-0`).classList.remove('active-0');
-                    
                     const btn = document.getElementById(`btn-${cat}-${score}`);
                     if(btn) btn.classList.add(`active-${score}`);
                 }
@@ -609,22 +502,16 @@
             document.getElementById(`btn-${cat}-10`).classList.remove('active-10');
             document.getElementById(`btn-${cat}-5`).classList.remove('active-5');
             document.getElementById(`btn-${cat}-0`).classList.remove('active-0');
-            
             const btn = document.getElementById(`btn-${cat}-${score}`);
             if(btn) btn.classList.add(`active-${score}`);
-
             db.ref(`insan/${roomId}/players/${myId}/scores/${cat}`).set(score);
         }
         
         function sendSuggestion() {
             const txt = document.getElementById('sugg-input').value;
-            if(txt) {
-                db.ref(`insan/${roomId}/players/${myId}/suggestion`).set(txt);
-                alert("تم الإرسال!");
-            }
+            if(txt) { db.ref(`insan/${roomId}/players/${myId}/suggestion`).set(txt); alert("تم الإرسال!"); }
         }
 
-        // --- Admin Logic ---
         function initAdmin() {
             const grid = document.getElementById('chars-grid');
             chars.forEach(c => {
@@ -633,17 +520,14 @@
                 b.onclick = () => startRound(c, b);
                 grid.appendChild(b);
             });
-            
             db.ref(`insan/${roomId}/usedChars`).on('value', snap => {
                 const used = snap.val() || {};
                 document.querySelectorAll('.char-btn').forEach(b => { if(used[b.innerText]) b.classList.add('used'); });
             });
-
             db.ref(`insan/${roomId}/players`).on('value', snap => {
                 const list = document.getElementById('adm-players-list');
                 list.innerHTML = '';
                 if(!snap.val()) return;
-                
                 Object.keys(snap.val()).forEach(pid => {
                     const p = snap.val()[pid];
                     const row = document.createElement('div');
@@ -662,7 +546,6 @@
 
         function startRound(char, btn) {
             if(btn.classList.contains('used')) return;
-            
             db.ref(`insan/${roomId}/players`).once('value', snap => {
                 const updates = {};
                 if(snap.val()) {
@@ -680,9 +563,7 @@
                 updates['char'] = char;
                 updates['endTime'] = Date.now() + 15000;
                 updates[`usedChars/${char}`] = true;
-                
                 db.ref(`insan/${roomId}`).update(updates);
-                
                 setTimeout(() => db.ref(`insan/${roomId}`).update({state: 'stopped'}), 15000);
             });
         }
@@ -693,17 +574,11 @@
         function showSuggestionsOnTV() { db.ref(`insan/${roomId}`).update({ state: 'suggestions_view' }); }
         function fullReset() { if(confirm('متأكد؟')) db.ref(`insan/${roomId}`).set({state:'lobby', char:'?'}); }
 
-        function kick(pid) {
-            if(confirm("حذف اللاعب نهائياً؟")) {
-                db.ref(`insan/${roomId}/players/${pid}`).remove();
-            }
-        }
+        function kick(pid) { if(confirm("حذف اللاعب نهائياً؟")) { db.ref(`insan/${roomId}/players/${pid}`).remove(); } }
         function editScore(pid, current) {
             const val = prompt(`النقاط الحالية: ${current}\nكم تريد أن تضيف؟ (اكتب سالب للخصم)`, "0");
             const num = parseInt(val);
-            if(!isNaN(num)) {
-                db.ref(`insan/${roomId}/players/${pid}/grandTotal`).set(current + num);
-            }
+            if(!isNaN(num)) { db.ref(`insan/${roomId}/players/${pid}/grandTotal`).set(current + num); }
         }
     </script>
 </body>
