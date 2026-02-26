@@ -7,10 +7,30 @@
     <!-- كود إثبات ملكية الموقع لجوجل (Google Site Verification) -->
     <meta name="google-site-verification" content="znycWNVniKL6yMLVBwjavYHbxtjKIyIaqZHMruzl7-U" />
     
-    <!-- إعدادات SEO للظهور في جوجل (تم تعديلها لضمان ظهور كلمة "برو") -->
-    <title>لعبة انسان حيوان برو - PRO 🦁</title>
-    <meta name="description" content="لعبة انسان حيوان برو (PRO) أونلاين. تحدي السرعة 15 ثانية! العب مع أصدقائك الآن في أفضل نسخة مطورة.">
+    <!-- إعدادات SEO للظهور في جوجل -->
+    <title>لعبة إنسان حيوان برو - PRO 🦁</title>
+    <meta name="description" content="لعبة إنسان حيوان برو (PRO) أونلاين. تحدي السرعة 15 ثانية! العب مع أصدقائك الآن في أفضل نسخة مطورة.">
     <meta name="keywords" content="لعبة انسان حيوان برو, انسان حيوان برو, لعبة انسان حيوان pro, لعبة انسان حيوان, مسابقات, ألعاب جماعية">
+    
+    <!-- 🌟 أيقونة الموقع (Favicon) التي ستظهر في بحث جوجل وفي المتصفح 🌟 -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
+    
+    <!-- 🌟 إجبار جوجل على قراءة اسم الموقع الرسمي بدل كلمة GitHub 🌟 -->
+    <meta property="og:title" content="لعبة إنسان حيوان PRO">
+    <meta property="og:site_name" content="لعبة إنسان حيوان PRO">
+    <meta property="og:description" content="تحدي السرعة 15 ثانية أونلاين.">
+    <meta property="og:type" content="website">
+    
+    <!-- سكريبت الفهرسة المتقدم لجوجل (Schema) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "لعبة إنسان حيوان PRO",
+      "alternateName": ["إنسان حيوان برو", "Insan Hayawan PRO"],
+      "url": "https://amlaygamer999-lgtm.github.io/"
+    }
+    </script>
     
     <!-- مكاتب Firebase والباركود -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -180,6 +200,7 @@
 
     <!-- ==================== TV Screen ==================== -->
     <div id="scr-tv" class="screen">
+        <!-- Top Bar with QR Toggle -->
         <div class="tv-top-bar">
             <button onclick="toggleQrModal(true)" style="background:rgba(255,255,255,0.1); border:1px solid #ffffff44; color:white; padding:8px 15px; border-radius:20px; cursor:pointer;">📱 الباركود</button>
             <div id="tv-status" style="font-size:1.2rem; color:#ccc;">انتظار...</div>
@@ -187,6 +208,7 @@
 
         <div id="tv-stop-alert"><h1>🛑 انتهى الوقت!</h1></div>
 
+        <!-- QR Modal (Pop-up) -->
         <div id="qr-modal">
             <div class="qr-modal-content">
                 <h2 style="color:white; margin-bottom:20px;">انضم للعبة</h2>
@@ -195,6 +217,7 @@
             </div>
         </div>
 
+        <!-- المنطقة الرئيسية في الوسط: الحرف وتحته الوقت الكبير -->
         <div class="tv-header-container">
             <div id="tv-char" class="big-char">?</div>
             <div id="tv-timer" class="timer-display">15</div>
@@ -210,6 +233,8 @@
 
     <!-- ==================== Player Screen ==================== -->
     <div id="scr-player" class="screen">
+        
+        <!-- 1. Login -->
         <div id="p-login" style="width:100%; text-align:center;">
             <h2>اختر اسمك</h2>
             <div id="name-grid" class="player-select-grid"></div>
@@ -220,17 +245,20 @@
             </div>
         </div>
 
+        <!-- 2. Dashboard -->
         <div id="p-dashboard" style="display:none; width:100%;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 id="p-name-disp" style="margin:0; color:var(--gold);">...</h3>
                 <button onclick="location.reload()" style="background:transparent; border:1px solid #666; color:#aaa; border-radius:10px; padding:5px 10px;">خروج</button>
             </div>
 
+            <!-- Wait State -->
             <div id="p-wait" style="text-align:center; margin-top:50px;">
                 <h1>⏳</h1>
                 <h3>انتظر الأدمن...</h3>
             </div>
 
+            <!-- Game State -->
             <div id="p-game" style="display:none;">
                 <div class="glass-panel" style="text-align:center; margin-bottom:15px; padding:10px;">
                     الحرف: <span id="p-char" style="color:var(--gold); font-size:1.5rem; font-weight:bold;">?</span>
@@ -243,12 +271,14 @@
                 <div id="p-msg" style="text-align:center; color:#ccc; margin-top:10px;">أسرع! الوقت يمضي ⏱️</div>
             </div>
 
+            <!-- Correction State -->
             <div id="p-correction" style="display:none;">
                 <h2 style="text-align:center; color:var(--gold);">صحح لنفسك 📝</h2>
                 <div id="correction-list"></div>
                 <div style="text-align:center; margin-top:20px; color:#aaa;">النتائج تظهر في التلفزيون</div>
             </div>
 
+            <!-- Suggestion State -->
             <div id="p-suggestion" style="display:none;">
                 <h2 style="text-align:center;">اكتب اقتراحك 💡</h2>
                 <textarea id="sugg-input" class="sugg-area" placeholder="اكتب هنا..."></textarea>
