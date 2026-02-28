@@ -4,18 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- كود إثبات الملكية لجوجل -->
     <meta name="google-site-verification" content="znycWNVniKL6yMLVBwjavYHbxtjKIyIaqZHMruzl7-U" />
-    
-    <!-- إعدادات العنوان والوصف -->
     <title>لعبة إنسان حيوان برو - PRO 🦁</title>
     <meta name="description" content="لعبة إنسان حيوان برو (PRO) أونلاين. تحدي السرعة 15 ثانية! العب مع أصدقائك الآن في أفضل نسخة مطورة.">
     <meta name="keywords" content="لعبة انسان حيوان برو, انسان حيوان برو, لعبة انسان حيوان pro, مسابقات, ألعاب جماعية">
-    
-    <!-- الأيقونة الحقيقية للموقع -->
     <link rel="icon" type="image/png" href="favicon.png">
-    
-    <!-- إجبار جوجل على قراءة اسم الموقع الرسمي -->
     <meta name="application-name" content="لعبة إنسان حيوان PRO">
     <meta property="og:site_name" content="لعبة إنسان حيوان PRO">
     <meta property="og:title" content="لعبة إنسان حيوان برو - PRO">
@@ -23,7 +16,6 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://amlaygamer999-lgtm.github.io/ansan/">
     
-    <!-- سكريبت الفهرسة المتقدم لجوجل -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -34,7 +26,6 @@
     }
     </script>
     
-    <!-- مكاتب Firebase والباركود -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -55,7 +46,6 @@
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
-        /* الخلفية الأساسية صارت لون سريع التحميل (للجوالات) */
         body {
             margin: 0; padding: 0; 
             font-family: 'Tajawal', sans-serif;
@@ -69,7 +59,6 @@
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; z-index: 10; }
         .active { display: flex; }
 
-        /* 🌟 كود جديد: الصورة تظهر فقط في الشاشات الرئيسية والتلفزيون 🌟 */
         .bg-image-screen {
             background-image: 
                 radial-gradient(circle at center, rgba(15,23,42,0.4) 0%, rgba(7,11,25,0.8) 100%),
@@ -154,7 +143,7 @@
         .sugg-area { width: 100%; height: 150px; background: rgba(0,0,0,0.5); border: 1px solid var(--panel-border); color: white; padding: 15px; border-radius: 15px; font-size: 1.2rem; font-family:'Tajawal';}
 
         .admin-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); padding: 12px; margin-bottom: 10px; border-radius: 12px; border:1px solid rgba(255,255,255,0.05); }
-        .adm-btn { border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; margin-left: 5px; font-weight: bold; }
+        .adm-btn { border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; margin-left: 5px; font-weight: bold; font-family:'Tajawal'; font-size: 0.9rem;}
         .btn-del { background: rgba(244, 63, 94, 0.2); color: var(--danger); border: 1px solid var(--danger);}
         .btn-edit { background: rgba(245, 158, 11, 0.2); color: var(--gold); border: 1px solid var(--gold);}
         
@@ -186,6 +175,7 @@
         <div class="glass-panel" style="padding:30px; text-align:center; margin-top:50px;">
             <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
             <h2 style="color:var(--primary);">امسح الكود للدخول</h2>
+            <!-- الباركود هنا يتغير برمجياً كل 3 ثواني -->
             <div id="qr-players" style="background:white; padding:15px; display:inline-block; border-radius:15px; margin: 15px 0;"></div>
         </div>
         <button class="btn-main" style="margin-top:20px;" onclick="goTV()">شاشة التلفزيون 📺</button>
@@ -207,6 +197,7 @@
         <div id="qr-modal">
             <div class="qr-modal-content">
                 <h2 style="color:white; margin-top:0; margin-bottom:20px; color:var(--primary);">انضم للعبة الآن</h2>
+                <!-- الباركود هنا يتغير برمجياً -->
                 <div id="tv-qr-img" style="background:white; padding:15px; border-radius:15px;"></div>
                 <button onclick="toggleQrModal(false)" class="btn-main" style="margin-top:30px; background:var(--danger); box-shadow:0 0 15px var(--danger);">إغلاق ❌</button>
             </div>
@@ -225,13 +216,13 @@
         </div>
     </div>
 
-    <!-- ==================== Player Screen (بدون صورة خلفية للسرعة) ==================== -->
+    <!-- ==================== Player Screen ==================== -->
     <div id="scr-player" class="screen">
         
         <div id="p-login" style="width:100%; text-align:center; margin-top:30px;">
             <h2 style="color:var(--primary); font-size:2.5rem; margin-bottom:30px; text-shadow:0 0 15px rgba(14,165,233,0.5);">اكتب اسمك لدخول اللعبة</h2>
             <div id="custom-name-box">
-                <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px; width:100%; font-size:1.5rem;" placeholder="اكتب اسمك هنا...">
+                <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px; width:100%; font-size:1.5rem;" placeholder="اكتب اسمك هنا..." maxlength="15">
                 <button class="btn-main" style="width:100%;" onclick="loginCustom()">دخول 🚀</button>
             </div>
         </div>
@@ -276,7 +267,7 @@
         </div>
     </div>
 
-    <!-- ==================== Admin Screen (بدون صورة خلفية للسرعة) ==================== -->
+    <!-- ==================== Admin Screen ==================== -->
     <div id="scr-admin" class="screen">
         <div class="glass-panel admin-controls" style="width:100%; max-width:600px; padding:20px; margin-top:20px;">
             <h2 style="color:var(--primary); text-align:center; margin-top:0;">🎮 لوحة التحكم</h2>
@@ -291,7 +282,7 @@
                 <button class="btn-main" style="width:100%; margin:0; font-size:1rem; background:var(--secondary); box-shadow:0 0 15px rgba(139,92,246,0.4);" onclick="showSuggestionsOnTV()">📺 عرض الاقتراحات بالتلفزيون</button>
             </div>
 
-            <h3 style="margin-top:40px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; color:var(--primary);">إدارة اللاعبين</h3>
+            <h3 style="margin-top:40px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; color:var(--primary);">إدارة اللاعبين (تعديل وحذف)</h3>
             <div id="adm-players-list"></div>
             
             <button class="btn-main" style="background:rgba(244,63,94,0.2); border:1px solid var(--danger); color:var(--danger); width:100%; margin-top:30px; box-shadow:none;" onclick="fullReset()">⚠️ تصفير اللعبة بالكامل</button>
@@ -319,7 +310,6 @@
         let roomId = new URLSearchParams(window.location.search).get('room');
         const role = new URLSearchParams(window.location.search).get('role');
         
-        // 🌟 التعديل السحري للسرعة: التنفيذ الفوري بدون انتظار الصور 🌟
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             
@@ -357,15 +347,27 @@
         }
         function goTV() { window.location.href = `?room=${roomId}&mode=tv`; }
 
+        // نظام تحديث الباركود الذكي (كل 3 ثواني يتغير الرابط برمجياً عشان يفتح صفحة جديدة للمسابقين دايماً)
         function generateQRs() {
             if(window.location.protocol === 'file:') document.getElementById('local-warning').style.display = 'block';
             const base = window.location.href.split('?')[0];
-            const pUrl = base + `?room=${roomId}&role=player`;
             const aUrl = base + `?room=${roomId}&role=admin`;
-            
-            const qrP = document.getElementById('qr-players'); qrP.innerHTML=''; new QRCode(qrP, {text:pUrl, width:200, height:200, colorDark:"#0ea5e9"});
             const qrA = document.getElementById('qr-admin'); qrA.innerHTML=''; new QRCode(qrA, {text:aUrl, width:100, height:100, colorDark:"#000000"});
-            const qrT = document.getElementById('tv-qr-img'); qrT.innerHTML=''; new QRCode(qrT, {text:pUrl, width:250, height:250, colorDark:"#0ea5e9"});
+            
+            setInterval(() => {
+                // إضافة كود زمني عشوائي يخدع متصفح الآيفون والأندرويد ليفتح صفحة جديدة كل مرة
+                const pUrl = base + `?room=${roomId}&role=player&scanID=${Math.floor(Date.now() / 3000)}`;
+                
+                const qrP = document.getElementById('qr-players');
+                if(qrP && qrP.offsetParent !== null) { 
+                    qrP.innerHTML=''; new QRCode(qrP, {text:pUrl, width:200, height:200, colorDark:"#0ea5e9"}); 
+                }
+                
+                const qrT = document.getElementById('tv-qr-img');
+                if(qrT && document.getElementById('qr-modal').style.display === 'flex') {
+                    qrT.innerHTML=''; new QRCode(qrT, {text:pUrl, width:250, height:250, colorDark:"#0ea5e9"});
+                }
+            }, 3000);
         }
 
         function toggleQrModal(show) { document.getElementById('qr-modal').style.display = show ? 'flex' : 'none'; }
@@ -589,9 +591,10 @@
         
         function sendSuggestion() {
             const txt = document.getElementById('sugg-input').value;
-            if(txt) { db.ref(`insan/${roomId}/players/${myId}/suggestion`).set(txt); alert("تم الإرسال!"); }
+            if(txt) { db.ref(`insan/${roomId}/players/${myId}/suggestion`).set(txt); alert("تم الإرسال بنجاح!"); }
         }
 
+        // ================== تحسينات الأدمن (التعديل والحذف) ==================
         function initAdmin() {
             const grid = document.getElementById('chars-grid');
             chars.forEach(c => {
@@ -604,6 +607,8 @@
                 const used = snap.val() || {};
                 document.querySelectorAll('.char-btn').forEach(b => { if(used[b.innerText]) b.classList.add('used'); });
             });
+            
+            // قائمة اللاعبين للأدمن
             db.ref(`insan/${roomId}/players`).on('value', snap => {
                 const list = document.getElementById('adm-players-list');
                 list.innerHTML = '';
@@ -612,11 +617,12 @@
                     const p = snap.val()[pid];
                     const row = document.createElement('div');
                     row.className = 'admin-row';
+                    // إضافة أزرار صريحة للتعديل والحذف
                     row.innerHTML = `
                         <span style="font-size:1.1rem; color:white;">${p.name} <b style="color:var(--gold)">(${p.grandTotal || 0})</b></span>
                         <div>
-                            <button class="adm-btn btn-edit" onclick="editScore('${pid}', ${p.grandTotal||0})">✏️</button>
-                            <button class="adm-btn btn-del" onclick="kick('${pid}')">🗑️</button>
+                            <button class="adm-btn btn-edit" onclick="editScore('${pid}', '${p.name}', ${p.grandTotal||0})">✏️ تعديل</button>
+                            <button class="adm-btn btn-del" onclick="kick('${pid}', '${p.name}')">🗑️ حذف</button>
                         </div>
                     `;
                     list.appendChild(row);
@@ -652,13 +658,26 @@
         function showResults() { db.ref(`insan/${roomId}`).update({ state: 'results' }); }
         function openSuggestions() { db.ref(`insan/${roomId}`).update({ state: 'suggestions' }); }
         function showSuggestionsOnTV() { db.ref(`insan/${roomId}`).update({ state: 'suggestions_view' }); }
-        function fullReset() { if(confirm('متأكد؟')) db.ref(`insan/${roomId}`).set({state:'lobby', char:'?'}); }
+        function fullReset() { if(confirm('هل أنت متأكد من تصفير اللعبة وحذف الجميع؟')) db.ref(`insan/${roomId}`).set({state:'lobby', char:'?'}); }
 
-        function kick(pid) { if(confirm("حذف اللاعب نهائياً؟")) { db.ref(`insan/${roomId}/players/${pid}`).remove(); } }
-        function editScore(pid, current) {
-            const val = prompt(`النقاط الحالية: ${current}\nكم تريد أن تضيف؟ (اكتب سالب للخصم)`, "0");
-            const num = parseInt(val);
-            if(!isNaN(num)) { db.ref(`insan/${roomId}/players/${pid}/grandTotal`).set(current + num); }
+        // دالة الحذف المباشر
+        function kick(pid, pName) { 
+            if(confirm(`هل أنت متأكد من طرد اللاعب (${pName}) نهائياً؟`)) { 
+                db.ref(`insan/${roomId}/players/${pid}`).remove(); 
+            } 
+        }
+        
+        // دالة تعديل النقاط المباشر (تكتب الرقم الجديد ويثبت فوراً)
+        function editScore(pid, pName, current) {
+            const val = prompt(`تعديل نقاط اللاعب: ${pName}\n\nالنقاط الحالية: ${current}\n\nاكتب الرصيد الجديد للاعب:`, current);
+            if (val !== null) { // إذا ما ضغط إلغاء
+                const num = parseInt(val);
+                if(!isNaN(num)) { 
+                    db.ref(`insan/${roomId}/players/${pid}/grandTotal`).set(num); 
+                } else {
+                    alert("الرجاء كتابة أرقام فقط!");
+                }
+            }
         }
     </script>
 </body>
