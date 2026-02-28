@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- 1. كود إثبات الملكية لجوجل -->
+    <!-- كود إثبات الملكية لجوجل -->
     <meta name="google-site-verification" content="znycWNVniKL6yMLVBwjavYHbxtjKIyIaqZHMruzl7-U" />
     
-    <!-- 2. العنوان والوصف (اللي يظهر في بحث جوجل) -->
+    <!-- إعدادات العنوان والوصف -->
     <title>لعبة إنسان حيوان برو - PRO 🦁</title>
     <meta name="description" content="لعبة إنسان حيوان برو (PRO) أونلاين. تحدي السرعة 15 ثانية! العب مع أصدقائك الآن في أفضل نسخة مطورة.">
     <meta name="keywords" content="لعبة انسان حيوان برو, انسان حيوان برو, لعبة انسان حيوان pro, مسابقات, ألعاب جماعية">
     
-    <!-- 3. الأيقونة (يجب رفع صورة باسم favicon.png في جيت هب) -->
+    <!-- الأيقونة الحقيقية للموقع -->
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- 4. أكواد إجبار جوجل ومواقع التواصل على قراءة الاسم الاحترافي -->
+    <!-- إجبار جوجل على قراءة اسم الموقع الرسمي -->
     <meta name="application-name" content="لعبة إنسان حيوان PRO">
     <meta property="og:site_name" content="لعبة إنسان حيوان PRO">
     <meta property="og:title" content="لعبة إنسان حيوان برو - PRO">
@@ -23,7 +23,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://amlaygamer999-lgtm.github.io/ansan/">
     
-    <!-- 5. الكود السري (Schema) لبرمجة روبوتات جوجل على اسم موقعك -->
+    <!-- سكريبت الفهرسة المتقدم لجوجل (Schema) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -34,206 +34,289 @@
     }
     </script>
     
-    <!-- مكاتب فايربيس والباركود والخطوط -->
+    <!-- مكاتب Firebase والباركود -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-    <!-- الستايل (CSS) -->
+    <!-- الستايل الجديد (متناسق مع صورة الخلفية النيون والفضاء) -->
     <style>
         :root {
-            --bg-dark: #0f172a; --primary: #8b5cf6; --secondary: #ec4899; 
-            --accent: #10b981; --danger: #f43f5e; --text: #f8fafc; --gold: #fbbf24;
+            /* ألوان مستوحاة من الخلفية الجديدة */
+            --bg-dark: #070b19; 
+            --primary: #0ea5e9; /* أزرق نيون/سماوي */
+            --secondary: #8b5cf6; /* بنفسجي نيون */
+            --accent: #10b981; /* أخضر النبتة */
+            --danger: #f43f5e; 
+            --text: #f8fafc;
+            --gold: #f59e0b; /* برتقالي/ذهبي الأسد */
+            --panel-bg: rgba(7, 11, 25, 0.7); /* خلفية زجاجية غامقة للوحات */
+            --panel-border: rgba(14, 165, 233, 0.3); /* حدود سماوية للوحات */
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0; padding: 0; font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-            color: var(--text); height: 100vh; overflow: hidden;
+            margin: 0; padding: 0; 
+            font-family: 'Tajawal', sans-serif;
+            color: var(--text); 
+            height: 100vh; 
+            overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            /* إضافة صورة الخلفية */
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
-        .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; }
+        /* طبقة تظليل خفيفة فوق الصورة عشان الكلام والقوائم تكون واضحة ومقروءة */
+        body::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(15,23,42,0.4) 0%, rgba(7,11,25,0.8) 100%);
+            z-index: -1;
+        }
+
+        .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; z-index: 10; }
         .active { display: flex; }
 
+        /* اللوحات الزجاجية الجديدة */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px); 
+            border: 1px solid var(--panel-border); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(14, 165, 233, 0.1) inset;
         }
 
+        /* الأزرار الجديدة بتدرج النيون */
         .btn-main {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; border: none; padding: 12px 30px; font-size: 1.1rem; 
+            color: white; border: none; padding: 15px 30px; font-size: 1.2rem; 
             font-weight: bold; border-radius: 50px; cursor: pointer; margin: 5px; 
             width: 90%; max-width: 300px;
+            box-shadow: 0 5px 20px rgba(14, 165, 233, 0.4);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6);
         }
 
         #scr-tv { padding-top: 60px; } 
         
         .tv-top-bar {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #ffffff22;
+            background: rgba(7, 11, 25, 0.9); border-bottom: 1px solid var(--panel-border);
             display: flex; justify-content: space-between; align-items: center; padding: 0 20px; z-index: 100;
         }
         
         .tv-header-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; margin-bottom: 20px; }
 
-        .timer-display { font-size: 8rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 40px rgba(251, 191, 36, 0.4); margin-top: 10px; line-height: 1; font-variant-numeric: tabular-nums; }
-        .timer-critical { color: var(--danger); text-shadow: 0 0 50px rgba(244, 63, 94, 0.6); animation: pulse 0.5s infinite; }
-        .big-char { font-size: 6rem; font-weight: 900; color: white; background: rgba(255,255,255,0.1); width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; border-radius: 30px; border: 2px solid rgba(255,255,255,0.2); }
+        /* المؤقت الجديد بستايل نيون الأسد الذهبي */
+        .timer-display { 
+            font-size: 8rem; font-weight: 900; color: var(--gold); 
+            text-shadow: 0 0 30px rgba(245, 158, 11, 0.6), 0 0 60px rgba(245, 158, 11, 0.2); 
+            margin-top: 10px; line-height: 1; font-variant-numeric: tabular-nums; 
+        }
+        .timer-critical { color: var(--danger); text-shadow: 0 0 40px rgba(244, 63, 94, 0.8); animation: pulse 0.5s infinite; }
         
-        .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 98%; padding: 10px; }
-        .result-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 10px; text-align: right; }
-        .res-header { display: flex; justify-content: space-between; border-bottom: 1px solid #ffffff22; padding-bottom: 5px; margin-bottom: 5px; }
-        .res-name { font-weight: bold; color: var(--gold); }
-        .res-total { background: var(--primary); padding: 2px 8px; border-radius: 5px; font-size: 0.9rem; }
-        .res-table td { padding: 3px; border-bottom: 1px solid #ffffff11; font-size: 0.85rem; }
+        /* الحرف الكبير */
+        .big-char { 
+            font-size: 6rem; font-weight: 900; color: white; 
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(139, 92, 246, 0.2)); 
+            width: 130px; height: 130px; display: flex; justify-content: center; align-items: center; 
+            border-radius: 35px; border: 2px solid var(--primary);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.3) inset;
+        }
         
-        .ts-10 { background: #10b981; color: black; padding: 0 5px; border-radius: 4px; }
-        .ts-5 { background: #f59e0b; color: black; padding: 0 5px; border-radius: 4px; }
-        .ts-0 { background: #f43f5e; color: white; padding: 0 5px; border-radius: 4px; }
+        .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 98%; padding: 10px; }
+        .result-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 12px; text-align: right; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .res-header { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; }
+        .res-name { font-weight: bold; color: var(--primary); text-shadow: 0 0 10px rgba(14, 165, 233, 0.5); }
+        .res-total { background: var(--secondary); padding: 3px 10px; border-radius: 8px; font-size: 0.9rem; font-weight:bold; box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);}
+        .res-table td { padding: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+        
+        .ts-10 { background: var(--accent); color: #000; padding: 1px 6px; border-radius: 5px; font-weight:bold; }
+        .ts-5 { background: var(--gold); color: #000; padding: 1px 6px; border-radius: 5px; font-weight:bold; }
+        .ts-0 { background: var(--danger); color: white; padding: 1px 6px; border-radius: 5px; font-weight:bold; }
 
         #scr-player { padding: 20px; max-width: 600px; }
-        .player-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 20px; }
-        .player-card-btn { background: rgba(255,255,255,0.1); border: 1px solid #ffffff33; padding: 20px; border-radius: 15px; color: white; font-size: 1.2rem; cursor: pointer; }
+        .player-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 20px; }
+        .player-card-btn { 
+            background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.4); 
+            padding: 20px; border-radius: 15px; color: white; font-size: 1.2rem; cursor: pointer; 
+            transition: 0.2s; text-align:center;
+        }
+        .player-card-btn:hover { background: rgba(14, 165, 233, 0.3); box-shadow: 0 0 15px rgba(14, 165, 233, 0.3); }
         
-        .input-row { display: flex; align-items: center; margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 10px; }
-        .input-label { width: 60px; text-align: center; color: #ccc; font-weight: bold; border-left: 1px solid #ffffff33; }
-        .game-input { flex-grow: 1; background: transparent; border: none; padding: 10px; color: white; font-size: 1.1rem; text-align: right; }
+        .input-row { display: flex; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 5px; border-radius: 12px; }
+        .input-label { width: 70px; text-align: center; color: var(--primary); font-weight: bold; border-left: 1px solid rgba(255,255,255,0.2); }
+        .game-input { flex-grow: 1; background: transparent; border: none; padding: 12px; color: white; font-size: 1.2rem; text-align: right; font-family: 'Tajawal'; }
+        .game-input:focus { background: rgba(14, 165, 233, 0.1); border-radius: 8px;}
         
-        .correction-card { background: rgba(255,255,255,0.05); padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ffffff22; }
-        .corr-ans { display: block; font-size: 1.3rem; font-weight: bold; margin: 10px 0; color: var(--gold); }
-        .corr-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-        .c-btn { padding: 10px; border-radius: 8px; border: 1px solid #ffffff44; background: transparent; color: white; font-weight: bold; cursor: pointer; transition: 0.1s; }
-        .c-btn.active-10 { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
-        .c-btn.active-5 { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
-        .c-btn.active-0 { background: var(--danger); border-color: var(--danger); box-shadow: 0 0 10px var(--danger); }
+        .correction-card { background: rgba(0,0,0,0.5); padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .corr-ans { display: block; font-size: 1.4rem; font-weight: bold; margin: 10px 0; color: var(--primary); }
+        .corr-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .c-btn { padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1.1rem;}
+        .c-btn.active-10 { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); color:black;}
+        .c-btn.active-5 { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 15px var(--gold); color:black;}
+        .c-btn.active-0 { background: var(--danger); border-color: var(--danger); box-shadow: 0 0 15px var(--danger); }
 
-        .sugg-area { width: 100%; height: 150px; background: rgba(255,255,255,0.1); border: 1px solid #ffffff44; color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; }
+        .sugg-area { width: 100%; height: 150px; background: rgba(0,0,0,0.5); border: 1px solid var(--panel-border); color: white; padding: 15px; border-radius: 15px; font-size: 1.2rem; font-family:'Tajawal';}
 
-        .admin-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px; }
-        .adm-btn { border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin-left: 5px; font-weight: bold; }
-        .btn-del { background: var(--danger); color: white; }
-        .btn-edit { background: var(--gold); color: black; }
+        .admin-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); padding: 12px; margin-bottom: 10px; border-radius: 12px; border:1px solid rgba(255,255,255,0.05); }
+        .adm-btn { border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; margin-left: 5px; font-weight: bold; }
+        .btn-del { background: rgba(244, 63, 94, 0.2); color: var(--danger); border: 1px solid var(--danger);}
+        .btn-edit { background: rgba(245, 158, 11, 0.2); color: var(--gold); border: 1px solid var(--gold);}
         
-        .char-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 20px; }
-        .char-btn { background: rgba(255,255,255,0.1); padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; }
-        .char-btn.used { background: #000; color: #555; text-decoration: line-through; }
+        .char-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 20px; }
+        .char-btn { background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.3); padding: 10px; text-align: center; border-radius: 10px; cursor: pointer; color: white; font-weight:bold;}
+        .char-btn.used { background: rgba(0,0,0,0.8); color: #555; text-decoration: line-through; border-color: #333;}
 
-        #tv-stop-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(220, 38, 38, 0.95); z-index: 99; flex-direction: column; justify-content: center; align-items: center; }
-        #tv-stop-alert h1 { font-size: 5rem; margin: 0; }
-        #local-warning { display: none; background: #f59e0b; color: black; padding: 10px; margin: 10px; border-radius: 5px; text-align: center; }
-        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; flex-direction: column; justify-content: center; align-items: center; }
-        .qr-modal-content { background: #1e1b4b; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #ffffff33; }
+        #tv-stop-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(244, 63, 94, 0.95); z-index: 99; flex-direction: column; justify-content: center; align-items: center; backdrop-filter:blur(5px);}
+        #tv-stop-alert h1 { font-size: 6rem; margin: 0; text-shadow: 0 0 20px black;}
+        
+        #local-warning { display: none; background: var(--gold); color: black; padding: 10px; margin: 10px; border-radius: 10px; text-align: center; font-weight:bold;}
+        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; flex-direction: column; justify-content: center; align-items: center; backdrop-filter:blur(10px);}
+        .qr-modal-content { background: var(--bg-dark); padding: 40px; border-radius: 25px; text-align: center; border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);}
+        
+        h1, h2, h3 { text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
 
-    <!-- الواجهات (نفسها بدون تغيير) -->
-    <div id="scr-landing" class="screen active">
-        <h1 style="font-size:3rem; margin-bottom:10px;">إنسان حيوان PRO</h1>
-        <button class="btn-main" onclick="createGame()">إنشاء غرفة جديدة 🎮</button>
+    <!-- ==================== Landing ==================== -->
+    <div id="scr-landing" class="screen active" style="justify-content:center;">
+        <!-- عنوان اللعبة بستايل نيون -->
+        <h1 style="font-size:4.5rem; margin-bottom:10px; color:var(--primary); text-shadow: 0 0 20px rgba(14, 165, 233, 0.6); text-align:center;">إنسان حيوان <span style="color:var(--secondary);">PRO</span></h1>
+        <p style="font-size:1.5rem; color:#aaa; margin-bottom:40px; text-shadow: 0 2px 5px black;">تحدي السرعة 15 ثانية ⏱️</p>
+        <button class="btn-main" style="font-size:1.5rem; padding: 20px 40px;" onclick="createGame()">إنشاء غرفة جديدة 🚀</button>
     </div>
 
+    <!-- ==================== Connect (QR) ==================== -->
     <div id="scr-connect" class="screen">
-        <div class="glass-panel" style="padding:20px; text-align:center; margin-top:50px;">
+        <div class="glass-panel" style="padding:30px; text-align:center; margin-top:50px;">
             <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
-            <div id="qr-players" style="background:white; padding:10px; display:inline-block; border-radius:10px;"></div>
-            <h3>امسح للكود للدخول</h3>
+            <h2 style="color:var(--primary);">امسح الكود للدخول</h2>
+            <div id="qr-players" style="background:white; padding:15px; display:inline-block; border-radius:15px; margin: 15px 0;"></div>
         </div>
-        <button class="btn-main" onclick="goTV()">شاشة التلفزيون 📺</button>
-        <div style="position:fixed; bottom:10px; left:10px; background:white; padding:5px;">
+        <button class="btn-main" style="margin-top:20px;" onclick="goTV()">شاشة التلفزيون 📺</button>
+        <div style="position:fixed; bottom:15px; left:15px; background:rgba(255,255,255,0.9); padding:10px; border-radius:10px;">
             <div id="qr-admin"></div>
-            <small>Admin</small>
+            <small style="color:black; font-weight:bold; display:block; text-align:center; margin-top:5px;">لوحة التحكم</small>
         </div>
     </div>
 
+    <!-- ==================== TV Screen ==================== -->
     <div id="scr-tv" class="screen">
         <div class="tv-top-bar">
-            <button onclick="toggleQrModal(true)" style="background:rgba(255,255,255,0.1); border:1px solid #ffffff44; color:white; padding:8px 15px; border-radius:20px; cursor:pointer;">📱 الباركود</button>
-            <div id="tv-status" style="font-size:1.2rem; color:#ccc;">انتظار...</div>
+            <button onclick="toggleQrModal(true)" style="background:var(--primary); border:none; color:white; padding:10px 20px; border-radius:12px; cursor:pointer; font-weight:bold; font-family:'Tajawal'; box-shadow:0 0 15px rgba(14, 165, 233, 0.4);">📱 إظهار الباركود</button>
+            <div id="tv-status" style="font-size:1.3rem; color:var(--text); font-weight:bold; background:rgba(0,0,0,0.5); padding:5px 15px; border-radius:10px;">انتظار...</div>
         </div>
+
         <div id="tv-stop-alert"><h1>🛑 انتهى الوقت!</h1></div>
+
         <div id="qr-modal">
             <div class="qr-modal-content">
-                <h2 style="color:white; margin-bottom:20px;">انضم للعبة</h2>
-                <div id="tv-qr-img" style="background:white; padding:10px; border-radius:10px;"></div>
-                <button onclick="toggleQrModal(false)" class="btn-main" style="margin-top:20px;">إغلاق ❌</button>
+                <h2 style="color:white; margin-top:0; margin-bottom:20px; color:var(--primary);">انضم للعبة الآن</h2>
+                <div id="tv-qr-img" style="background:white; padding:15px; border-radius:15px;"></div>
+                <button onclick="toggleQrModal(false)" class="btn-main" style="margin-top:30px; background:var(--danger); box-shadow:0 0 15px var(--danger);">إغلاق ❌</button>
             </div>
         </div>
+
         <div class="tv-header-container">
             <div id="tv-char" class="big-char">?</div>
             <div id="tv-timer" class="timer-display">15</div>
         </div>
+
         <div id="tv-results" class="results-grid"></div>
+        
         <div id="tv-suggestions" style="display:none; width:100%; padding:20px;">
-            <h2 style="text-align:center; color:var(--gold);">💡 اقتراحات الجمهور</h2>
-            <div id="tv-sugg-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:15px;"></div>
+            <h2 style="text-align:center; color:var(--primary); font-size:2.5rem; text-shadow:0 0 20px rgba(14,165,233,0.5);">💡 اقتراحات الجمهور</h2>
+            <div id="tv-sugg-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; margin-top:20px;"></div>
         </div>
     </div>
 
+    <!-- ==================== Player Screen ==================== -->
     <div id="scr-player" class="screen">
-        <div id="p-login" style="width:100%; text-align:center;">
-            <h2>اختر اسمك</h2>
+        
+        <div id="p-login" style="width:100%; text-align:center; margin-top:30px;">
+            <h2 style="color:var(--primary); font-size:2.5rem; margin-bottom:30px; text-shadow:0 0 15px rgba(14,165,233,0.5);">اختر اسمك لدخول اللعبة</h2>
             <div id="name-grid" class="player-select-grid"></div>
-            <div id="custom-name-box" style="display:none;">
-                <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px;" placeholder="اكتب اسمك...">
-                <button class="btn-main" onclick="loginCustom()">دخول</button>
-                <button class="btn-main" style="background:transparent; border:1px solid #666;" onclick="showNameGrid()">رجوع</button>
+            <div id="custom-name-box" style="display:none; margin-top:20px;">
+                <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px; width:100%; font-size:1.5rem;" placeholder="اكتب اسمك هنا...">
+                <button class="btn-main" style="width:100%;" onclick="loginCustom()">دخول</button>
+                <button class="btn-main" style="background:transparent; border:1px solid #666; width:100%; box-shadow:none;" onclick="showNameGrid()">رجوع</button>
             </div>
         </div>
+
         <div id="p-dashboard" style="display:none; width:100%;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h3 id="p-name-disp" style="margin:0; color:var(--gold);">...</h3>
-                <button onclick="location.reload()" style="background:transparent; border:1px solid #666; color:#aaa; border-radius:10px; padding:5px 10px;">خروج</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:rgba(0,0,0,0.5); padding:10px 20px; border-radius:15px; border:1px solid rgba(255,255,255,0.1);">
+                <h3 id="p-name-disp" style="margin:0; color:var(--primary); text-shadow:0 0 10px rgba(14,165,233,0.5);">...</h3>
+                <button onclick="location.reload()" style="background:rgba(244,63,94,0.2); border:1px solid var(--danger); color:var(--danger); border-radius:10px; padding:8px 15px; font-weight:bold; font-family:'Tajawal'; cursor:pointer;">خروج</button>
             </div>
-            <div id="p-wait" style="text-align:center; margin-top:50px;"><h1>⏳</h1><h3>انتظر الأدمن...</h3></div>
+
+            <div id="p-wait" class="glass-panel" style="text-align:center; margin-top:50px;">
+                <h1 style="font-size:4rem; margin:10px;">⏳</h1>
+                <h3 style="color:#ccc;">انتظر الأدمن لبدء الجولة...</h3>
+            </div>
+
             <div id="p-game" style="display:none;">
-                <div class="glass-panel" style="text-align:center; margin-bottom:15px; padding:10px;">
-                    الحرف: <span id="p-char" style="color:var(--gold); font-size:1.5rem; font-weight:bold;">?</span>
+                <div class="glass-panel" style="text-align:center; margin-bottom:20px; padding:15px; border-color:var(--primary); box-shadow:0 0 20px rgba(14,165,233,0.2);">
+                    <span style="font-size:1.2rem; color:#aaa;">الحرف المطلوب:</span><br>
+                    <span id="p-char" style="color:var(--primary); font-size:3rem; font-weight:900; text-shadow:0 0 15px rgba(14,165,233,0.6);">?</span>
                 </div>
                 <div class="input-row"><div class="input-label">إنسان</div><input id="in-human" class="game-input"></div>
                 <div class="input-row"><div class="input-label">حيوان</div><input id="in-animal" class="game-input"></div>
                 <div class="input-row"><div class="input-label">نبات</div><input id="in-plant" class="game-input"></div>
                 <div class="input-row"><div class="input-label">جماد</div><input id="in-object" class="game-input"></div>
                 <div class="input-row"><div class="input-label">بلاد</div><input id="in-country" class="game-input"></div>
-                <div id="p-msg" style="text-align:center; color:#ccc; margin-top:10px;">أسرع! الوقت يمضي ⏱️</div>
+                <div id="p-msg" style="text-align:center; color:var(--gold); font-weight:bold; font-size:1.2rem; margin-top:15px;">أسرع! الوقت يمضي ⏱️</div>
             </div>
+
             <div id="p-correction" style="display:none;">
-                <h2 style="text-align:center; color:var(--gold);">صحح لنفسك 📝</h2>
+                <h2 style="text-align:center; color:var(--primary); text-shadow:0 0 15px rgba(14,165,233,0.5);">صحح إجاباتك 📝</h2>
                 <div id="correction-list"></div>
-                <div style="text-align:center; margin-top:20px; color:#aaa;">النتائج تظهر في التلفزيون</div>
+                <div class="glass-panel" style="text-align:center; margin-top:20px; padding:15px;">
+                    <span style="color:#aaa;">النتائج تظهر مباشرة في شاشة التلفزيون</span>
+                </div>
             </div>
+
             <div id="p-suggestion" style="display:none;">
-                <h2 style="text-align:center;">اكتب اقتراحك 💡</h2>
-                <textarea id="sugg-input" class="sugg-area" placeholder="اكتب هنا..."></textarea>
-                <button class="btn-main" onclick="sendSuggestion()">إرسال</button>
+                <h2 style="text-align:center; color:var(--primary);">اكتب اقتراحك 💡</h2>
+                <textarea id="sugg-input" class="sugg-area" placeholder="اكتب هنا ما لم يخطر على بال أحد..."></textarea>
+                <button class="btn-main" style="width:100%; margin:20px 0 0 0;" onclick="sendSuggestion()">إرسال للتلفزيون 🚀</button>
             </div>
         </div>
     </div>
 
+    <!-- ==================== Admin Screen ==================== -->
     <div id="scr-admin" class="screen">
-        <div class="glass-panel admin-controls" style="width:100%; max-width:600px; padding:15px; margin-top:20px;">
-            <h3>🎮 التحكم</h3>
-            <div style="margin-bottom:15px;">اختر الحرف (يبدأ الـ 15 ثانية):</div>
+        <div class="glass-panel admin-controls" style="width:100%; max-width:600px; padding:20px; margin-top:20px;">
+            <h2 style="color:var(--primary); text-align:center; margin-top:0;">🎮 لوحة التحكم</h2>
+            
+            <div style="margin-bottom:15px; color:#ccc; text-align:center;">اختر الحرف لبدء المؤقت (15 ثانية):</div>
             <div id="chars-grid" class="char-grid"></div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
-                <button class="btn-main" style="width:100%; margin:0; font-size:0.9rem; background:linear-gradient(135deg, #f59e0b, #d97706); color:black;" onclick="startCorrection()">📝 بدء التصحيح</button>
-                <button class="btn-main" style="width:100%; margin:0; font-size:0.9rem;" onclick="showResults()">👀 إظهار النتائج</button>
-                <button class="btn-main" style="width:100%; margin:0; background:var(--accent); color:black;" onclick="openSuggestions()">💡 فتح الاقتراحات</button>
-                <button class="btn-main" style="width:100%; margin:0;" onclick="showSuggestionsOnTV()">📺 عرض الاقتراحات</button>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:30px; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+                <button class="btn-main" style="width:100%; margin:0; font-size:1rem; background:linear-gradient(135deg, var(--gold), #d97706); color:black; box-shadow:0 0 15px rgba(245,158,11,0.4);" onclick="startCorrection()">📝 بدء التصحيح</button>
+                <button class="btn-main" style="width:100%; margin:0; font-size:1rem;" onclick="showResults()">👀 إظهار النتائج</button>
+                <button class="btn-main" style="width:100%; margin:0; font-size:1rem; background:linear-gradient(135deg, var(--accent), #059669); box-shadow:0 0 15px rgba(16,185,129,0.4);" onclick="openSuggestions()">💡 فتح الاقتراحات للجوالات</button>
+                <button class="btn-main" style="width:100%; margin:0; font-size:1rem; background:var(--secondary); box-shadow:0 0 15px rgba(139,92,246,0.4);" onclick="showSuggestionsOnTV()">📺 عرض الاقتراحات بالتلفزيون</button>
             </div>
-            <h4 style="margin-top:30px; border-bottom:1px solid #444; padding-bottom:5px;">إدارة اللاعبين</h4>
+
+            <h3 style="margin-top:40px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; color:var(--primary);">إدارة اللاعبين</h3>
             <div id="adm-players-list"></div>
-            <button class="btn-main" style="background:black; width:100%; margin-top:20px;" onclick="fullReset()">⚠️ تصفير اللعبة</button>
+            
+            <button class="btn-main" style="background:rgba(244,63,94,0.2); border:1px solid var(--danger); color:var(--danger); width:100%; margin-top:30px; box-shadow:none;" onclick="fullReset()">⚠️ تصفير اللعبة بالكامل</button>
         </div>
     </div>
 
-    <!-- برمجة اللعبة -->
+    <!-- Script (Logic remains unchanged) -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDh4v9gRCICA_XRCJXsDpbtCySYAoFsfhk",
@@ -283,9 +366,9 @@
             const pUrl = base + `?room=${roomId}&role=player`;
             const aUrl = base + `?room=${roomId}&role=admin`;
             
-            const qrP = document.getElementById('qr-players'); qrP.innerHTML=''; new QRCode(qrP, {text:pUrl, width:200, height:200});
-            const qrA = document.getElementById('qr-admin'); qrA.innerHTML=''; new QRCode(qrA, {text:aUrl, width:100, height:100});
-            const qrT = document.getElementById('tv-qr-img'); qrT.innerHTML=''; new QRCode(qrT, {text:pUrl, width:250, height:250});
+            const qrP = document.getElementById('qr-players'); qrP.innerHTML=''; new QRCode(qrP, {text:pUrl, width:200, height:200, colorDark:"#0ea5e9"});
+            const qrA = document.getElementById('qr-admin'); qrA.innerHTML=''; new QRCode(qrA, {text:aUrl, width:100, height:100, colorDark:"#000000"});
+            const qrT = document.getElementById('tv-qr-img'); qrT.innerHTML=''; new QRCode(qrT, {text:pUrl, width:250, height:250, colorDark:"#0ea5e9"});
         }
 
         function toggleQrModal(show) { document.getElementById('qr-modal').style.display = show ? 'flex' : 'none'; }
@@ -370,9 +453,9 @@
                 
                 const total = (p.grandTotal||0) + roundScore;
                 grid.innerHTML += `
-                <div class="result-card">
+                <div class="result-card glass-panel" style="padding:15px; border:none;">
                     <div class="res-header"><span class="res-name">${p.name}</span><span class="res-total">${total}</span></div>
-                    <table class="res-table" style="width:100%">${rows}</table>
+                    <table class="res-table" style="width:100%; margin-top:10px;">${rows}</table>
                 </div>`;
             });
         }
@@ -382,7 +465,7 @@
             grid.innerHTML = '';
             if(!players) return;
             Object.values(players).forEach(p => {
-                if(p.suggestion) grid.innerHTML += `<div class="glass-panel" style="padding:15px; background:white; color:black;"><b>${p.suggestion}</b><br><small>- ${p.name}</small></div>`;
+                if(p.suggestion) grid.innerHTML += `<div class="glass-panel" style="padding:20px; background:rgba(14, 165, 233, 0.1); border-color:var(--primary);"><b style="font-size:1.5rem; display:block; margin-bottom:10px;">${p.suggestion}</b><small style="color:var(--gold); font-size:1.1rem;">- ${p.name}</small></div>`;
             });
         }
 
@@ -473,7 +556,7 @@
                 const val = answers[k] || "-";
                 list.innerHTML += `
                 <div class="correction-card" id="card-${k}">
-                    <small>${cats[k]}</small>
+                    <small style="color:#aaa;">${cats[k]}</small>
                     <span class="corr-ans">${val}</span>
                     <div class="corr-btns">
                         <button class="c-btn cb-10" id="btn-${k}-10" onclick="rate('${k}', 10)">10</button>
@@ -533,7 +616,7 @@
                     const row = document.createElement('div');
                     row.className = 'admin-row';
                     row.innerHTML = `
-                        <span>${p.name} <b style="color:var(--gold)">(${p.grandTotal || 0})</b></span>
+                        <span style="font-size:1.1rem; color:white;">${p.name} <b style="color:var(--gold)">(${p.grandTotal || 0})</b></span>
                         <div>
                             <button class="adm-btn btn-edit" onclick="editScore('${pid}', ${p.grandTotal||0})">✏️</button>
                             <button class="adm-btn btn-del" onclick="kick('${pid}')">🗑️</button>
