@@ -4,29 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- كود إثبات الملكية لجوجل -->
     <meta name="google-site-verification" content="znycWNVniKL6yMLVBwjavYHbxtjKIyIaqZHMruzl7-U" />
+    
+    <!-- إعدادات العنوان والوصف -->
     <title>لعبة إنسان حيوان برو - PRO 🦁</title>
     <meta name="description" content="لعبة إنسان حيوان برو (PRO) أونلاين. تحدي السرعة 15 ثانية! العب مع أصدقائك الآن في أفضل نسخة مطورة.">
     <meta name="keywords" content="لعبة انسان حيوان برو, انسان حيوان برو, لعبة انسان حيوان pro, مسابقات, ألعاب جماعية">
+    
+    <!-- الأيقونة الحقيقية للموقع (Favicon) -->
+    <!-- تأكد أن لديك صورة باسم favicon.png في نفس مسار هذا الملف على GitHub وتكون مربعة (مثل 512x512) -->
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <meta name="application-name" content="لعبة إنسان حيوان PRO">
-    <meta property="og:site_name" content="لعبة إنسان حيوان PRO">
+    <!-- إجبار جوجل على قراءة اسم الموقع كـ Bagera Games -->
+    <meta name="application-name" content="Bagera Games">
+    <meta property="og:site_name" content="Bagera Games">
     <meta property="og:title" content="لعبة إنسان حيوان برو - PRO">
     <meta property="og:description" content="تحدي السرعة 15 ثانية أونلاين. العب مع أصدقائك الآن.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://amlaygamer999-lgtm.github.io/ansan/">
     
+    <!-- سكريبت الفهرسة المتقدم لجوجل (Schema) لترسيخ اسم Bagera Games -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "لعبة إنسان حيوان PRO",
-      "alternateName": ["إنسان حيوان برو", "Insan Hayawan PRO"],
+      "name": "Bagera Games",
       "url": "https://amlaygamer999-lgtm.github.io/ansan/"
     }
     </script>
     
+    <!-- مكاتب Firebase والباركود -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -47,6 +55,7 @@
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
+        /* الخلفية الأساسية صارت لون سريع التحميل (للجوالات) */
         body {
             margin: 0; padding: 0; 
             font-family: 'Tajawal', sans-serif;
@@ -60,6 +69,7 @@
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; z-index: 10; }
         .active { display: flex; }
 
+        /* الصورة تظهر فقط في الشاشات الرئيسية والتلفزيون */
         .bg-image-screen {
             background-image: 
                 radial-gradient(circle at center, rgba(15,23,42,0.4) 0%, rgba(7,11,25,0.8) 100%),
@@ -176,6 +186,7 @@
         <div class="glass-panel" style="padding:30px; text-align:center; margin-top:50px;">
             <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
             <h2 style="color:var(--primary);">امسح الكود للدخول</h2>
+            <!-- الباركود هنا يتغير برمجياً كل 3 ثواني -->
             <div id="qr-players" style="background:white; padding:15px; display:inline-block; border-radius:15px; margin: 15px 0;"></div>
         </div>
         <button class="btn-main" style="margin-top:20px;" onclick="goTV()">شاشة التلفزيون 📺</button>
@@ -197,6 +208,7 @@
         <div id="qr-modal">
             <div class="qr-modal-content">
                 <h2 style="color:white; margin-top:0; margin-bottom:20px; color:var(--primary);">انضم للعبة الآن</h2>
+                <!-- الباركود هنا يتغير برمجياً -->
                 <div id="tv-qr-img" style="background:white; padding:15px; border-radius:15px;"></div>
                 <button onclick="toggleQrModal(false)" class="btn-main" style="margin-top:30px; background:var(--danger); box-shadow:0 0 15px var(--danger);">إغلاق ❌</button>
             </div>
@@ -388,7 +400,6 @@
                 else if(data.state === 'stopped') {
                     if(timerInt) clearInterval(timerInt);
                     
-                    // 🌟 التعديل هنا: إجبار الشاشة على إظهار رقم 0 فوراً عند التوقف
                     if(timerEl) {
                         timerEl.innerText = "0";
                         timerEl.classList.remove('timer-critical');
@@ -420,13 +431,11 @@
             });
         }
 
-        // 🌟 التعديل السحري في المؤقت عشان يصير دقيق وما يبدأ من 16
         function runTimer(end) {
             if(timerInt) clearInterval(timerInt);
             const el = document.getElementById('tv-timer');
 
             const tick = () => {
-                // حساب الوقت وتقييده بين 0 و 15 فقط
                 let left = Math.ceil((end - Date.now()) / 1000);
                 left = Math.max(0, Math.min(15, left)); 
 
@@ -442,7 +451,6 @@
             };
             
             tick();
-            // تحديث سريع جداً كل 200 ملي ثانية لضمان الدقة وتفادي اللاق
             timerInt = setInterval(tick, 200); 
         }
 
@@ -621,6 +629,7 @@
                 const used = snap.val() || {};
                 document.querySelectorAll('.char-btn').forEach(b => { if(used[b.innerText]) b.classList.add('used'); });
             });
+            
             db.ref(`insan/${roomId}/players`).on('value', snap => {
                 const list = document.getElementById('adm-players-list');
                 list.innerHTML = '';
