@@ -9,6 +9,7 @@
     <meta name="description" content="لعبة إنسان حيوان برو (PRO) أونلاين. تحدي السرعة 15 ثانية! العب مع أصدقائك الآن في أفضل نسخة مطورة.">
     <meta name="keywords" content="لعبة انسان حيوان برو, انسان حيوان برو, لعبة انسان حيوان pro, مسابقات, ألعاب جماعية">
     <link rel="icon" type="image/png" href="favicon.png">
+    
     <meta name="application-name" content="لعبة إنسان حيوان PRO">
     <meta property="og:site_name" content="لعبة إنسان حيوان PRO">
     <meta property="og:title" content="لعبة إنسان حيوان برو - PRO">
@@ -175,7 +176,6 @@
         <div class="glass-panel" style="padding:30px; text-align:center; margin-top:50px;">
             <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
             <h2 style="color:var(--primary);">امسح الكود للدخول</h2>
-            <!-- الباركود هنا يتغير برمجياً كل 3 ثواني -->
             <div id="qr-players" style="background:white; padding:15px; display:inline-block; border-radius:15px; margin: 15px 0;"></div>
         </div>
         <button class="btn-main" style="margin-top:20px;" onclick="goTV()">شاشة التلفزيون 📺</button>
@@ -197,7 +197,6 @@
         <div id="qr-modal">
             <div class="qr-modal-content">
                 <h2 style="color:white; margin-top:0; margin-bottom:20px; color:var(--primary);">انضم للعبة الآن</h2>
-                <!-- الباركود هنا يتغير برمجياً -->
                 <div id="tv-qr-img" style="background:white; padding:15px; border-radius:15px;"></div>
                 <button onclick="toggleQrModal(false)" class="btn-main" style="margin-top:30px; background:var(--danger); box-shadow:0 0 15px var(--danger);">إغلاق ❌</button>
             </div>
@@ -347,7 +346,6 @@
         }
         function goTV() { window.location.href = `?room=${roomId}&mode=tv`; }
 
-        // نظام تحديث الباركود الذكي (كل 3 ثواني يتغير الرابط برمجياً عشان يفتح صفحة جديدة للمسابقين دايماً)
         function generateQRs() {
             if(window.location.protocol === 'file:') document.getElementById('local-warning').style.display = 'block';
             const base = window.location.href.split('?')[0];
@@ -355,14 +353,11 @@
             const qrA = document.getElementById('qr-admin'); qrA.innerHTML=''; new QRCode(qrA, {text:aUrl, width:100, height:100, colorDark:"#000000"});
             
             setInterval(() => {
-                // إضافة كود زمني عشوائي يخدع متصفح الآيفون والأندرويد ليفتح صفحة جديدة كل مرة
                 const pUrl = base + `?room=${roomId}&role=player&scanID=${Math.floor(Date.now() / 3000)}`;
-                
                 const qrP = document.getElementById('qr-players');
                 if(qrP && qrP.offsetParent !== null) { 
                     qrP.innerHTML=''; new QRCode(qrP, {text:pUrl, width:200, height:200, colorDark:"#0ea5e9"}); 
                 }
-                
                 const qrT = document.getElementById('tv-qr-img');
                 if(qrT && document.getElementById('qr-modal').style.display === 'flex') {
                     qrT.innerHTML=''; new QRCode(qrT, {text:pUrl, width:250, height:250, colorDark:"#0ea5e9"});
@@ -382,6 +377,7 @@
                 document.getElementById('tv-char').innerText = data.char;
                 const status = document.getElementById('tv-status');
                 const alert = document.getElementById('tv-stop-alert');
+                const timerEl = document.getElementById('tv-timer');
                 
                 if(data.state === 'playing') {
                     status.innerText = "انطلقوا! 🔥";
@@ -391,6 +387,13 @@
                 } 
                 else if(data.state === 'stopped') {
                     if(timerInt) clearInterval(timerInt);
+                    
+                    // 🌟 التعديل هنا: إجبار الشاشة على إظهار رقم 0 فوراً عند التوقف
+                    if(timerEl) {
+                        timerEl.innerText = "0";
+                        timerEl.classList.remove('timer-critical');
+                    }
+
                     if(alert.style.display === 'none') {
                         alert.style.display = 'flex';
                         setTimeout(() => alert.style.display='none', 3000);
@@ -417,18 +420,30 @@
             });
         }
 
+        // 🌟 التعديل السحري في المؤقت عشان يصير دقيق وما يبدأ من 16
         function runTimer(end) {
             if(timerInt) clearInterval(timerInt);
             const el = document.getElementById('tv-timer');
+
             const tick = () => {
-                const left = Math.max(0, Math.ceil((end - Date.now())/1000));
+                // حساب الوقت وتقييده بين 0 و 15 فقط
+                let left = Math.ceil((end - Date.now()) / 1000);
+                left = Math.max(0, Math.min(15, left)); 
+
                 el.innerText = left;
-                if(left<=5) el.classList.add('timer-critical');
+                
+                if(left <= 5 && left > 0) el.classList.add('timer-critical');
                 else el.classList.remove('timer-critical');
-                if(left<=0) clearInterval(timerInt);
+                
+                if(left <= 0) {
+                    el.innerText = "0";
+                    clearInterval(timerInt);
+                }
             };
+            
             tick();
-            timerInt = setInterval(tick, 1000);
+            // تحديث سريع جداً كل 200 ملي ثانية لضمان الدقة وتفادي اللاق
+            timerInt = setInterval(tick, 200); 
         }
 
         function renderResults(data, hide) {
@@ -594,7 +609,6 @@
             if(txt) { db.ref(`insan/${roomId}/players/${myId}/suggestion`).set(txt); alert("تم الإرسال بنجاح!"); }
         }
 
-        // ================== تحسينات الأدمن (التعديل والحذف) ==================
         function initAdmin() {
             const grid = document.getElementById('chars-grid');
             chars.forEach(c => {
@@ -607,8 +621,6 @@
                 const used = snap.val() || {};
                 document.querySelectorAll('.char-btn').forEach(b => { if(used[b.innerText]) b.classList.add('used'); });
             });
-            
-            // قائمة اللاعبين للأدمن
             db.ref(`insan/${roomId}/players`).on('value', snap => {
                 const list = document.getElementById('adm-players-list');
                 list.innerHTML = '';
@@ -617,7 +629,6 @@
                     const p = snap.val()[pid];
                     const row = document.createElement('div');
                     row.className = 'admin-row';
-                    // إضافة أزرار صريحة للتعديل والحذف
                     row.innerHTML = `
                         <span style="font-size:1.1rem; color:white;">${p.name} <b style="color:var(--gold)">(${p.grandTotal || 0})</b></span>
                         <div>
@@ -660,17 +671,15 @@
         function showSuggestionsOnTV() { db.ref(`insan/${roomId}`).update({ state: 'suggestions_view' }); }
         function fullReset() { if(confirm('هل أنت متأكد من تصفير اللعبة وحذف الجميع؟')) db.ref(`insan/${roomId}`).set({state:'lobby', char:'?'}); }
 
-        // دالة الحذف المباشر
         function kick(pid, pName) { 
             if(confirm(`هل أنت متأكد من طرد اللاعب (${pName}) نهائياً؟`)) { 
                 db.ref(`insan/${roomId}/players/${pid}`).remove(); 
             } 
         }
         
-        // دالة تعديل النقاط المباشر (تكتب الرقم الجديد ويثبت فوراً)
         function editScore(pid, pName, current) {
             const val = prompt(`تعديل نقاط اللاعب: ${pName}\n\nالنقاط الحالية: ${current}\n\nاكتب الرصيد الجديد للاعب:`, current);
-            if (val !== null) { // إذا ما ضغط إلغاء
+            if (val !== null) { 
                 const num = parseInt(val);
                 if(!isNaN(num)) { 
                     db.ref(`insan/${roomId}/players/${pid}/grandTotal`).set(num); 
