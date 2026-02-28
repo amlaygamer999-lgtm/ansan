@@ -23,7 +23,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://amlaygamer999-lgtm.github.io/ansan/">
     
-    <!-- سكريبت الفهرسة المتقدم لجوجل (Schema) -->
+    <!-- سكريبت الفهرسة المتقدم لجوجل -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -40,7 +40,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-    <!-- الستايل الجديد (متناسق مع صورة الخلفية النيون والفضاء) -->
     <style>
         :root {
             --bg-dark: #070b19; 
@@ -56,6 +55,7 @@
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
+        /* الخلفية الأساسية صارت لون سريع التحميل (للجوالات) */
         body {
             margin: 0; padding: 0; 
             font-family: 'Tajawal', sans-serif;
@@ -63,21 +63,20 @@
             height: 100vh; 
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-image: url('bg.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        body::before {
-            content: '';
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(15,23,42,0.4) 0%, rgba(7,11,25,0.8) 100%);
-            z-index: -1;
+            background: linear-gradient(135deg, #070b19 0%, #1e1b4b 100%);
         }
 
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; z-index: 10; }
         .active { display: flex; }
+
+        /* 🌟 كود جديد: الصورة تظهر فقط في الشاشات الرئيسية والتلفزيون 🌟 */
+        .bg-image-screen {
+            background-image: 
+                radial-gradient(circle at center, rgba(15,23,42,0.4) 0%, rgba(7,11,25,0.8) 100%),
+                url('bg.png');
+            background-size: cover;
+            background-position: center;
+        }
 
         .glass-panel {
             background: var(--panel-bg);
@@ -137,7 +136,7 @@
         .ts-5 { background: var(--gold); color: #000; padding: 1px 6px; border-radius: 5px; font-weight:bold; }
         .ts-0 { background: var(--danger); color: white; padding: 1px 6px; border-radius: 5px; font-weight:bold; }
 
-        #scr-player { padding: 20px; max-width: 600px; }
+        #scr-player, #scr-admin { padding: 20px; max-width: 600px; }
         
         .input-row { display: flex; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 5px; border-radius: 12px; }
         .input-label { width: 70px; text-align: center; color: var(--primary); font-weight: bold; border-left: 1px solid rgba(255,255,255,0.2); }
@@ -176,14 +175,14 @@
 <body>
 
     <!-- ==================== Landing ==================== -->
-    <div id="scr-landing" class="screen active" style="justify-content:center;">
+    <div id="scr-landing" class="screen bg-image-screen" style="justify-content:center;">
         <h1 style="font-size:4.5rem; margin-bottom:10px; color:var(--primary); text-shadow: 0 0 20px rgba(14, 165, 233, 0.6); text-align:center;">إنسان حيوان <span style="color:var(--secondary);">PRO</span></h1>
         <p style="font-size:1.5rem; color:#aaa; margin-bottom:40px; text-shadow: 0 2px 5px black;">تحدي السرعة 15 ثانية ⏱️</p>
         <button class="btn-main" style="font-size:1.5rem; padding: 20px 40px;" onclick="createGame()">إنشاء غرفة جديدة 🚀</button>
     </div>
 
     <!-- ==================== Connect (QR) ==================== -->
-    <div id="scr-connect" class="screen">
+    <div id="scr-connect" class="screen bg-image-screen">
         <div class="glass-panel" style="padding:30px; text-align:center; margin-top:50px;">
             <div id="local-warning">⚠️ يجب رفع الموقع على استضافة ليعمل الباركود</div>
             <h2 style="color:var(--primary);">امسح الكود للدخول</h2>
@@ -197,7 +196,7 @@
     </div>
 
     <!-- ==================== TV Screen ==================== -->
-    <div id="scr-tv" class="screen">
+    <div id="scr-tv" class="screen bg-image-screen">
         <div class="tv-top-bar">
             <button onclick="toggleQrModal(true)" style="background:var(--primary); border:none; color:white; padding:10px 20px; border-radius:12px; cursor:pointer; font-weight:bold; font-family:'Tajawal'; box-shadow:0 0 15px rgba(14, 165, 233, 0.4);">📱 إظهار الباركود</button>
             <div id="tv-status" style="font-size:1.3rem; color:var(--text); font-weight:bold; background:rgba(0,0,0,0.5); padding:5px 15px; border-radius:10px;">انتظار...</div>
@@ -226,10 +225,9 @@
         </div>
     </div>
 
-    <!-- ==================== Player Screen ==================== -->
+    <!-- ==================== Player Screen (بدون صورة خلفية للسرعة) ==================== -->
     <div id="scr-player" class="screen">
         
-        <!-- واجهة تسجيل الدخول المباشرة (بدون أسماء جاهزة) -->
         <div id="p-login" style="width:100%; text-align:center; margin-top:30px;">
             <h2 style="color:var(--primary); font-size:2.5rem; margin-bottom:30px; text-shadow:0 0 15px rgba(14,165,233,0.5);">اكتب اسمك لدخول اللعبة</h2>
             <div id="custom-name-box">
@@ -278,7 +276,7 @@
         </div>
     </div>
 
-    <!-- ==================== Admin Screen ==================== -->
+    <!-- ==================== Admin Screen (بدون صورة خلفية للسرعة) ==================== -->
     <div id="scr-admin" class="screen">
         <div class="glass-panel admin-controls" style="width:100%; max-width:600px; padding:20px; margin-top:20px;">
             <h2 style="color:var(--primary); text-align:center; margin-top:0;">🎮 لوحة التحكم</h2>
@@ -321,14 +319,30 @@
         let roomId = new URLSearchParams(window.location.search).get('room');
         const role = new URLSearchParams(window.location.search).get('role');
         
-        window.onload = function() {
-            if(role === 'admin') { show('scr-admin'); initAdmin(); }
-            else if(role === 'player') { show('scr-player'); initPlayer(); }
+        // 🌟 التعديل السحري للسرعة: التنفيذ الفوري بدون انتظار الصور 🌟
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            if(role === 'admin') { 
+                document.getElementById('scr-admin').classList.add('active'); 
+                initAdmin(); 
+            }
+            else if(role === 'player') { 
+                document.getElementById('scr-player').classList.add('active'); 
+                initPlayer(); 
+            }
             else if(roomId) {
-                if(new URLSearchParams(window.location.search).get('mode') === 'tv') { show('scr-tv'); initTV(); }
-                else { show('scr-connect'); generateQRs(); }
-            } else { show('scr-landing'); }
-        };
+                if(new URLSearchParams(window.location.search).get('mode') === 'tv') { 
+                    document.getElementById('scr-tv').classList.add('active'); 
+                    initTV(); 
+                } else { 
+                    document.getElementById('scr-connect').classList.add('active'); 
+                    generateQRs(); 
+                }
+            } else { 
+                document.getElementById('scr-landing').classList.add('active'); 
+            }
+        });
 
         function show(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -456,8 +470,10 @@
         let isCorrectionRendered = false;
 
         function initPlayer() {
-            // تركيز مباشر على مربع النص لتسهيل الكتابة
-            document.getElementById('custom-name-input').focus();
+            setTimeout(() => {
+                const input = document.getElementById('custom-name-input');
+                if(input) input.focus();
+            }, 100);
         }
 
         function loginCustom() { 
