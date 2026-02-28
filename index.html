@@ -43,16 +43,15 @@
     <!-- الستايل الجديد (متناسق مع صورة الخلفية النيون والفضاء) -->
     <style>
         :root {
-            /* ألوان مستوحاة من الخلفية الجديدة */
             --bg-dark: #070b19; 
-            --primary: #0ea5e9; /* أزرق نيون/سماوي */
-            --secondary: #8b5cf6; /* بنفسجي نيون */
-            --accent: #10b981; /* أخضر النبتة */
+            --primary: #0ea5e9; 
+            --secondary: #8b5cf6; 
+            --accent: #10b981; 
             --danger: #f43f5e; 
             --text: #f8fafc;
-            --gold: #f59e0b; /* برتقالي/ذهبي الأسد */
-            --panel-bg: rgba(7, 11, 25, 0.7); /* خلفية زجاجية غامقة للوحات */
-            --panel-border: rgba(14, 165, 233, 0.3); /* حدود سماوية للوحات */
+            --gold: #f59e0b; 
+            --panel-bg: rgba(7, 11, 25, 0.7); 
+            --panel-border: rgba(14, 165, 233, 0.3); 
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -64,14 +63,12 @@
             height: 100vh; 
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            /* إضافة صورة الخلفية */
             background-image: url('bg.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
         }
 
-        /* طبقة تظليل خفيفة فوق الصورة عشان الكلام والقوائم تكون واضحة ومقروءة */
         body::before {
             content: '';
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -82,7 +79,6 @@
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; position: absolute; top: 0; left: 0; overflow-y: auto; padding-bottom: 20px; z-index: 10; }
         .active { display: flex; }
 
-        /* اللوحات الزجاجية الجديدة */
         .glass-panel {
             background: var(--panel-bg);
             backdrop-filter: blur(15px); 
@@ -91,7 +87,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(14, 165, 233, 0.1) inset;
         }
 
-        /* الأزرار الجديدة بتدرج النيون */
         .btn-main {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white; border: none; padding: 15px 30px; font-size: 1.2rem; 
@@ -116,7 +111,6 @@
         
         .tv-header-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; margin-bottom: 20px; }
 
-        /* المؤقت الجديد بستايل نيون الأسد الذهبي */
         .timer-display { 
             font-size: 8rem; font-weight: 900; color: var(--gold); 
             text-shadow: 0 0 30px rgba(245, 158, 11, 0.6), 0 0 60px rgba(245, 158, 11, 0.2); 
@@ -124,7 +118,6 @@
         }
         .timer-critical { color: var(--danger); text-shadow: 0 0 40px rgba(244, 63, 94, 0.8); animation: pulse 0.5s infinite; }
         
-        /* الحرف الكبير */
         .big-char { 
             font-size: 6rem; font-weight: 900; color: white; 
             background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(139, 92, 246, 0.2)); 
@@ -145,13 +138,6 @@
         .ts-0 { background: var(--danger); color: white; padding: 1px 6px; border-radius: 5px; font-weight:bold; }
 
         #scr-player { padding: 20px; max-width: 600px; }
-        .player-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 20px; }
-        .player-card-btn { 
-            background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.4); 
-            padding: 20px; border-radius: 15px; color: white; font-size: 1.2rem; cursor: pointer; 
-            transition: 0.2s; text-align:center;
-        }
-        .player-card-btn:hover { background: rgba(14, 165, 233, 0.3); box-shadow: 0 0 15px rgba(14, 165, 233, 0.3); }
         
         .input-row { display: flex; align-items: center; margin-bottom: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 5px; border-radius: 12px; }
         .input-label { width: 70px; text-align: center; color: var(--primary); font-weight: bold; border-left: 1px solid rgba(255,255,255,0.2); }
@@ -191,7 +177,6 @@
 
     <!-- ==================== Landing ==================== -->
     <div id="scr-landing" class="screen active" style="justify-content:center;">
-        <!-- عنوان اللعبة بستايل نيون -->
         <h1 style="font-size:4.5rem; margin-bottom:10px; color:var(--primary); text-shadow: 0 0 20px rgba(14, 165, 233, 0.6); text-align:center;">إنسان حيوان <span style="color:var(--secondary);">PRO</span></h1>
         <p style="font-size:1.5rem; color:#aaa; margin-bottom:40px; text-shadow: 0 2px 5px black;">تحدي السرعة 15 ثانية ⏱️</p>
         <button class="btn-main" style="font-size:1.5rem; padding: 20px 40px;" onclick="createGame()">إنشاء غرفة جديدة 🚀</button>
@@ -244,13 +229,12 @@
     <!-- ==================== Player Screen ==================== -->
     <div id="scr-player" class="screen">
         
+        <!-- واجهة تسجيل الدخول المباشرة (بدون أسماء جاهزة) -->
         <div id="p-login" style="width:100%; text-align:center; margin-top:30px;">
-            <h2 style="color:var(--primary); font-size:2.5rem; margin-bottom:30px; text-shadow:0 0 15px rgba(14,165,233,0.5);">اختر اسمك لدخول اللعبة</h2>
-            <div id="name-grid" class="player-select-grid"></div>
-            <div id="custom-name-box" style="display:none; margin-top:20px;">
+            <h2 style="color:var(--primary); font-size:2.5rem; margin-bottom:30px; text-shadow:0 0 15px rgba(14,165,233,0.5);">اكتب اسمك لدخول اللعبة</h2>
+            <div id="custom-name-box">
                 <input type="text" id="custom-name-input" class="game-input glass-panel" style="text-align:center; margin-bottom:15px; width:100%; font-size:1.5rem;" placeholder="اكتب اسمك هنا...">
-                <button class="btn-main" style="width:100%;" onclick="loginCustom()">دخول</button>
-                <button class="btn-main" style="background:transparent; border:1px solid #666; width:100%; box-shadow:none;" onclick="showNameGrid()">رجوع</button>
+                <button class="btn-main" style="width:100%;" onclick="loginCustom()">دخول 🚀</button>
             </div>
         </div>
 
@@ -316,7 +300,7 @@
         </div>
     </div>
 
-    <!-- Script (Logic remains unchanged) -->
+    <!-- Script -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDh4v9gRCICA_XRCJXsDpbtCySYAoFsfhk",
@@ -330,7 +314,6 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        const namesList = ["هدى", "نور", "تهاني", "اماني", "حنين", "صالح", "عبودي", "مرام", "آخر"];
         const chars = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split('');
         const cats = {human:'إنسان', animal:'حيوان', plant:'نبات', object:'جماد', country:'بلاد'};
         const catKeys = Object.keys(cats);
@@ -473,20 +456,18 @@
         let isCorrectionRendered = false;
 
         function initPlayer() {
-            const grid = document.getElementById('name-grid');
-            namesList.forEach(n => {
-                const btn = document.createElement('div');
-                btn.className = 'player-card-btn';
-                btn.innerText = n;
-                btn.onclick = () => {
-                    if(n === 'آخر') { document.getElementById('p-login').children[1].style.display='none'; document.getElementById('custom-name-box').style.display='block'; }
-                    else doLogin(n);
-                };
-                grid.appendChild(btn);
-            });
+            // تركيز مباشر على مربع النص لتسهيل الكتابة
+            document.getElementById('custom-name-input').focus();
         }
-        function showNameGrid() { document.getElementById('p-login').children[1].style.display='grid'; document.getElementById('custom-name-box').style.display='none'; }
-        function loginCustom() { const n = document.getElementById('custom-name-input').value; if(n) doLogin(n); }
+
+        function loginCustom() { 
+            const n = document.getElementById('custom-name-input').value.trim(); 
+            if(n) {
+                doLogin(n); 
+            } else {
+                alert("الرجاء كتابة اسمك أولاً!");
+            }
+        }
         
         function doLogin(name) {
             myId = Date.now().toString(); 
